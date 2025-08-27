@@ -115,10 +115,10 @@
       </button>
       <div id="nav" class="collapse navbar-collapse">
         <ul class="navbar-nav nav nav-pills gap-2">
-          <li class="nav-item"><a class="nav-link active" href="#">Főoldal</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Bejelentkezés</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">GYIK</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Kapcsolat</a></li>
+          <li class="nav-item"><a class="nav-link active" href="home.php">Főoldal</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.php">Bejelentkezés</a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.php">GYIK</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.php">Kapcsolat</a></li>
         </ul>
       </div>
     </div>
