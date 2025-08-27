@@ -29,13 +29,16 @@
 
         /* NAVBAR */
         .navbar {
-            background: transparent !important; /* nincs háttér */
-            position: absolute; /* „ráül” a tartalomra */
+            background: transparent !important;
+            /* nincs háttér */
+            position: absolute;
+            /* „ráül” a tartalomra */
             top: 0;
             left: 0;
             width: 100%;
             padding: 1rem 2rem;
-            z-index: 10; /* mindig a tartalom fölött */
+            z-index: 10;
+            /* mindig a tartalom fölött */
         }
 
         .navbar-brand {
@@ -56,15 +59,20 @@
             color: #fff !important;
             margin-left: 1rem;
             font-weight: 500;
-            padding: .4rem 1rem; /* hogy legyen hely a háttérnek */
-            border-radius: 20px; /* lekerekített háttér */
-            transition: all 0.3s ease; /* finom animáció */
+            padding: .4rem 1rem;
+            /* hogy legyen hely a háttérnek */
+            border-radius: 20px;
+            /* lekerekített háttér */
+            transition: all 0.3s ease;
+            /* finom animáció */
         }
 
         .nav-link:hover {
             color: var(--mm-accent) !important;
-            background: rgba(255, 255, 255, 0.15); /* halvány fehér háttér */
-            color: #fff !important; /* maradjon fehér szöveg */
+            background: rgba(255, 255, 255, 0.15);
+            /* halvány fehér háttér */
+            color: #fff !important;
+            /* maradjon fehér szöveg */
         }
 
 
@@ -108,7 +116,8 @@
             justify-content: center;
             min-height: 100vh;
 
-            background: transparent; /*hogy a body gradient látszódjon */
+            background: transparent;
+            /*hogy a body gradient látszódjon */
         }
 
         .mm-right::before {
@@ -131,8 +140,10 @@
             -webkit-backdrop-filter: saturate(120%) blur(8px);
             border-radius: 20px;
             box-shadow:
-                0 15px 40px rgba(0, 0, 0, 0.45), /* erősebb árnyék a háttérből kiemeléshez */
-                0 0 0 1px rgba(255, 255, 255, 0.08) inset; /* finom belső kontúr */
+                0 15px 40px rgba(0, 0, 0, 0.45),
+                /* erősebb árnyék a háttérből kiemeléshez */
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+            /* finom belső kontúr */
             padding: 2rem;
         }
 
@@ -263,6 +274,10 @@
             </div>
         </div>
     </main>
+    <!-- FOOTER -->
+    <footer class="text-center mini-footer mt-auto">
+        © <?php echo date('Y'); ?> MentorMeet • Minden jog fenntartva
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
