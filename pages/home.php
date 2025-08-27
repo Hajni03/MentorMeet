@@ -140,7 +140,7 @@
               átlátható naptárban láthatod a szabad időpontokat,<br>
               és könnyedén lefoglalhatod a neked megfelelőt.
             </p>
-            <a href="#" class="btn cta-btn">Regisztrálj most</a>
+            <a href="signup.php" class="btn cta-btn">Regisztrálj most</a>
           </div>
 
           <div class="col-lg-6 d-flex justify-content-lg-end">
