@@ -184,6 +184,18 @@
         a {
             color: white;
         }
+
+        .mini-footer {
+            color: #9aa3ff;
+            font-size: .9rem;
+            padding: .5rem 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            background: transparent;
+        }
     </style>
 </head>
 
