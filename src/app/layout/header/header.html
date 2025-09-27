@@ -1,1 +1,25 @@
-<p>header works!</p>
+<header class="site-header">
+  <div class="container header__row">
+    <!-- Logó -->
+    <a class="brand" routerLink="/" aria-label="MentorMeet – Főoldal">
+      <img class="brand__mark" src="/src/assets/img/egyszeru_logo.png" alt="MentorMeet logó" />
+      <span class="brand__text">Mentor<span class="brand__accent">Meet</span></span>
+    </a>
+
+    <!-- Menü -->
+    <nav class="main-nav" aria-label="Fő navigáció">
+      <ul class="nav__list">
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Főoldal</a></li>
+        <li><a routerLink="/blog" routerLinkActive="active">Blog</a></li>
+        <li><a routerLink="/gyik" routerLinkActive="active">GYIK</a></li>
+        <li><a routerLink="/kapcsolat" routerLinkActive="active">Kapcsolat</a></li>
+      </ul>
+    </nav>
+
+    <!-- CTA-k -->
+    <div class="header__cta">
+      <a class="btn btn--ghost" routerLink="/login">Bejelentkezés</a>
+      <a class="btn" routerLink="/register">Regisztráció</a>
+    </div>
+  </div>
+</header>
