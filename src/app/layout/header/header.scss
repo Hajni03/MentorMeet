@@ -1,0 +1,114 @@
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+    /* finom alsó árnyék a képen láthatóhoz hasonló */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+}
+
+.site-header .container {
+    padding-left: 8px;
+    padding-right: 16px;
+}
+
+.header__row {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+/* LOGÓ */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    text-decoration: none;
+    color: #232329;
+}
+
+.brand__mark {
+    width: 52px;
+    height: auto;
+    display: block;
+}
+
+.brand__text {
+    font-weight: 600;
+    letter-spacing: .2px;
+}
+
+.brand__accent {
+    color: #6F77A8;
+}
+
+/* MENÜ (középen) */
+.main-nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav__list {
+    display: flex;
+    gap: 3.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav__list a {
+    text-decoration: none;
+    color: #2c2c35;
+    font-weight: 500;
+}
+
+.nav__list a:hover {
+    opacity: .8;
+}
+
+.nav__list a.active {
+    color: #000;
+}
+
+/* CTA-k (jobbra) */
+.header__cta {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .9rem 1.6rem;
+    border-radius: 12px;
+    border: 0;
+    font-weight: 600;
+    cursor: pointer;
+    background: #6F77A8;
+    color: #fff;
+}
+
+.btn--ghost {
+    background: #fff;
+    color: #6F77A8;
+    border: 1px solid #6F77A8;
+}
+
+/* konténer (ha még nincs globálisan) */
+.container {
+    width: min(1120px, calc(100% - 32px));
+    margin-inline: auto;
+}
+.header__cta .btn,
+.header__cta .btn:link,
+.header__cta .btn:visited,
+.header__cta .btn:hover,
+.header__cta .btn:active,
+.header__cta .btn:focus {
+  text-decoration: none;
+  outline: none;
+}

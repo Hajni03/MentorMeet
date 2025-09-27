@@ -1,13 +1,36 @@
-<section class="hero container">
-  <div class="hero__left">
-    <h1>Egyszerűbb konzultáció, jobb eredmények</h1>
-    <p>Tanár és diák könnyedén egyeztethet időpontot, nyomon követhetik a találkozásokat, és több idő marad a valódi tanulásra.</p>
-    <div class="hero__cta">
-      <button class="btn">Fedezd fel a mentortárat</button>
-      <button class="btn btn--ghost">Tippek és hírek</button>
-    </div>
+<section class="hero" aria-labelledby="hero-title">
+  <!-- csak a BAL oldali szürke folt külön képként -->
+  <div class="hero__bg hero__bg--left" aria-hidden="true">
+    <img src="assets/img/szurkefolt.png" alt="">
   </div>
-  <div class="hero__right">
-    <img class="hero__img" src="/src/assets/img/Csajszi.png" alt="MentorMeet Header Image">
+
+  <div class="container hero__row">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__line1">Egyszerűbb konzultáció, jobb</span><br>
+        <span class="hero__line2">eredmények</span>
+      </h1>
+      <p class="hero__subtitle">
+        Tanár és diák könnyedén egyeztethet időpontot,<br> 
+        nyomon követheti a találkozásokat, és több idő<br> 
+        marad a valódi tanulásra.
+      </p>
+
+      <div class="hero__meta">
+        <div class="hero__meta-block">
+          <span class="hero__meta-label">Már regisztrált tanárok:</span>
+          <a class="btn btn--primary" href="#">Fedezd fel a mentorokat</a>
+        </div>
+        <div class="hero__meta-block">
+          <span class="hero__meta-label">Blog:</span>
+          <a class="btn btn--primary" href="#">Tippek és hírek</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- A kék folt a kép része! -->
+    <div class="hero__visual">
+      <img class="hero__img" src="assets/img/Csajszi.png" alt="Diák a MentorMeet oldalán">
+    </div>
   </div>
 </section>
