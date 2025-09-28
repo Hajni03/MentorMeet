@@ -155,3 +155,43 @@
   transform: scale(1.07);
   box-shadow: 0 8px 20px rgba(116,125,166,.30);
 }
+
+.site-header{
+  --brand: #6F77A8;
+  --shadow: 0 8px 18px rgba(116,125,166,.25);
+}
+
+.header__cta .btn{
+  padding: .9rem 1.4rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transform: translateZ(0);
+  transition:
+    transform .12s ease,
+    background-color .18s ease,
+    color .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+/* alapállapotok */
+.header__cta .btn{ background: var(--brand); color:#fff; border:1px solid transparent; }
+.header__cta .btn.btn--ghost{ background:#fff; color:var(--brand); border:1px solid var(--brand); }
+
+@media (prefers-reduced-motion: reduce){
+  .header__cta .btn{ transition: none; }
+}
+
+/* mindkettőnél kis „ring” és pop */
+.header__cta .btn:hover,
+.header__cta .btn:focus-visible{
+  transform: scale(1.06);
+  box-shadow:
+    0 10px 22px rgba(116,125,166,.28),
+    0 0 0 1px rgba(116,125,166,.35) inset;
+  outline: none;
+}
+/* ghost marad ghost, filled marad filled – csak a ring jelenik meg */
+
+
+
