@@ -228,7 +228,7 @@
 /* === Bal szürke folt: kisebb méret + finom pozíció === */
 .hero__bg--left img{
   /* MÉRET: csökkentett clamp – ha még kisebb kell, vedd tovább le */
-  width: clamp(350px, 33vw, 650px) !important;
+  width: clamp(300px, 30vw, 500px) !important;
 
   /* POZÍCIÓ: kicsit feljebb és egy picit jobbra (X,Y) */
   transform: translate(-8px, -240px) !important;
