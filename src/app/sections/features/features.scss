@@ -130,5 +130,45 @@
   .features__brand{ flex-wrap: wrap; }
 }
 
+/* ===== FEATURES – kék háttér (#848CAF) + kontraszt beállítás ===== */
+.features{
+  --features-bg: #F5F5F0;
+  background: var(--features-bg) !important;
+
+  /* világos tipó a kék háttéren */
+  --ink: #ffffff;
+  --muted: rgba(255,255,255,.88);
+  color: var(--ink);
+}
+
+/* felső brand-sor és bullet-ek */
+.features__tagline{ color: var(--muted); }
+.features__bullets{ color: var(--muted); }
+.features__bullets li strong{ color: var(--ink); }
+
+/* kártyák maradjanak fehérek, erősebb árnyékkal a kék háttéren */
+.card{
+  background: #fff;
+  box-shadow: 0 14px 32px rgba(0,0,0,.18);
+}
+
+/* ghost gomb a kék háttéren: fehér körvonal + fehér szöveg */
+.features .btn.btn--ghost,
+.features .btn.btn--ghost:link,
+.features .btn.btn--ghost:visited{
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.85);
+}
+
+/* hover: nagyon halvány fehér háttér, erősebb kontúr */
+.features .btn.btn--ghost:hover,
+.features .btn.btn--ghost:focus-visible{
+  background: rgba(255,255,255,.12);
+  border-color: #fff;
+  outline: none;
+}
+
+
 
 

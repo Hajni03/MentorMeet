@@ -319,3 +319,34 @@
 
 
 
+/* === Hero háttér „rövidítése” + átmenet a következő szekció színére === */
+.hero{
+  /* a hero saját háttere és a következő szekció színe */
+  --hero-bg: #F5F5F0;
+  --next-bg: #F5F5F0;
+
+  /* mennyit vágjunk le alul a hero hátteréből (px) */
+  --hero-bg-cut: 80px;  /* állítható: 60–140 között próbáld ki */
+
+  position: relative;
+  background: var(--hero-bg) !important;
+}
+
+/* a hero alján rajzolunk egy sávot a következő szekció színével */
+.hero::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: var(--hero-bg-cut);
+  background: var(--next-bg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* a hero tartalma legyen biztosan fölötte */
+.hero__row{ position: relative; z-index: 1; }
+
+/* reszponzív finomítás: keskenyen kisebb vágás */
+@media (max-width: 992px){
+  .hero{ --hero-bg-cut: 40px; }
+}
