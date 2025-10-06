@@ -1,56 +1,67 @@
-<section class="features" aria-labelledby="features-title">
+<section class="features" id="features" aria-labelledby="features-title">
   <div class="container">
+    <header class="features__head features__head--logo">
+      <img class="features__logo" src="assets/img/teljes_logo.png" alt="MentorMeet">
+      <p id="features-title" class="features__tagline">– a konzultáció egyszerűbb jövője</p>
 
-    <!-- Fejléc / tagline -->
-    <header class="features__head">
-      <div class="features__brand">
-        <img class="features__logo" src="assets/img/teljes_logo.png" alt="MentorMeet">
-        <span class="features__tagline">– a konzultáció egyszerűbb jövője</span>
-      </div>
+      <p class="features__lead">
+        Foglalj időpontot pár kattintással, kövesd nyomon a találkozásokat, és felejtsd el a kaotikus egyeztetéseket.
+      </p>
 
-      <ul class="features__bullets">
-        <li><strong>Diákoknak:</strong> gyors segítség, ha elakadsz</li>
-        <li><strong>Tanároknak:</strong> tiszta naptár, kevesebb papírmunka</li>
+      <ul class="features__benefits">
+        <li>
+          <span class="dot dot--student" aria-hidden="true"></span>
+          <strong>Diákoknak:</strong> gyors segítség, ha elakadsz
+        </li>
+        <li>
+          <span class="dot dot--teacher" aria-hidden="true"></span>
+          <strong>Tanároknak:</strong> tiszta naptár, kevesebb papírmunka
+        </li>
       </ul>
     </header>
 
-    <h2 id="features-title" class="visually-hidden">Fő funkciók</h2>
-
-    <!-- 3 kártya -->
-    <div class="features__grid">
-      <article class="feature card">
-        <figure class="feature__media">
-          <img src="assets/img/idopontfoglalas.png" alt="Könnyű időpontfoglalás">
+    <div class="feature-grid">
+      <!-- Kártya 1 -->
+      <article class="feature-card">
+        <figure class="feature-card__media">
+          <img src="assets/img/feature-1.jpg" alt="Időpontfoglalás képernyő">
         </figure>
-        <div class="feature__body">
-          <h3 class="feature__title">Könnyű időpontfoglalás</h3>
-          <p class="feature__text">Leírás helye…</p>
-          <a class="btn btn--ghost" href="#">Csatlakozz hozzánk</a>
+        <div class="feature-card__body">
+          <h3 class="feature-card__title">Könnyű időpontfoglalás</h3>
+          <p class="feature-card__text">
+            Válassz szabad időpontot, kapj visszaigazolást másodpercek alatt – mindezt egy helyen.
+          </p>
+          <a class="btn btn--primary" href="#">Csatlakozz hozzánk</a>
         </div>
       </article>
 
-      <article class="feature card">
-        <figure class="feature__media">
-          <img src="assets/img/atlathato_rendszer.png" alt="Átlátható rendszer">
+      <!-- Kártya 2 -->
+      <article class="feature-card">
+        <figure class="feature-card__media">
+          <img src="assets/img/feature-2.jpg" alt="Átlátható statisztikák és naptár">
         </figure>
-        <div class="feature__body">
-          <h3 class="feature__title">Átlátható rendszer</h3>
-          <p class="feature__text">Leírás helye…</p>
-          <a class="btn btn--ghost" href="#">Nézd meg, hogyan működik</a>
+        <div class="feature-card__body">
+          <h3 class="feature-card__title">Átlátható rendszer</h3>
+          <p class="feature-card__text">
+            Naptár, jegyzetek, státuszok – minden adat egy helyen, rendezve és kereshetően.
+          </p>
+          <a class="btn btn--primary" href="#">Mutasd meg, hogyan működik</a>
         </div>
       </article>
 
-      <article class="feature card">
-        <figure class="feature__media">
-          <img src="assets/img/gyors_segitseg.png" alt="Gyors segítség diákoknak">
+      <!-- Kártya 3 -->
+      <article class="feature-card">
+        <figure class="feature-card__media">
+          <img src="assets/img/feature-3.jpg" alt="Diák mosolyog, sikeres konzultáció után">
         </figure>
-        <div class="feature__body">
-          <h3 class="feature__title">Gyors segítség diákoknak</h3>
-          <p class="feature__text">Leírás helye…</p>
-          <a class="btn btn--ghost" href="#">Kérj segítséget</a>
+        <div class="feature-card__body">
+          <h3 class="feature-card__title">Gyors segítség diákoknak</h3>
+          <p class="feature-card__text">
+            Írj a mentorodnak, foglalj időpontot és kapj visszajelzést – egyszerűen és gyorsan.
+          </p>
+          <a class="btn btn--primary" href="#">Kérj segítséget</a>
         </div>
       </article>
     </div>
-
   </div>
 </section>
