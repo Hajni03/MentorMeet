@@ -1,352 +1,263 @@
 /* ─────────────────────────────────────────
-   HERO – teljes SCSS (mindent tartalmaz)
+   HERO – TISZTÍTOTT CSS (csíkkal a kép alján)
    ───────────────────────────────────────── */
 
-:host {
-    --hero-bg: #F5F5F0;
-    /* háttérszín (headerrel egyező) */
-    --hero-ink: #232329;
-    --hero-muted: #5a5a66;
-    --hero-brand: #6F77A8;
-    /* márka szín a gombhoz */
-    --hero-radius: 12px;
-    --hero-shadow: 0 12px 24px rgba(0, 0, 0, .18);
-    --hero-image-shift: clamp(100px, 30vw, 160px);
-    /* >>> kép további jobbra tolása */
-    --hero-image-out: clamp(-28px, -3vw, -72px);
-    /* >>> konténeren túl lógás */
+:host{
+  /* Alap változók */
+  --hero-bg:#F5F5F0;
+  --hero-ink:#232329;
+  --hero-muted:#5a5a66;
+  --hero-brand:#6F77A8;
+
+  --hero-radius:12px;
+  --hero-shadow:0 12px 24px rgba(0,0,0,.18);
+
+  /* Pozícionálás / vágás */
+  --hero-pad-top:clamp(12px,1vw,20px);
+  --hero-copy-overlap:80px;
+  --copy-up:-46px;
+  --girl-up:-5px;
+
+  /* Kép eltolások */
+  --hero-image-shift:clamp(100px,30vw,160px);
+  --hero-image-out:clamp(-28px,-3vw,-72px);
+
+  /* „Rátolás” a következő szekcióra */
+  --cut-gap:180px;
+
+  /* Átmenet a következő szekció hátterére */
+  --next-bg:#F5F5F0;
+  --hero-bg-cut:80px;
 }
 
-.hero {
-    --hero-pad-top: clamp(2px, 0.2vw, 2px);
-    --hero-copy-overlap: 80px;
-    position: relative;
-    background: var(--hero-bg);
-    padding: var(--hero-pad-top) 0 clamp(80px, 8vw, 120px);
-
-    /* finom árnyék a header alatt */
-    &::before {
-        content: "";
-        position: absolute;
-        inset: 0 0 auto 0;
-        height: 10px;
-        box-shadow: 0 8px 18px rgba(0, 0, 0, .12);
-        opacity: .25;
-        pointer-events: none;
-    }
+/* ───────── Hero alapok ───────── */
+.hero{
+  position:relative;
+  background:var(--hero-bg);
+  padding:var(--hero-pad-top) 0 clamp(80px,8vw,120px);
+  padding-bottom:0 !important; /* ne hagyjon extra helyet alul */
 }
 
-/* rács: bal (copy) max 560px, jobb (kép) rugalmas */
-.hero__row {
-    width: min(1120px, calc(100% - 32px));
-    margin-inline: auto;
-
-    display: grid;
-    grid-template-columns: minmax(320px, 560px) 1fr;
-    align-items: center;
-    /* címsor/szöveg függőlegesen középen */
-    gap: clamp(32px, 5vw, 72px);
-    position: relative;
-    z-index: 1;
-    overflow: visible;
+/* Finom árnyék a header alatt */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:10px;
+  box-shadow:0 8px 18px rgba(0,0,0,.12);
+  opacity:.25;
+  pointer-events:none;
 }
 
-/* bal oldal */
-.hero__copy {
-    position: relative;
-    z-index: 2;
-    /* szöveg a kép fölött legyen */
-    margin-right: calc(-1 * var(--hero-copy-overlap));
-    transform: translateY(-4px);
-    /* finom feljebb húzás, ízlés szerint */
+/* A hero alján „ráfestjük” a következő szekció színét */
+.hero::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:var(--hero-bg-cut);
+  background:var(--next-bg);
+  pointer-events:none;
+  z-index:0;
 }
 
-.hero__title {
-    color: var(--hero-ink);
-    font-size: clamp(3.2rem, 1.2rem + 3.2vw, 5.4rem);
-    line-height: 1.12;
-    letter-spacing: -0.3px;
-    margin: 0 0 1.2rem;
+/* Rács: bal (copy) + jobb (kép) */
+.hero__row{
+  width:min(1120px, calc(100% - 32px));
+  margin-inline:auto;
+  display:grid;
+  grid-template-columns:minmax(320px,560px) 1fr;
+  align-items:center;
+  gap:clamp(32px,5vw,72px);
+  position:relative;
+  z-index:1;
 }
 
-.hero__subtitle {
-    color: var(--hero-muted);
-    font-size: 1.8rem;
-    line-height: 1.6;
-    margin: 0 0 2.4rem;
-    max-width: 58ch;
+.hero__copy{
+  position:relative;
+  z-index:2;
+  margin-right:calc(-1 * var(--hero-copy-overlap));
+  transform:translateY(var(--copy-up));
 }
 
-.hero__line1 {
-    white-space: nowrap !important;
-    /* első sor egy sorban marad */
-    display: inline-block;
+.hero__title{
+  color:var(--hero-ink);
+  font-size:clamp(3.2rem,1.2rem + 3.2vw,5.4rem);
+  line-height:1.12;
+  letter-spacing:-.3px;
+  margin:0 0 1.2rem;
 }
 
-.hero__line2 {
-    display: inline-block;
-    transform: translateY(-2px);
+.hero__subtitle{
+  color:var(--hero-muted);
+  font-size:1.8rem;
+  line-height:1.6;
+  margin:0 0 2.4rem;
+  max-width:58ch;
 }
 
-/* infó blokkok + gombok */
-.hero__meta {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: clamp(22px, 3vw, 42px);
-    margin-top: .5rem;
-}
+.hero__line1{ white-space:nowrap; display:inline-block; }
+.hero__line2{ display:inline-block; transform:translateY(-2px); }
 
-.hero__meta-label {
-    display: block;
-    margin-bottom: .6rem;
-    font-weight: 600;
-    color: #3a3a42;
+/* Infó blokkok + gombok */
+.hero__meta{
+  display:grid;
+  grid-template-columns:auto auto;
+  gap:clamp(22px,3vw,42px);
+  margin-top:.5rem;
 }
+.hero__meta-label{ display:block; margin-bottom:.6rem; font-weight:600; color:#3a3a42; }
 
-/* ── Gombok (linkekből is gomb lesz, aláhúzás kikapcsolva) ── */
+/* ───────── Gombok ───────── */
 .btn,
 .btn:link,
-.btn:visited {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.1rem 1.6rem;
-    border: 0;
-    border-radius: var(--hero-radius);
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none !important;
-    /* <<< nincs aláhúzás */
-    transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease;
+.btn:visited{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:1.1rem 1.6rem;
+  border:0;
+  border-radius:var(--hero-radius);
+  font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
+  transition:transform .12s ease, box-shadow .18s ease;
 }
-
 .btn--primary,
 .btn--primary:link,
-.btn--primary:visited {
-    background: var(--hero-brand);
-    color: #fff;
-    /* <<< fix fehér, visited sem változtatja */
-    box-shadow: 0 4px 14px rgba(111, 119, 168, .28);
+.btn--primary:visited{
+  background:var(--hero-brand);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(111,119,168,.28);
 }
-
-.btn--primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(111, 119, 168, .32);
-}
-
-.btn--primary:active {
-    transform: translateY(0);
-}
+.btn--primary:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(111,119,168,.32); }
+.btn--primary:active{ transform:translateY(0); }
 
 .btn--ghost,
 .btn--ghost:link,
-.btn--ghost:visited {
-    background: transparent;
-    color: var(--hero-brand);
-    border: 1px solid var(--hero-brand);
+.btn--ghost:visited{
+  background:transparent;
+  color:var(--hero-brand);
+  border:1px solid var(--hero-brand);
 }
 
-/* jobb oldal – kép még jobbra tolva és picit kijjebb */
-.hero__visual {
-    justify-self: end;
-    position: relative;
-    margin-right: var(--hero-image-out);
-    /* >>> konténeren túl */
+/* ───────── Jobb oldal – vizuál ───────── */
+.hero__visual{
+  justify-self:end;
+  position:relative;                  /* csík pszeudo-elemhez */
+  margin-right:var(--hero-image-out);
+  margin-bottom:calc(-1 * var(--cut-gap)) !important; /* „rátolás” */
+  z-index:2;                          /* a hero ::after fölött legyen */
 }
 
-.hero__img {
-    width: min(660px, 50vw);
-    height: auto;
-    display: block;
-    transform: translateX(var(--hero-image-shift));
-    /* >>> jobbra tolás */
-    filter: drop-shadow(var(--hero-shadow));
-}
-
-/* bal szürke vízfesték – ne takarja a CTA-kat */
-.hero__bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.hero__bg--left img {
-    position: absolute;
-    left: max(-170px, -9vw);
-    top: 100px;
-    width: clamp(520px, 52vw, 820px);
-    opacity: .50;
-    /* ha sötétnek érzed: mix-blend-mode: multiply; */
-}
-
-
-/* ───────── reszponzív ───────── */
-@media (max-width: 1200px) {
-    :host {
-        --hero-image-shift: clamp(28px, 4vw, 60px);
-        --hero-image-out: clamp(-16px, -2vw, -40px);
-    }
-}
-
-@media (max-width: 992px) {
-    .hero__row {
-        grid-template-columns: 1fr;
-        gap: 32px;
-    }
-
-    .hero__copy {
-        margin-right: 0 !important;
-    }
-
-    .hero__line1 {
-        white-space: normal !important;
-    }
-
-    .hero__visual {
-        justify-self: center;
-        margin-right: 0;
-    }
-
-    .hero__img {
-        width: min(520px, 90vw);
-        transform: none;
-    }
-
-    .hero__meta {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .hero__bg--left img {
-        left: -120px;
-        top: 120px;
-        width: 120%;
-        opacity: .35;
-    }
-}
-/* === Bal szürke folt: kisebb méret + finom pozíció === */
-.hero__bg--left img{
-  /* MÉRET: csökkentett clamp – ha még kisebb kell, vedd tovább le */
-  width: clamp(300px, 30vw, 500px) !important;
-
-  /* POZÍCIÓ: kicsit feljebb és egy picit jobbra (X,Y) */
-  transform: translate(-8px, -240px) !important;
-
-  /* ha még erősnek érzed a tónust */
-  opacity: .40;
-}
-
-/* ===== Hero finom pozíciózás – feljebb húzás ===== */
-.hero{
-  --copy-up: -46px;   /* cím + subtitle + gombok ennyivel feljebb */
-  --girl-up: -48px;   /* lány képe ennyivel feljebb */
-  --hero-pad-top: clamp(12px, 1vw, 20px); /* ha még közelebb akarod a navbarhoz */
-}
-
-/* bal oszlop (cím + szöveg + gombok) feljebb */
-.hero__copy{
-  transform: translateY(var(--copy-up)) !important;
-}
-
-/* kép: eddig csak X-ben toltuk; most X+Y együtt */
 .hero__img{
-  transform: translate(var(--hero-image-shift), var(--girl-up)) !important;
-  /* ha szeretnéd, hogy kicsit jobban „üljön” az árnyék: */
-  /* filter: drop-shadow(0 14px 26px rgba(0,0,0,.18)); */
+  width:min(660px,50vw);
+  height:auto;
+  display:block;
+  transform:translate(var(--hero-image-shift), var(--girl-up));
+  filter:drop-shadow(var(--hero-shadow));
 }
 
-/* mobilon ne toljuk szét */
-@media (max-width: 992px){
-  .hero__copy{ transform: none !important; }
-  .hero__img{ transform: none !important; }
+/* Bal szürke „vízfesték” folt */
+.hero__bg{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+.hero__bg--left img{
+  position:absolute;
+  left:max(-170px,-9vw);
+  top:100px;
+  width:clamp(300px,30vw,500px);
+  opacity:.40;
+  transform:translate(-8px,-240px);
 }
 
-/* === Hero CTA gombok: pop-out hover === */
+/* ───────── Interakciós finomítás ───────── */
 .hero .btn,
 .hero .btn:link,
 .hero .btn:visited{
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
-  transition:
-    transform .12s ease,
-    box-shadow .18s ease;
+  transform:translateZ(0);
+  will-change:transform, box-shadow;
 }
-
-/* hover/focus: enyhe nagyítás + erősebb árnyék */
 .hero .btn:hover,
 .hero .btn:focus-visible{
-  transform: scale(1.07);                        /* <<< kiugrás */
-  box-shadow: 0 10px 24px rgba(111,119,168,.32); /* illik a pill árnyékához */
-  outline: none;
+  transform:scale(1.07);
+  box-shadow:0 10px 24px rgba(111,119,168,.32);
+  outline:none;
 }
-
-/* kattintáskor kicsit vissza */
-.hero .btn:active{
-  transform: scale(1.03);
-}
-
-/* (hozzáférhetőség) ha valaki csökkentett animációt kér */
+.hero .btn:active{ transform:scale(1.03); }
 @media (prefers-reduced-motion: reduce){
   .hero .btn,
   .hero .btn:hover,
   .hero .btn:focus-visible,
   .hero .btn:active{
-    transition: none;
-    transform: none;
+    transition:none; transform:none;
   }
 }
 
+/* ───────── Reszponzív ───────── */
+@media (max-width:1200px){
+  :host{
+    --hero-image-shift:clamp(28px,4vw,60px);
+    --hero-image-out:clamp(-16px,-2vw,-40px);
+  }
+}
 
+@media (max-width:992px){
+  .hero__row{
+    grid-template-columns:1fr;
+    gap:32px;
+  }
+  .hero__copy{
+    margin-right:0;
+    transform:none;
+  }
+  .hero__line1{ white-space:normal; }
 
-/* --- A következő szekció „rátolása” a kép vágására --- */
+  .hero__visual{
+    justify-self:center;
+    margin-right:0;
+    margin-bottom:0 !important;       /* mobilon ne toljuk össze */
+  }
+  .hero{ padding-bottom:24px !important; }
+
+  .hero__img{
+    width:min(520px,90vw);
+    transform:none;
+  }
+  .hero__meta{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .hero__bg--left img{
+    left:-120px; top:120px;
+    width:120%;
+    opacity:.35;
+    transform:none;
+  }
+  .hero{ --hero-bg-cut:40px; }        /* hero aljának rövidítése mobilon */
+}
+
+/* Divider beállítások (szín/magasság igény szerint) */
 .hero{
-  /* mennyit „lógjon rá” a következő szekció a kép aljára */
-  --cut-gap: 180px; /* növeld 200–220-ra, ha még van rés; csökkentsd, ha túl sok */
-  padding-bottom: 0 !important;      /* ne adjon plusz helyet a hero alá */
+  --divider-color: #848CAF;
+  --divider-height: 1.5px;
+  --divider-nudge: -143px; 
 }
 
-/* a képoszlop ténylegesen lejjebb lóg – ezzel zár össze a következő szekcióval */
-.hero__visual{
-  margin-bottom: calc(-1 * var(--cut-gap)) !important;
+.hero__row{
+  position: relative; /* hogy legyen referenciapont a ::after-nek */
+  z-index: 1;
 }
 
-/* mobilon NE toljuk össze, mert a kép alá csúszhat a tartalom */
-@media (max-width: 992px){
-  .hero__visual{ margin-bottom: 0 !important; }
-  .hero{ padding-bottom: 24px !important; }
-}
-
-
-
-/* === Hero háttér „rövidítése” + átmenet a következő szekció színére === */
-.hero{
-  /* a hero saját háttere és a következő szekció színe */
-  --hero-bg: #F5F5F0;
-  --next-bg: #F5F5F0;
-
-  /* mennyit vágjunk le alul a hero hátteréből (px) */
-  --hero-bg-cut: 80px;  /* állítható: 60–140 között próbáld ki */
-
-  position: relative;
-  background: var(--hero-bg) !important;
-}
-
-/* a hero alján rajzolunk egy sávot a következő szekció színével */
-.hero::after{
+/* Vékony, container-szélességű csík a hero alján */
+.hero__row::after{
   content: "";
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: var(--hero-bg-cut);
-  background: var(--next-bg);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* a hero tartalma legyen biztosan fölötte */
-.hero__row{ position: relative; z-index: 1; }
-
-/* reszponzív finomítás: keskenyen kisebb vágás */
-@media (max-width: 992px){
-  .hero{ --hero-bg-cut: 40px; }
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--cut-gap) + var(--divider-nudge));
+  width: min(1120px, calc(100%));
+  height: var(--divider-height);
+  background: var(--divider-color);
+  border-radius: 999px;
+  opacity: .9;
+  z-index: 3; /* a hero ::after (z-index:0) fölé kerüljön */
+  box-shadow: 0 4px 10px rgba(0,0,0,.04); /* finom „air” – opcionális */
 }
