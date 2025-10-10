@@ -1,4 +1,22 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $name = $_POST["name"] ?? '';
+    $email = $_POST["email"] ?? '';
+    $password = $_POST["password"] ?? '';
+    $repassword = $_POST["repassword"] ?? '';
+
+    // Jelszó ellenőrzése
+    if ($password !== $repassword) {
+        echo "A jelszavak nem egyeznek!";
+        exit;
+    }
+    // Itt jönne az adatbázisba való mentés logikája
+    echo "Sikeres regisztráció, üdvözlünk, $name!";
+    // Jelszó hashelése
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+} else {
+    echo "Hibás kérés!";
+}
 /*
 Ez egy régebbi verzióból való, egyáltalán nem mérvadó, szimplán csak arra kell hogy lássam mik voltak
 Ez egy régebbi verzióból való, egyáltalán nem mérvadó, szimplán csak arra kell hogy lássam mik voltak

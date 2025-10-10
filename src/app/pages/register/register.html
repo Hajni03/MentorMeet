@@ -1,6 +1,6 @@
 <h2>Regisztráció teszt</h2>
 
-<form>
+<form action="/backend/register.php" method="POST">
   <div>
     <label for="name">Név:</label>
     <input type="text" id="name" name="name" required />
@@ -14,7 +14,22 @@
   <div>
     <label for="password">Jelszó:</label>
     <input type="password" id="password" name="password" required />
+    <button type="button" class="show-btn" onclick="jelszoMegjelenites('password')">Jeelszó megjelenítése</button>
+  </div>
+
+  <div>
+    <label for="repassword">Jelszó megerősítése:</label>
+    <input type="password" name="repassword" id="repassword" required />
+    <button type="button" class="show-btn" onclick="jelszoMegjelenites('repassword')">Jelszó megjelenítése</button>
   </div>
 
   <button type="submit">Küldés</button>
 </form>
+
+
+<script>
+  function jelszoMegjelenites(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+  }
+</script>

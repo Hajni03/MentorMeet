@@ -2,7 +2,7 @@
 $host = 'localhost';
 $dbname = 'mentormeet';
 $username = 'root';
-$password = 'root'; // XAMPP/MAMP esetén gyakran üres
+$password = 'root'; // Mamp használata esetén
 
 try {
     // Kapcsolat létrehozása
