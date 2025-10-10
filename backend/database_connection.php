@@ -11,8 +11,8 @@ try {
     // Hibakezelés mód beállítása (kivétel dobása)
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "✅ Sikeres adatbázis kapcsolat!";
+    echo "Sikeres adatbázis kapcsolat!";
 } catch (PDOException $e) {
-    echo "❌ Hiba történt: " . $e->getMessage();
+    echo "Hiba történt: " . $e->getMessage();
 }
 ?>
