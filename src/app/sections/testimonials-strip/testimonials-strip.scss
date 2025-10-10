@@ -1,0 +1,145 @@
+/* ===== Impact (Akik már kipróbálták…) ===== */
+.impact {
+  --surface: #6F77A8;                 /* lila háttér */
+  --ink-on: #ffffff;                  /* szöveg a lila háttéren */
+  --muted-on: rgba(255,255,255,.82);  /* halványabb szöveg */
+  --card-bg: #F4F5FA;                 /* stat kártyák háttere */
+  --card-ink: #232329;
+  --card-shadow: 0 14px 28px rgba(0,0,0,.16);
+  --card-radius: 16px;
+
+  background: var(--surface);
+  padding: 40px 0 56px;
+}
+
+/* kétoszlopos elrendezés: bal kép, jobb tartalom */
+.impact__row {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+/* bal oldali kép */
+.impact__media {
+  margin: 0;
+}
+
+.impact__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  box-shadow: 0 18px 36px rgba(0,0,0,.25);
+}
+
+/* jobb oldali tartalom */
+.impact__content {
+  color: var(--ink-on);
+}
+
+/* cím: “Akik már kipróbálták a MentorMeet -et” */
+.impact__title {
+  margin: 0 0 10px;
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+  line-height: 1.2;
+  color: var(--ink-on);
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+/* a “MentorMeet” brandrész kiemelése */
+.impact__brand {
+  font-weight: 800;
+  color: var(--ink-on);
+  letter-spacing: .3px;
+  /* ha szeretnél enyhe kiemelést: */
+  text-shadow: 0 1px 0 rgba(0,0,0,.06);
+}
+
+/* kötőjel utótag –et kicsit leheletnyivel halványabban */
+.impact__suffix {
+  color: var(--muted-on);
+  font-weight: 600;
+}
+
+/* bevezető szöveg a cím alatt */
+.impact__lead {
+  margin: 8px 0 18px;
+  color: var(--muted-on);
+  line-height: 1.6;
+  max-width: 56ch;
+}
+
+/* stat kártyák */
+.impact-stats {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.impact-stats__item {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 18px 20px;
+  text-align: center;
+  color: var(--card-ink);
+}
+
+.impact-stats__value {
+  font-size: clamp(1.6rem, 1.2rem + 1vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.impact-stats__label {
+  font-size: .95rem;
+  color: #5a5a66;
+  letter-spacing: .2px;
+}
+
+/* hover pici emelés (opcionális) */
+.impact-stats__item:hover {
+  transform: translateY(-3px);
+  transition: transform .15s ease, box-shadow .2s ease;
+  box-shadow: 0 22px 44px rgba(0,0,0,.2);
+}
+
+/* ===== Reszponzív ===== */
+@media (max-width: 1100px) {
+  .impact__row {
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .impact__row {
+    grid-template-columns: 1fr;      /* kép felül, tartalom alul */
+  }
+  .impact__media {
+    order: 1;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .impact__content {
+    order: 2;
+  }
+  .impact-stats {
+    grid-template-columns: 1fr 1fr;  /* két oszlopra vált */
+  }
+}
+
+@media (max-width: 560px) {
+  .impact {
+    padding: 28px 0 40px;
+  }
+  .impact-stats {
+    grid-template-columns: 1fr;      /* egymás alatt mobilon */
+  }
+}
