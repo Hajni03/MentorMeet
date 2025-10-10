@@ -48,16 +48,16 @@
   letter-spacing: .2px;
 }
 
-/* a “MentorMeet” brandrész kiemelése */
-.impact__brand {
-  font-weight: 800;
-  color: var(--ink-on);
-  letter-spacing: .3px;
-  /* ha szeretnél enyhe kiemelést: */
-  text-shadow: 0 1px 0 rgba(0,0,0,.06);
+/* MentorMeet logó a címben */
+.impact__logo {
+  height: 50px;            /* igazítsd a betűmérethez */
+  width: auto;
+  vertical-align: middle;  /* egy vonalba hozza a szöveggel */
+  margin: 0 4px;           /* kis térköz a szövegtől */
+  transform: translateY(-2px); /* finom korrekció, ha kicsit lejjebb áll */
 }
 
-/* kötőjel utótag –et kicsit leheletnyivel halványabban */
+/* kötőjel utótag –et */
 .impact__suffix {
   color: var(--muted-on);
   font-weight: 600;
@@ -81,6 +81,7 @@
   gap: 18px;
 }
 
+/* alap stílus: halvány szürkés háttér */
 .impact-stats__item {
   background: var(--card-bg);
   border-radius: var(--card-radius);
@@ -88,8 +89,23 @@
   padding: 18px 20px;
   text-align: center;
   color: var(--card-ink);
+  transition: transform .15s ease, box-shadow .2s ease;
 }
 
+/* középső kártya (fehér, enyhén kiemelt) */
+.impact-stats__item:nth-child(2) {
+  background: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 18px 36px rgba(0,0,0,.15);
+  z-index: 2;
+}
+
+.impact-stats__item:nth-child(2):hover {
+  transform: scale(1.05);
+  box-shadow: 0 22px 44px rgba(0,0,0,.25);
+}
+
+/* érték és cím a kártyákban */
 .impact-stats__value {
   font-size: clamp(1.6rem, 1.2rem + 1vw, 2.1rem);
   font-weight: 800;
@@ -103,10 +119,9 @@
   letter-spacing: .2px;
 }
 
-/* hover pici emelés (opcionális) */
+/* hover animáció minden kártyára */
 .impact-stats__item:hover {
   transform: translateY(-3px);
-  transition: transform .15s ease, box-shadow .2s ease;
   box-shadow: 0 22px 44px rgba(0,0,0,.2);
 }
 
