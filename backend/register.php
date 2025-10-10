@@ -1,53 +1,47 @@
 <?php
+require_once 'database_connection.php'; // Adatbázis kapcsolat betöltése
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $name = $_POST["name"] ?? '';
-    $email = $_POST["email"] ?? '';
+    $name = trim($_POST["name"] ?? '');
+    $email = trim($_POST["email"] ?? '');
     $password = $_POST["password"] ?? '';
     $repassword = $_POST["repassword"] ?? '';
 
-    // Jelszó ellenőrzése
+    // Üres mezők ellenőrzése
+    if (empty($name) || empty($email) || empty($password) || empty($repassword)) {
+        die("Kérlek, tölts ki minden mezőt!");
+    }
+
+    // Jelszavak egyezésének ellenőrzése
     if ($password !== $repassword) {
-        echo "A jelszavak nem egyeznek!";
-        exit;
+        die("A két jelszó nem egyezik!");
     }
-    // Itt jönne az adatbázisba való mentés logikája
-    echo "Sikeres regisztráció, üdvözlünk, $name!";
-    // Jelszó hashelése
+
+    // Email ellenőrzés (szintaktikailag helyes-e)
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("Érvénytelen email cím!");
+    }
+
+    // Jelszó titkosítása
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-} else {
-    echo "Hibás kérés!";
-}
-/*
-Ez egy régebbi verzióból való, egyáltalán nem mérvadó, szimplán csak arra kell hogy lássam mik voltak
-Ez egy régebbi verzióból való, egyáltalán nem mérvadó, szimplán csak arra kell hogy lássam mik voltak
-Ez egy régebbi verzióból való, egyáltalán nem mérvadó, szimplán csak arra kell hogy lássam mik voltak
 
+    try {
+        // Ellenőrizzük, hogy az email már létezik-e
+        $checkStmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $checkStmt->execute([$email]);
 
-
-// Függvény kód generálására
-function generalKod($elsoBetu)
-{
-    $karakterek = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Karakterek halmaza
-    $kod = $elsoBetu; // Kód kezdőbetűje
-    for ($i = 0; $i < 7; $i++) {
-        $kod .= $karakterek[random_int(0, strlen($karakterek) - 1)]; // Véletlenszerű karakter hozzáadása
-    }
-    return $kod;
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_POST["role"])) {
-        $role = $_POST["role"];
-        if ($role === "student") {
-            $kod = generalKod("S");
-            echo "<p>Te a <strong>Diák</strong> szerepet választottad.<br>Kódod: <strong>$kod</strong></p>";
-        } elseif ($role === "teacher") {
-            $kod = generalKod("T");
-            echo "<p>Te a <strong>Tanár</strong> szerepet választottad.<br>Kódod: <strong>$kod</strong></p>";
+        if ($checkStmt->rowCount() > 0) {
+            die("Ez az email cím már regisztrálva van!");
         }
-    } else {
-        echo "<p>Nem választottál semmit!</p>";
+
+        // Adatok beszúrása az adatbázisba
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $email, $hashedPassword]);
+
+        echo "Sikeres regisztráció, üdvözlünk, $name!";
+    } catch (PDOException $e) {
+        die("Hiba történt a mentés során: " . $e->getMessage());
     }
 }
-*/
+
 ?>
