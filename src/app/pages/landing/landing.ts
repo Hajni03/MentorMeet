@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 //layout
-import { Header } from '../../layout/header/header';
+import { HeaderComponent } from '../../layout/header/header';
 import { Footer } from '../../layout/footer/footer';
 
 //sections
@@ -16,7 +17,7 @@ import { Cta } from '../../sections/cta/cta';
   selector: 'app-landing',
   standalone: true,
   imports: [
-    Header,
+    HeaderComponent,
     Hero,
     BrandStrip,
     Features,
@@ -28,6 +29,6 @@ import { Cta } from '../../sections/cta/cta';
   templateUrl: './landing.html',
   styleUrl: './landing.scss'
 })
-export class Landing {
+export class Landing{
 
 }
