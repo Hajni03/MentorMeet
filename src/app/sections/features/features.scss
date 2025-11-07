@@ -19,12 +19,22 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 740px;
+
+  /* méret: ne legyen túl nagy, mindig befér */
+  width: clamp(260px, 28vw, 520px);
   height: auto;
-  opacity: 0.50;
+  max-width: 100%;
+
+  opacity: .5;
   pointer-events: none;
-  margin: -250px -620px;
   z-index: 0;
+
+  /* a régi nagy negatív margin helyett finom eltolás */
+  margin: 0;
+  transform: translate(
+    clamp(250px, -4vw, -12px),   /* X: kicsit „befelé csúsztatjuk” */
+    clamp(-120px, -8vw, -40px)   /* Y: felfelé toljuk */
+  );
 }
 
 /* ---- Fejléc ---- */

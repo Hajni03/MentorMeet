@@ -1,0 +1,24 @@
+<section class="how-it-works" aria-labelledby="how-title">
+  <div class="container">
+    <header class="heading">
+      <h2 id="how-title">Hogyan működik a MentorMeet?</h2>
+      <p class="subtitle">
+        Három egyszerű lépés, és máris készen állsz a konzultációra.
+      </p>
+    </header>
+
+    <!-- Szemantika: rendezett lista a lépésekhez -->
+    <ol class="steps" role="list">
+      <li class="step" *ngFor="let s of steps; index as i">
+        <div class="num" aria-hidden="true">{{ i + 1 }}</div>
+
+        <div class="icon-wrap">
+          <img [src]="s.img" [alt]="s.alt" loading="lazy" />
+        </div>
+
+        <h3 class="step-title">{{ s.title }}</h3>
+        <p class="step-desc">{{ s.desc }}</p>
+      </li>
+    </ol>
+  </div>
+</section>

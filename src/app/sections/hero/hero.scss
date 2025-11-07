@@ -160,14 +160,22 @@
 /* Bal szürke „vízfesték” folt */
 .hero__bg{ position:absolute; inset:0; z-index:0; pointer-events:none; }
 .hero__bg--left img{
-  position:absolute;
-  left:max(-170px,-9vw);
-  top:100px;
-  width:clamp(300px,30vw,500px);
-  opacity:.40;
-  transform:translate(-8px,-240px);
-}
+   position: absolute;
+  /* kevesebbet lógjon ki balra */
+  left: clamp(-40px, -5vw, -16px);
+  top: 100px;
 
+  /* kicsit kisebb, hogy biztosan beférjen */
+  width: clamp(260px, 26vw, 420px);
+
+  opacity: .40;
+
+  /* csak felfelé tolás – NINCS vízszintes eltolás */
+  transform: translateY(-200px);
+
+  /* biztosíték: sose legyen szélesebb a konténertől */
+  max-width: 100%;
+}
 /* ───────── Interakciós finomítás ───────── */
 .hero .btn,
 .hero .btn:link,
