@@ -1,1 +1,0 @@
-echo "<?php echo json_encode(['msg'=>'Hello Backend']); ?>" >

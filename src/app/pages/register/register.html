@@ -1,20 +1,31 @@
-<h2>Regisztráció teszt</h2>
+<form (ngSubmit)="onSubmit()" #regForm="ngForm">
+  <label>Név:
+    <input type="text" name="nev" [(ngModel)]="formData.nev" required />
+  </label><br />
 
-<form >
-  <div>
-    <label for="name">Név:</label>
-    <input type="text" id="name" name="name" required />
-  </div>
+  <label>Email:
+    <input type="email" name="email" [(ngModel)]="formData.email" required />
+  </label><br />
 
-  <div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required />
-  </div>
+  <label>Jelszó:
+    <input type="password" name="jelszo" [(ngModel)]="formData.jelszo" required />
+  </label><br />
 
-  <div>
-    <label for="password">Jelszó:</label>
-    <input type="password" id="password" name="password" required />
-  </div>
+  <label>Szerep:
+    <select name="szerep" [(ngModel)]="formData.szerep" required>
+      <option value="diak">Diák</option>
+      <option value="tanar">Tanár</option>
+      <option value="admin">Admin</option>
+    </select>
+  </label><br />
 
-  <button type="submit">Küldés</button>
+  <label>Iskola ID:
+    <input type="number" name="iskola_id" [(ngModel)]="formData.iskola_id" required />
+  </label><br />
+
+  <label>Osztály ID (nem kötelező):
+    <input type="number" name="osztaly_id" [(ngModel)]="formData.osztaly_id" />
+  </label><br />
+
+  <button type="submit">Regisztrálok</button>
 </form>
