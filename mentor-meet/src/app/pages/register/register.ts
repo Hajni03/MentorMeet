@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './register.scss',
 })
 export class Register {
+  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
@@ -35,20 +36,26 @@ export class Register {
   }
 
   onSubmit() {
-    if (!this.form.valid || !this.passwordsMatch) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    const payload = { ...this.form.value };
-    delete payload.jelszoUjra;
-
-    // TODO: Küldés a backendre
-    console.log('Regisztrációs adatok:', payload);
-
-    // Navigálás vagy visszajelzés
-    this.router.navigate(['/login']);
+  if (!this.form.valid || !this.passwordsMatch) {
+    this.form.markAllAsTouched();
+    return;
   }
+
+  const payload = { ...this.form.value };
+  delete payload.jelszoUjra;
+
+  this.authService.register(payload).subscribe({
+    next: (res) => {
+      console.log('Sikeres regisztráció:', res);
+      alert('Sikeres regisztráció!');
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      console.error('Hiba a regisztrációnál:', err);
+      alert('Hiba: ' + (err?.error?.message || 'Ismeretlen hiba'));
+    }
+  });
+}
 
   // DEMÓ: itt lehetne API hívás az iskolák/osztályok lekérésére
   ngOnInit() {
