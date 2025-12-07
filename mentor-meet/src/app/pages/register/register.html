@@ -31,25 +31,23 @@
     </select>
   </label>
 
-  <label>
-    Iskola:
-    <select formControlName="iskola_id">
-      <option value="" disabled selected>Válassz iskolát</option>
-      <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
-        {{ iskola.nev }}
-      </option>
-    </select>
-  </label>
+  <!-- Iskola választó -->
+  <label for="iskola">Iskola:</label>
+  <select formControlName="iskola_id" id="iskola">
+    <option value="">-- Válassz iskolát --</option>
+    <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
+      {{ iskola.nev }}
+    </option>
+  </select>
 
-  <label>
-    Osztály:
-    <select formControlName="osztaly_id">
-      <option value="" disabled selected>Válassz osztályt</option>
-      <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
-        {{ osztaly.nev }}
-      </option>
-    </select>
-  </label>
+  <label for="osztaly">Osztály:</label>
+<select formControlName="osztaly_id" id="osztaly">
+  <option value="">-- Válassz osztályt --</option>
+  <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
+    {{ osztaly.nev }}
+  </option>
+</select>
+
 
   <label>
     <input type="checkbox" formControlName="elfogadas" />
