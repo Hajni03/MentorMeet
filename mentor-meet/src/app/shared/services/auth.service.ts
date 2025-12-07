@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost/api/register.php'; // ✅ cseréld, ha máshol van
+  private apiUrl = 'http://localhost/backend/api/register.php'; // ✅ cseréld, ha máshol van
 
   constructor(private http: HttpClient) {}
 
