@@ -1,0 +1,182 @@
+// Alapvető színek és fontok
+$primary-color: #5b478d; // Sötét lila
+$secondary-color: #8c8c8c; // Szürke
+$background-light: #F5F5F0; // A szekció törtfehér háttere
+$font-stack: 'Inter', sans-serif; 
+
+.features-section {
+    background-color: $background-light;
+    padding: 60px 0;
+    font-family: $font-stack;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: "";
+        position: absolute;
+        top: -100;
+        right: -100;
+        width: 800px;
+        height: 600px;
+        background-image: url('/assets/images/szurkefolt.png'); 
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.5;
+        z-index: 0;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.features-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.2;
+
+    .logo-image {
+        // A logó kép méretezése
+        height: 100px; // Állítsd be a kívánt magasságot, hogy illeszkedjen az 'h2'-höz
+        width: auto;
+        margin-right: 8px; // Elválasztás a "– a konzultáció..." szövegtől
+    }
+    
+    .trailing-text {
+        // A maradék szöveg színe és fontja (hogy illeszkedjen a 'h2' alap stílusához)
+        color: #333; 
+        font-weight: 700;
+        font-size: 25px;
+    }
+}
+
+.features-subtitle {
+    font-size: 1.15rem;
+    color: $secondary-color;
+    margin-top: 10px;
+}
+
+// --- Előnyök lista (változatlan) ---
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .features-list-item {
+        margin: 0 15px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #555;
+        
+        .icon {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+    }
+}
+
+// --- Kártyák és Gombok Stílusa (változatlan) ---
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+
+    @media (max-width: 992px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.feature-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.card-image-wrapper {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .card-image {
+        max-width: 100%;
+        max-height: 100%;
+        height: auto;
+    }
+}
+
+.card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-description {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.card-button {
+    display: inline-block;
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: auto;
+    border: 2px solid transparent;
+
+    &.primary {
+        background-color: $primary-color;
+        color: white;
+        border-color: $primary-color;
+
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
+    }
+
+    &.secondary {
+        background-color: transparent;
+        color: $primary-color;
+        border-color: $primary-color;
+
+        &:hover {
+            background-color: $primary-color;
+            color: white;
+        }
+    }
+}
