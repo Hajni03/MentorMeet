@@ -1,0 +1,43 @@
+<div class="dashboard-wrapper">
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="assets/images/logo_mini.svg" alt="M">
+    </div>
+
+    <div class="profile-section">
+      <div class="avatar-circle">
+        <img [src]="user.avatar || 'assets/images/default-avatar.png'" alt="Profil">
+      </div>
+      <h3>{{ user.nev }}</h3>
+    </div>
+
+    <nav class="side-nav">
+      <a routerLink="/student-dashboard" routerLinkActive="active">
+        <i class="icon-profile"></i> Profil
+      </a>
+      <a routerLink="/chat" routerLinkActive="active">
+        <i class="icon-chat"></i> Chat
+      </a>
+      <a routerLink="/search" routerLinkActive="active">
+        <i class="icon-list"></i> {{ user.szerep === 'diak' ? 'Tanárok' : 'Diákok' }}
+      </a>
+    </nav>
+  </aside>
+
+  <main class="content-area">
+    <header class="top-navbar">
+      <h2 class="page-title">Profil</h2>
+      <div class="nav-actions">
+        <button class="icon-btn"><i class="icon-search"></i></button>
+        <button class="icon-btn"><i class="icon-bell"></i></button>
+        <button class="icon-btn"><i class="icon-settings"></i></button>
+        <button class="icon-btn logout" (click)="logout()">
+          <i class="icon-exit"></i> </button>
+      </div>
+    </header>
+
+    <section class="main-card">
+      <ng-content></ng-content>
+    </section>
+  </main>
+</div>

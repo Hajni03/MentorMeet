@@ -1,0 +1,14 @@
+<app-dashboard-layout>
+    <div class="welcome-box">
+        <h1>Üdvözöljük, {{ user.nev }}! 🎓</h1>
+        <p>Itt láthatja a függőben lévő kéréseket.</p>
+    </div>
+
+    <div class="requests-section">
+        <h2>Beérkező jelölések</h2>
+        <p *ngIf="requests.length === 0">Nincs új kérésed.</p>
+    </div>
+    <div>
+        <button (click)="onLogout()" class="btn-logout">Kijelentkezés</button>
+    </div>
+</app-dashboard-layout>

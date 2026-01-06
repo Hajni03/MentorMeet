@@ -1,0 +1,159 @@
+$primary-purple: #8187b1;
+$bg-color: #f5f5f0;
+$text-dark: #5a5a5a;
+
+.registration-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $bg-color;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+
+  // Dekorációs foltok (Ugyanaz, mint a login/diák oldalon)
+  .blob {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(129, 135, 177, 0.25) 0%, rgba(245, 245, 240, 0) 70%);
+    filter: blur(50px);
+    z-index: 0;
+  }
+  .blob-1 { top: -5%; left: -5%; }
+  .blob-2 { bottom: -5%; right: -5%; }
+
+  .form-card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px); // Erősebb üveghatás
+    padding: 3rem;
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+
+    h2 {
+      color: $primary-purple;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      font-size: 1.8rem;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+
+      label {
+        font-size: 0.85rem;
+        color: $text-dark;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      input, select {
+        padding: 12px 8px;
+        border: none;
+        border-bottom: 1.5px solid #d1d1d1;
+        background: transparent;
+        outline: none;
+        font-size: 1rem;
+        color: $text-dark;
+        transition: all 0.3s ease;
+
+        &:focus {
+          border-bottom-color: $primary-purple;
+          background: rgba(129, 135, 177, 0.02);
+        }
+
+        &::placeholder {
+          color: #bbb;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: $text-dark;
+      text-align: left;
+      cursor: pointer;
+      
+      input { 
+        margin-top: 3px;
+        cursor: pointer; 
+      }
+    }
+
+    .error-text {
+      color: #e74c3c;
+      font-size: 0.75rem;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    button {
+      background-color: $primary-purple;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover:not(:disabled) {
+        background-color: darken($primary-purple, 8%);
+        box-shadow: 0 8px 20px rgba(129, 135, 177, 0.3);
+        transform: translateY(-2px);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .footer-text {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: $text-dark;
+
+    &.sub {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    a {
+      color: $primary-purple;
+      text-decoration: none;
+      font-weight: 700;
+      
+      &:hover { 
+        text-decoration: underline; 
+      }
+    }
+  }
+}

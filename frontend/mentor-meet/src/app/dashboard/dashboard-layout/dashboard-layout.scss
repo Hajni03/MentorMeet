@@ -1,0 +1,52 @@
+.dashboard-wrapper {
+  display: flex;
+  height: 100vh;
+  background-color: #f8f9fa;
+
+  .sidebar {
+    width: 260px;
+    background-color: #8187b1; // MentorMeet lila
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+
+    .profile-section {
+      text-align: center;
+      margin: 2rem 0;
+
+      .avatar-circle {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        overflow: hidden;
+      }
+    }
+    
+    .side-nav a {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+      
+      &.active {
+        background: rgba(255,255,255,0.2);
+        color: white;
+      }
+    }
+  }
+
+  .top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid #eee;
+  }
+}

@@ -1,0 +1,17 @@
+<div class="school-select">
+  <h2>Válaszd ki az iskoládat</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="iskola">Iskola:</label>
+    <select id="iskola" formControlName="iskola_id" required>
+      <option value="" disabled selected>-- Válassz egy iskolát --</option>
+      <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
+        {{ iskola.nev }}
+      </option>
+    </select>
+
+    <button type="submit" [disabled]="form.invalid || isLoading()">Tovább</button>
+  </form>
+
+  <p *ngIf="isLoading()">Betöltés...</p>
+</div>

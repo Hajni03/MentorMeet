@@ -1,0 +1,65 @@
+<div class="registration-container">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="form-card">
+    <h2>Diák regisztráció</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      
+      <div class="input-group">
+        <label>Teljes név:</label>
+        <input type="text" formControlName="nev" placeholder="Kovács János" />
+      </div>
+
+      <div class="input-group">
+        <label>Email:</label>
+        <input type="email" formControlName="email" placeholder="pelda@email.hu" />
+      </div>
+
+      <div class="input-group">
+        <label>Jelszó:</label>
+        <input type="password" formControlName="jelszo" />
+      </div>
+
+      <div class="input-group">
+        <label>Jelszó megerősítése:</label>
+        <input type="password" formControlName="jelszoUjra" />
+        <div *ngIf="!passwordsMatch && form.get('jelszoUjra')?.touched" class="error-text">
+          A jelszavak nem egyeznek!
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="iskola">Iskola:</label>
+        <select formControlName="iskola_id" id="iskola">
+          <option value="">-- Válassz iskolát --</option>
+          <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
+            {{ iskola.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="osztaly">Osztály:</label>
+        <select formControlName="osztaly_id" id="osztaly">
+          <option value="">-- Válassz osztályt --</option>
+          <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
+            {{ osztaly.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" formControlName="elfogadas" id="elfogadas" />
+        <label for="elfogadas">Elfogadom az Adatvédelmi tájékoztatót</label>
+      </div>
+
+      <button type="submit" [disabled]="form.invalid">Regisztráció</button>
+    </form>
+
+    <p class="footer-text">
+      Már van fiókod? <a routerLink="/login">Jelentkezz be</a>
+    </p>
+  </div>
+</div>
