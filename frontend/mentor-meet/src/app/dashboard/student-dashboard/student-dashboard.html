@@ -1,0 +1,15 @@
+<app-dashboard-layout>
+    <div class="welcome-box">
+        <h1>Szia, {{ user?.nev }}! 👋</h1>
+        <p>Iskola: {{ user?.iskola }}</p>
+    </div>
+
+    <div class="action-cards">
+        <div class="card" routerLink="/user-list" style="cursor: pointer;">
+            <h3>Tanár keresése</h3>
+            <p>Böngéssz a mentorok között és jelöld be őket!</p>
+        </div>
+    </div>
+    
+    <button (click)="onLogout()" class="btn-logout">Kijelentkezés</button>
+</app-dashboard-layout>

@@ -1,0 +1,60 @@
+<h2>Regisztráció</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label>
+    Teljes név:
+    <input type="text" formControlName="nev" />
+  </label>
+
+  <label>
+    Email:
+    <input type="email" formControlName="email" />
+  </label>
+
+  <label>
+    Jelszó:
+    <input type="password" formControlName="jelszo" />
+  </label>
+
+  <label>
+    Jelszó megerősítése:
+    <input type="password" formControlName="jelszoUjra" />
+  </label>
+  <div *ngIf="!passwordsMatch && form.controls.jelszoUjra.touched" class="error">
+    A jelszavak nem egyeznek!
+  </div>
+
+  <label>
+    Szerep:
+    <select formControlName="szerep">
+      <option *ngFor="let role of szerepek" [value]="role">{{ role }}</option>
+    </select>
+  </label>
+
+  <!-- Iskola választó -->
+  <label for="iskola">Iskola:</label>
+  <select formControlName="iskola_id" id="iskola">
+    <option value="">-- Válassz iskolát --</option>
+    <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
+      {{ iskola.nev }}
+    </option>
+  </select>
+
+  <label for="osztaly">Osztály:</label>
+<select formControlName="osztaly_id" id="osztaly">
+  <option value="">-- Válassz osztályt --</option>
+  <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
+    {{ osztaly.nev }}
+  </option>
+</select>
+
+
+  <label>
+    <input type="checkbox" formControlName="elfogadas" />
+    Elfogadom az Adatvédelmi tájékoztatót
+  </label>
+
+  <button type="submit">Regisztráció</button>
+</form>
+
+<p>Már van fiókod? <a routerLink="/login">Jelentkezz be</a></p>

@@ -1,0 +1,134 @@
+// Színek definiálása
+$primary-color: #5b478d; // MentorMeet lila
+$review-bg-color: #7b83ae; // A képen látható szürke-lila háttér
+$logo-font: 'Playfair Display', serif;
+$font-stack: 'Inter', sans-serif; 
+
+.reviews-section {
+    background-color: $review-bg-color;
+    padding: 80px 0;
+    color: white; // Alapértelmezett szövegszín a sötét háttéren
+    font-family: $font-stack;
+}
+
+.reviews-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center; // Vertikálisan középre igazítás
+
+    @media (max-width: 992px) {
+        flex-direction: column; // Egymás alá mobil nézetben
+    }
+}
+
+// Bal oldali kép konténer
+.reviews-media {
+    flex-basis: 45%; // Kicsit nagyobb hely a képnek
+    margin-right: 50px;
+    // A képen látható nagy, lekerekített sarkú keret és árnyék
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); // Kiemelt, nagy árnyék
+
+    @media (max-width: 992px) {
+        flex-basis: auto;
+        width: 90%;
+        margin-right: 0;
+        margin-bottom: 40px;
+    }
+
+    .media-image {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+}
+
+// Jobb oldali szöveg és statisztikák
+.reviews-text-and-stats {
+    flex-basis: 55%;
+    
+    @media (max-width: 992px) {
+        flex-basis: auto;
+        text-align: center;
+    }
+}
+
+.reviews-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    
+    .logo-text {
+        font-family: $logo-font;
+        font-weight: 900;
+        font-style: italic;
+        color: white; 
+    }
+
+    @media (max-width: 992px) {
+        font-size: 2rem;
+    }
+}
+
+.reviews-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    
+    @media (max-width: 992px) {
+        margin: 0 auto 30px;
+        max-width: 600px;
+    }
+}
+
+// Statisztikai kártyák
+.stats-grid {
+    display: flex;
+    gap: 20px;
+    
+    @media (max-width: 600px) {
+        flex-direction: column; 
+        align-items: center;
+    }
+}
+
+.stat-card {
+    // Világos, törtfehér/szürke háttér a kártyáknak (mint a képen)
+    background-color: #e7e7f1; 
+    border-radius: 10px;
+    padding: 25px 15px;
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    
+    @media (max-width: 600px) {
+        width: 70%;
+        flex: none;
+    }
+}
+
+.stat-number {
+    display: block;
+    font-size: 25px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 5px;
+    color: $primary-color; // Lila a kiemeléshez
+}
+
+.stat-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+}
+.logo-image {
+        // A logó kép méretezése
+        height: 70px; // Állítsd be a kívánt magasságot, hogy illeszkedjen az 'h2'-höz
+        width: auto;
+        margin-right: 8px; // Elválasztás a "– a konzultáció..." szövegtől
+    }

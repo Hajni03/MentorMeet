@@ -1,0 +1,70 @@
+<div class="registration-container">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="form-card">
+    <h2>Tanár regisztráció</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      
+      <div class="input-group">
+        <label>Teljes név:</label>
+        <input type="text" formControlName="nev" placeholder="Dr. Kovács Péter" />
+      </div>
+
+      <div class="input-group">
+        <label>Email (iskolai email javasolt):</label>
+        <input type="email" formControlName="email" placeholder="tanar@iskola.hu" />
+      </div>
+
+      <div class="input-group">
+        <label>Jelszó:</label>
+        <input type="password" formControlName="jelszo" />
+      </div>
+
+      <div class="input-group">
+        <label>Jelszó megerősítése:</label>
+        <input type="password" formControlName="jelszoUjra" />
+        <div *ngIf="form.get('jelszoUjra')?.touched && form.errors?.['mismatch']" class="error-text">
+          A jelszavak nem egyeznek!
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="iskola">Iskola:</label>
+        <select formControlName="iskola_id" id="iskola">
+          <option [value]="null">-- Válassz iskolát --</option>
+          <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
+            {{ iskola.nev }}
+          {{ iskola.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="osztaly">Osztály (opcionális):</label>
+        <select formControlName="osztaly_id" id="osztaly">
+          <option [value]="null">-- Nincs fix osztályom / Több osztály --</option>
+          <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
+            {{ osztaly.nev }}
+          {{ osztaly.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" formControlName="elfogadas" id="elfogadas" />
+        <label for="elfogadas">Elfogadom a Tanári szabályzatot és az Adatkezelést</label>
+      </div>
+
+      <button type="submit" [disabled]="form.invalid">Tanár regisztráció</button>
+    </form>
+
+    <p class="footer-text">
+      Már van fiókod? <a routerLink="/login">Jelentkezz be</a>
+    </p>
+    <p class="footer-text sub">
+      Diák vagy? <a routerLink="/register-student">Regisztrálj itt</a>
+    </p>
+  </div>
+</div>

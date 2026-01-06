@@ -1,0 +1,117 @@
+@use "sass:color";
+
+$primary-purple: #8187b1; // MentorMeet lila
+$bg-light: #f4f5f9;
+$text-dark: #333;
+$text-gray: #777;
+
+.search-container {
+  padding: 2rem;
+  
+  h2 {
+    color: $primary-purple;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+  }
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.user-card {
+  background: white;
+  border-radius: 20px; // Figma-stílusú lekerekítés
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); // Finom árnyék
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(129, 135, 177, 0.15);
+  }
+
+  .user-info {
+    margin-bottom: 1.5rem;
+
+    .avatar-placeholder {
+      width: 70px;
+      height: 70px;
+      background: #e0e2f0;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      // Ikon helyettesítő, amíg nincs kép
+      &::after {
+        content: '👤';
+        font-size: 2rem;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: $text-dark;
+    }
+
+    p {
+      margin: 5px 0 0;
+      font-size: 0.9rem;
+      color: $text-gray;
+    }
+  }
+
+  .btn-primary {
+    width: 100%;
+    background-color: $primary-purple;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: color.adjust($primary-purple, $lightness: -10%);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+.header-with-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  .search-bar {
+    position: relative;
+    width: 300px;
+
+    input {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 15px;
+      border: 1px solid #ddd;
+      outline: none;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: #8187b1; // MentorMeet lila
+      }
+    }
+  }
+}
