@@ -1,25 +1,27 @@
-version: "3.9"
-
 services:
   frontend:
     image: node:20
     working_dir: /app
     volumes:
-      - ./frontend/mentor-meet:/app
+      - ./MentorMeet/frontend/mentor-meet:/app
+      - /app/node_modules
     ports:
       - "4200:4200"
-    command: sh -c "npm install && npm start"
+    # A --poll 2000 segít, hogy a Windows-on végzett módosításokat a Docker azonnal észlelje (hot reload)
+    command: sh -c "npm install && npx ng serve --host 0.0.0.0 --port 4200 --proxy-config proxy.conf.json --poll 2000"
+    stdin_open: true 
+    tty: true
     depends_on:
       - backend
 
   backend:
     build:
-      context: ./backend
+      context: ./MentorMeet/backend
       dockerfile: Dockerfile
     ports:
       - "8000:80"
     volumes:
-      - ./backend/:/var/www/html/
+      - ./MentorMeet/backend:/var/www/html
     depends_on:
       - db
 
