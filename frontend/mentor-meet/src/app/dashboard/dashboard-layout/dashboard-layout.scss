@@ -1,52 +1,265 @@
+// 1. ALAP ELRENDEZÉS (LAYOUT)
 .dashboard-wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: 260px 1fr; // Csak két oszlop: Bal menü + Tartalom
   height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #f0f2f5;
+  overflow: hidden;
+}
 
-  .sidebar {
-    width: 260px;
-    background-color: #8187b1; // MentorMeet lila
-    color: white;
+// 2. BAL OLDALI MENÜ (SIDEBAR)
+.sidebar {
+  background: #8187b1; // MentorMeet lila
+  color: white;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+
+  .brand {
     display: flex;
-    flex-direction: column;
-    padding: 2rem 1rem;
+    align-items: center;
+    gap: 10px;
 
-    .profile-section {
-      text-align: center;
-      margin: 2rem 0;
-
-      .avatar-circle {
-        width: 80px;
-        height: 80px;
-        background: white;
-        border-radius: 50%;
-        margin: 0 auto 1rem;
-        overflow: hidden;
-      }
+    .logo-img {
+      width: 32px;
+      height: 32px;
     }
-    
-    .side-nav a {
+
+    .brand-name {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  }
+
+  .nav-menu {
+    flex-grow: 1;
+    margin-top: 3rem;
+
+    .nav-item {
       display: flex;
       align-items: center;
-      padding: 0.8rem 1rem;
-      color: rgba(255,255,255,0.8);
+      gap: 15px;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       border-radius: 12px;
-      margin-bottom: 0.5rem;
-      
+      margin-bottom: 8px;
+      transition: all 0.2s;
+
       &.active {
-        background: rgba(255,255,255,0.2);
+        background: rgba(255, 255, 255, 0.2);
         color: white;
+        font-weight: bold;
+      }
+
+      &:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
       }
     }
   }
 
-  .top-navbar {
+  .nav-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .nav-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: white;
+      object-fit: cover;
+    }
+
+    .nav-name {
+      margin: 0;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .nav-role {
+      margin: 0;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+  }
+}
+
+// 3. FŐ TARTALMI TERÜLET
+.content-area {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem;
+  overflow: hidden;
+
+  .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      // Ikon gombok alapstílusa (Értesítés és Beállítások)
+      .icon-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.2s;
+        position: relative;
+
+        &:hover {
+          background: #e4e6eb;
+        }
+
+        .header-svg {
+          width: 24px;
+          height: 24px;
+        }
+
+        .badge {
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          background: #ff4d4d;
+          color: white;
+          font-size: 10px;
+          min-width: 17px;
+          height: 17px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #f0f2f5;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .scroll-content {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 2rem 0;
+  }
+}
+
+// 4. ÉRTESÍTÉSI DROPDOWN (Facebook stílus)
+.notification-container {
+  position: relative;
+
+  .notif-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 360px;
     background: white;
-    border-bottom: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border: 1px solid #ddd;
+    overflow: hidden;
+
+    .dropdown-header {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #1c1e21;
+      }
+    }
+
+    .notif-scroll-area {
+      max-height: 400px;
+      overflow-y: auto;
+
+      .notif-item {
+        display: flex;
+        padding: 12px;
+        gap: 12px;
+        border-bottom: 1px solid #f0f2f5;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #f8f9fa;
+        }
+
+        .item-avatar {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .item-content {
+          flex: 1;
+
+          p {
+            margin: 0 0 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #050505;
+          }
+
+          .item-actions {
+            display: flex;
+            gap: 8px;
+
+            button {
+              flex: 1;
+              padding: 6px 12px;
+              border-radius: 6px;
+              border: none;
+              font-weight: 600;
+              font-size: 13px;
+              cursor: pointer;
+              transition: filter 0.2s;
+
+              &.confirm-btn {
+                background: #1877f2;
+                color: white;
+              }
+
+              &.remove-btn {
+                background: #e4e6eb;
+                color: #050505;
+              }
+
+              &:hover {
+                filter: brightness(0.9);
+              }
+            }
+          }
+        }
+      }
+
+      .empty-notif {
+        padding: 40px 20px;
+        text-align: center;
+        color: #888;
+        font-size: 0.9rem;
+      }
+    }
   }
 }

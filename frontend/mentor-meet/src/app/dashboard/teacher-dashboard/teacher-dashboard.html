@@ -1,14 +1,132 @@
-<app-dashboard-layout>
-    <div class="welcome-box">
-        <h1>Üdvözöljük, {{ user.nev }}! 🎓</h1>
-        <p>Itt láthatja a függőben lévő kéréseket.</p>
+<div class="teacher-dashboard-wrapper">
+
+    <div class="dashboard-header-grid">
+        <div class="glass-card profile-card" *ngIf="currentUser">
+            <div class="profile-layout">
+                <div class="avatar-box">
+                    <img [src]="currentUser.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'"
+                        alt="Profil" class="main-avatar">
+                    <span class="status-pill">Oktató</span>
+                </div>
+                <div class="user-info">
+                    <h2>{{ currentUser.nev }}</h2>
+                    <p class="school-text">Iskola azonosító: {{ currentUser.iskola_id }}</p>
+                    <p class="email-text">{{ currentUser.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card reminder-card">
+            <h3>Közelgő események</h3>
+
+            <div class="event-placeholder" *ngIf="bookedSlots.length === 0">
+                <p>Nincs lefoglalt konzultációd.</p>
+            </div>
+
+            <div class="event-item" *ngFor="let slot of bookedSlots">
+                <div class="event-indicator" [ngClass]="slot.status_color"></div>
+                <div class="event-details">
+                    <p class="event-name">Konzultáció - {{ slot.diak_nev || 'Diák' }}</p>
+                    <p class="event-time">{{ slot.datum }} | {{ slot.kezdes.slice(0,5) }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="requests-section">
-        <h2>Beérkező jelölések</h2>
-        <p *ngIf="requests.length === 0">Nincs új kérésed.</p>
+    <div class="main-schedule-container glass-card">
+        <div class="container-header">
+            <div class="title-area">
+                <h3>Heti beosztásom</h3>
+                <div class="color-legend" *ngIf="!isEditMode">
+                    <span class="leg-item"><i class="dot green"></i> Szabad</span>
+                    <span class="leg-item"><i class="dot red"></i> Foglalt</span>
+                </div>
+            </div>
+            <button class="edit-toggle-btn" (click)="toggleEditMode()">
+                {{ isEditMode ? 'Bezárás' : 'Időpontok szerkesztése' }}
+            </button>
+        </div>
+
+        <div class="calendar-grid" *ngIf="!isEditMode">
+            <div class="day-col" *ngFor="let nap of hetiNapok">
+                <div class="day-label">{{ nap }}</div>
+                <div class="slot-list">
+                    <ng-container *ngFor="let slot of idopontok">
+                        <div *ngIf="getWeekday(slot.datum) === nap" class="time-pill" [ngClass]="slot.status_color">
+                            {{ slot.kezdes.slice(0,5) }} - {{ slot.befejezes.slice(0,5) }}
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-mode-area" *ngIf="isEditMode">
+
+            <div class="add-slot-container" [ngClass]="{'is-locked': mySubjects.length === 0}">
+
+                <div class="lock-overlay" *ngIf="mySubjects.length === 0">
+                    <div class="lock-content">
+                        <div class="lock-svg-box">
+                            <img src="assets/images/icons/locksvg.svg" alt="Lezárva" class="main-lock-svg">
+                        </div>
+                        <h3>Funkció lezárva</h3>
+                        <p>Időpontok rögzítéséhez előbb adj meg legalább egy tantárgyat a profilodnál!</p>
+                        <button routerLink="/teacher-profile-edit" class="go-to-profile-btn">
+                            Irány a profil szerkesztése
+                        </button>
+                    </div>
+                </div>
+
+                <div class="add-slot-box" *ngIf="mySubjects.length > 0">
+                    <h4>Új szabad konzultációs időpont</h4>
+                    <div class="form-row">
+                        <div class="input-field">
+                            <label>Dátum</label>
+                            <input type="date" [(ngModel)]="ujIdopont.datum">
+                        </div>
+                        <div class="input-field">
+                            <label>Kezdés</label>
+                            <input type="time" [(ngModel)]="ujIdopont.kezdes">
+                        </div>
+                        <div class="input-field">
+                            <label>Befejezés</label>
+                            <input type="time" [(ngModel)]="ujIdopont.befejezes">
+                        </div>
+                        <button class="save-btn" (click)="addIdopont()">Hozzáadás</button>
+                    </div>
+                    <p class="helper-text">Az időpont alapértelmezetten általános konzultációként kerül rögzítésre.</p>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="manage-list" *ngIf="mySubjects.length > 0">
+                <h4>Beállított időpontok kezelése</h4>
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Dátum</th>
+                            <th>Időpont</th>
+                            <th>Státusz</th>
+                            <th>Művelet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let slot of idopontok">
+                            <td>{{ slot.datum }}</td>
+                            <td>{{ slot.kezdes.slice(0,5) }} - {{ slot.befejezes.slice(0,5) }}</td>
+                            <td>
+                                <span class="status-badge" [ngClass]="slot.status_color">
+                                    {{ slot.diak_id ? 'FOGLALT' : 'SZABAD' }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="delete-btn" (click)="deleteIdopont(slot.id)">Törlés</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div>
-        <button (click)="onLogout()" class="btn-logout">Kijelentkezés</button>
-    </div>
-</app-dashboard-layout>
+</div>

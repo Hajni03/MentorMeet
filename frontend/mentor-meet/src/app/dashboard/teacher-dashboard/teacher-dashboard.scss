@@ -1,16 +1,253 @@
-.btn-logout {
-  background-color: #8187b1; // A MentorMeet lila színe
+$primary-purple: #8187b1;
+$success-green: #00b894;
+$error-red: #ff7675;
+$gray-muted: #b2bec3;
+$bg-light: #f4f5f9;
+
+.teacher-dashboard-wrapper {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+// Közös kártya stílus
+.glass-card {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+// 1. FELSŐ SZEKCIÓ
+.dashboard-header-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+
+  .profile-layout {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    .avatar-box {
+      position: relative;
+
+      .main-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid $bg-light;
+      }
+
+      .status-pill {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: $success-green;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
+// 2. NAPTÁR RÁCS
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-top: 1.5rem;
+
+  .day-col {
+    background: rgba($bg-light, 0.5);
+    border-radius: 16px;
+    padding: 10px;
+    min-height: 200px;
+
+    .day-label {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: $primary-purple;
+    }
+  }
+}
+
+// IDŐPONT TABLETTÁK (Pills)
+.time-pill {
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  border-left: 4px solid transparent;
+
+  &.green {
+    background: #e6f7f1;
+    color: $success-green;
+    border-left-color: $success-green;
+  }
+
+  &.red {
+    background: #fdeaea;
+    color: $error-red;
+    border-left-color: $error-red;
+  }
+
+  &.gray {
+    background: #f0f2f5;
+    color: $gray-muted;
+    border-left-color: $gray-muted;
+    opacity: 0.7;
+  }
+}
+
+// 3. SZERKESZTŐ FELÜLET
+.edit-mode-area {
+  .add-slot-box {
+    background: $bg-light;
+    padding: 1.5rem;
+    border-radius: 18px;
+    margin-bottom: 2rem;
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+
+      .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+
+        input {
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid #ddd;
+        }
+      }
+    }
+  }
+
+  .slot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+
+    .status-text {
+      font-weight: bold;
+
+      &.green {
+        color: $success-green;
+      }
+
+      &.red {
+        color: $error-red;
+      }
+    }
+  }
+}
+
+// GOMBOK
+.edit-toggle-btn {
+  background: $primary-purple;
   color: white;
-  padding: 12px 24px;
   border: none;
+  padding: 10px 20px;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  margin-top: 25px;
-  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #6a6f91;
-    box-shadow: 0 4px 12px rgba(129, 135, 177, 0.3);
+    opacity: 0.9;
+  }
+}
+
+.delete-btn {
+  background: #fff0f0;
+  color: $error-red;
+  border: 1px solid $error-red;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: $error-red;
+    color: white;
+  }
+}
+
+//Lockolt időpont foglalás
+.lock-svg-box {
+  background: #fdeaea; // Halvány pirosas háttér a körnek
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+
+  .main-lock-svg {
+    width: 40px;
+    height: 40px;
+    // Ha sötét az SVG-d és színeset szeretnél (pl. MentorMeet lila):
+    // filter: invert(56%) sepia(11%) saturate(1005%) hue-rotate(196deg) brightness(94%) contrast(88%);
+  }
+}
+
+.add-slot-container {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+
+  &.is-locked {
+    .add-slot-box {
+      filter: blur(4px);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+}
+
+.lock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .lock-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 350px;
+    border: 1px solid #eee;
+
+    h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    p {
+      color: #777;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
   }
 }
