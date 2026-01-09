@@ -7,7 +7,6 @@ services:
       - /app/node_modules
     ports:
       - "4200:4200"
-    # A --poll 2000 segít, hogy a Windows-on végzett módosításokat a Docker azonnal észlelje (hot reload)
     command: sh -c "npm install && npx ng serve --host 0.0.0.0 --port 4200 --proxy-config proxy.conf.json --poll 2000"
     stdin_open: true 
     tty: true
@@ -31,6 +30,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mentormeet
+      MYSQL_USER: mentormeet
+      MYSQL_PASSWORD: mentormeet
     volumes:
       - db-data:/var/lib/mysql
     ports:
