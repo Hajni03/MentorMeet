@@ -1,0 +1,67 @@
+<div class="profile-edit-wrapper">
+  <div class="profile-grid">
+    
+    <div class="glass-card left-column">
+      <h3>👤 Személyes adatok</h3>
+      
+      <div class="avatar-section">
+        <div class="avatar-preview">
+          <img [src]="currentUser?.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" alt="Avatar">
+          <label for="file-upload" class="upload-label">
+            📸
+          </label>
+        </div>
+        <input id="file-upload" type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
+        <p class="upload-text">Profilkép módosítása</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Telefonszám</label>
+          <input type="text" [(ngModel)]="currentUser.telefonszam" placeholder="+36 30 123 4567">
+        </div>
+        <div class="input-group">
+          <label>Születési dátum</label>
+          <input type="date" [(ngModel)]="currentUser.szuletes_datum">
+        </div>
+        <div class="input-group full-width">
+          <label>Bemutatkozás (Bio)</label>
+          <textarea [(ngModel)]="currentUser.bemutatkozas" rows="5" placeholder="Mesélj magadról pár mondatban..."></textarea>
+        </div>
+      </div>
+
+      <button (click)="saveDetails()" class="btn-save">Adatok mentése</button>
+    </div>
+
+    <div class="glass-card right-column">
+      <h3>📚 Oktatott tantárgyak</h3>
+      <p class="section-desc">Add meg, mely tárgyakból tudsz segíteni a diákoknak.</p>
+      
+      <div class="add-subject-box">
+        <select [(ngModel)]="selectedSubjectId" class="modern-select">
+          <option value="" disabled selected>Tantárgy választása...</option>
+          <option *ngFor="let s of allSubjects" [value]="s.id">{{s.nev}}</option>
+        </select>
+        <button (click)="addSubject()" class="btn-add">Hozzáadás</button>
+      </div>
+
+      <div class="subject-tags">
+        <div *ngFor="let sub of mySubjects" class="tag">
+          {{sub.tantargy_nev}}
+          <span class="remove" (click)="deleteSubject(sub.id)">✕</span>
+        </div>
+      </div>
+
+      <div class="empty-info" *ngIf="mySubjects.length === 0">
+        <p>⚠️ Legalább egy tantárgyat meg kell adnod a naptár használatához!</p>
+      </div>
+      
+      <div class="dashboard-link-box">
+         <button routerLink="/teacher-dashboard" class="btn-dash" [disabled]="mySubjects.length === 0">
+           Tovább a naptáramhoz →
+         </button>
+      </div>
+    </div>
+
+  </div>
+</div>

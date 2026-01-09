@@ -1,43 +1,78 @@
 <div class="dashboard-wrapper">
   <aside class="sidebar">
-    <div class="logo-section">
-      <img src="assets/images/logo_mini.svg" alt="M">
+    <div class="brand">
+      <img src="assets/images/egyszeru-logo.png" alt="M" class="logo-img">
+      <span class="brand-name">MentorMeet</span>
     </div>
 
-    <div class="profile-section">
-      <div class="avatar-circle">
-        <img [src]="user.avatar || 'assets/images/default-avatar.png'" alt="Profil">
-      </div>
-      <h3>{{ user.nev }}</h3>
-    </div>
+    <nav class="nav-menu">
+      <a routerLink="/user-list" routerLinkActive="active" class="nav-item">
+        <img src="assets/images/icons/searchsvg.svg" class="nav-svg" alt="Search">
+        <span>Keresés</span>
+      </a>
 
-    <nav class="side-nav">
-      <a routerLink="/student-dashboard" routerLinkActive="active">
-        <i class="icon-profile"></i> Profil
+      <a [routerLink]="currentUser?.szerep === 'tanar' ? '/teacher-dashboard' : '/student-dashboard'" 
+         routerLinkActive="active" class="nav-item">
+        <img src="assets/images/icons/profilesvg.svg" class="nav-svg" alt="Profile">
+        <span>Profil</span>
       </a>
-      <a routerLink="/chat" routerLinkActive="active">
-        <i class="icon-chat"></i> Chat
-      </a>
-      <a routerLink="/search" routerLinkActive="active">
-        <i class="icon-list"></i> {{ user.szerep === 'diak' ? 'Tanárok' : 'Diákok' }}
+
+      <a routerLink="/chat" routerLinkActive="active" class="nav-item">
+        <img src="assets/images/icons/chatsvg.svg" class="nav-svg" alt="Chat">
+        <span>Chat</span>
       </a>
     </nav>
+
+    <div class="nav-user-info" *ngIf="currentUser">
+      <img src="assets/images/profilkep_placeholder.jpg" class="nav-avatar">
+      <div class="text-info">
+        <p class="nav-name">{{ currentUser.nev }}</p>
+        <p class="nav-role">{{ currentUser.szerep === 'diak' ? 'Tanuló' : 'Oktató' }}</p>
+      </div>
+    </div>
   </aside>
 
   <main class="content-area">
-    <header class="top-navbar">
-      <h2 class="page-title">Profil</h2>
-      <div class="nav-actions">
-        <button class="icon-btn"><i class="icon-search"></i></button>
-        <button class="icon-btn"><i class="icon-bell"></i></button>
-        <button class="icon-btn"><i class="icon-settings"></i></button>
-        <button class="icon-btn logout" (click)="logout()">
-          <i class="icon-exit"></i> </button>
+    <header class="content-header">
+      <div class="header-left">
+        <h1>{{ currentUser?.szerep === 'tanar' ? 'Profil szerkesztése' : 'Tanulói Portál' }}</h1>
+      </div>
+
+      <div class="header-right">
+        <div class="notification-container">
+          <button class="icon-btn" (click)="toggleNotifications()">
+            <img src="assets/images/icons/notificationsvg.svg" alt="Notifications" class="header-svg">
+            <span class="badge" *ngIf="pendingRequests.length">{{ pendingRequests.length }}</span>
+          </button>
+
+          <div class="notif-dropdown" *ngIf="isNotificationOpen">
+            <div class="dropdown-header">
+              <h3>Értesítések</h3>
+            </div>
+            <div class="notif-scroll-area">
+              <div *ngFor="let req of pendingRequests" class="notif-item">
+                <img src="assets/images/profilkep_placeholder.jpg" class="item-avatar">
+                <div class="item-content">
+                  <p><strong>{{ req.nev }}</strong> kapcsolódni szeretne</p>
+                  <div class="item-actions">
+                    <button (click)="handleRequest(req.request_id, 'accepted')" class="confirm-btn">Elfogadás</button>
+                    <button (click)="handleRequest(req.request_id, 'rejected')" class="remove-btn">Elutasítás</button>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="pendingRequests.length === 0" class="empty-notif">Nincs új értesítés.</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="icon-btn" (click)="goToProfileEdit()">
+          <img src="assets/images/icons/settingssvg.svg" alt="Settings" class="header-svg">
+        </button>
       </div>
     </header>
 
-    <section class="main-card">
-      <ng-content></ng-content>
-    </section>
+    <div class="scroll-content">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 </div>

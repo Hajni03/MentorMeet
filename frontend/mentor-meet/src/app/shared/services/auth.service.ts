@@ -36,18 +36,17 @@ export class AuthService {
   }
 
   //Kapcsolatok kezelése - ismerősnek jelölések
-  // auth.service.ts
-
-  addContact(diakId: number, tanarId: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/add_contact.php`, {
-      diak_id: diakId,
-      tanar_id: tanarId
-    });
-  }
 
   //Tanárok, diákok lekérdezése
   getUsers(currentId: number, role: string, search: string = ''): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/get_users.php?current_id=${currentId}&role=${role}&search=${search}`);
+  }
+  //Barátnak jelölések
+   addContact(diakId: number, tanarId: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/add_contact.php`, {
+      diak_id: diakId,
+      tanar_id: tanarId
+    });
   }
 
 }

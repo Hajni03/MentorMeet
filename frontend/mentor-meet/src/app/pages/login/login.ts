@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'; // inject hozzáadva a modernebb kódért
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -12,7 +12,6 @@ import { AuthService } from '../../shared/services/auth.service';
   styleUrls: ['./login.scss']
 })
 export class Login {
-  // 1. A formot inicializáljuk a konstruktor előtt vagy inject-tel
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -27,23 +26,26 @@ export class Login {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res: any) => {
-          // Ellenőrizzük, hogy jött-e user adat
           if (res && res.user) {
             console.log('Sikeres belépés:', res.user);
             
             // Adatok mentése a böngészőbe
             localStorage.setItem('user', JSON.stringify(res.user));
 
-            // Szerepkör alapú irányítás
+            // SZEREPKÖR ALAPÚ IRÁNYÍTÁS MÓDOSÍTÁSA
             if (res.user.szerep === 'tanar') {
-              this.router.navigate(['/teacher-dashboard']);
-            } else {
+              // A naptár helyett mostantól a profil szerkesztőbe küldjük, 
+              // hogy kényszerítsük a tantárgyválasztást
+              this.router.navigate(['/teacher-profile-edit']);
+            } else if (res.user.szerep === 'diak') {
               this.router.navigate(['/student-dashboard']);
+            } else {
+              // Biztonsági tartalék, ha lenne más szerepkör
+              this.router.navigate(['/']);
             }
           }
         },
         error: (err: any) => {
-          // Részletesebb hibaüzenet kezelés
           console.error('Login hiba:', err);
           alert(err.error?.message || 'Hibás belépési adatok vagy szerverhiba!');
         }
