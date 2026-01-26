@@ -29,6 +29,13 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 // Jelszó ellenőrzése
 if ($user && password_verify($jelszo, $user['jelszo'])) {
     // SIKERES BELÉPÉS
+    // --Online státusz frissítése ---
+    $updateStmt = $pdo->prepare("UPDATE felhasznalok SET is_online = 1 WHERE id = ?");
+    $updateStmt->execute([$user['id']]);
+    
+    // Frissítsük a $user tömböt is, hogy a visszaküldött adatokban is 1-es legyen
+    $user['is_online'] = 1;
+    
     // Biztonsági okokból a jelszót ne küldjük vissza!
     unset($user['jelszo']);
     
@@ -37,6 +44,8 @@ if ($user && password_verify($jelszo, $user['jelszo'])) {
         'message' => 'Sikeres bejelentkezés.',
         'user' => $user
     ]);
+
+
 } else {
     // SIKERTELEN BELÉPÉS
     http_response_code(401);

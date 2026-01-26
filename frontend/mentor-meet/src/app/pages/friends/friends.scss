@@ -1,0 +1,118 @@
+.friends-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .header-section {
+        margin-bottom: 30px;
+
+        h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+        }
+    }
+}
+
+.friends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.friend-card {
+    background: white;
+    border-radius: 20px; // A Dashboardon is ilyen kerek
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); // Finom árnyék
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.card-left {
+    position: relative;
+
+    .friend-avatar {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #f0f2f5;
+    }
+
+    .status-indicator {
+        position: absolute;
+        bottom: 5px;
+        right: 0;
+        width: 14px;
+        height: 14px;
+        background: #bdc3c7; // Alapértelmezett szürke (offline)
+        border: 2px solid white;
+        border-radius: 50%;
+        transition: background 0.3s;
+
+        &.online {
+            background: #2ecc71; // Világító zöld (online)
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+        }
+    }
+}
+
+.card-info {
+    flex: 1;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .role-text {
+        margin: 4px 0 0;
+        font-size: 14px;
+        color: #8e44ad; // A MentorMeet lila színe
+        font-weight: 500;
+    }
+}
+
+.chat-btn {
+    background: #f3f0ff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 12px;
+    color: #8e44ad;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    img {
+        width: 18px;
+        filter: invert(34%) sepia(85%) saturate(1435%) hue-rotate(244deg) brightness(81%) contrast(92%);
+    }
+
+    &:hover {
+        background: #8e44ad;
+        color: white;
+
+        img {
+            filter: brightness(0) invert(1);
+        }
+    }
+}
+
+.no-friends {
+    text-align: center;
+    margin-top: 100px;
+    color: #95a5a6;
+    font-style: italic;
+}

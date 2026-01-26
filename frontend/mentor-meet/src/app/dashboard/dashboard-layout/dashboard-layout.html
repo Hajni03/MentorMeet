@@ -11,8 +11,8 @@
         <span>Keresés</span>
       </a>
 
-      <a [routerLink]="currentUser?.szerep === 'tanar' ? '/teacher-dashboard' : '/student-dashboard'" 
-         routerLinkActive="active" class="nav-item">
+      <a [routerLink]="currentUser?.szerep === 'tanar' ? '/teacher-dashboard' : '/student-dashboard'"
+        routerLinkActive="active" class="nav-item">
         <img src="assets/images/icons/profilesvg.svg" class="nav-svg" alt="Profile">
         <span>Profil</span>
       </a>
@@ -21,7 +21,14 @@
         <img src="assets/images/icons/chatsvg.svg" class="nav-svg" alt="Chat">
         <span>Chat</span>
       </a>
+
+      <a routerLink="/friends" routerLinkActive="active" class="nav-item">
+        <img src="assets/images/icons/friendssvg.svg" class="nav-svg" alt="Friends">
+        <span>Ismerősök</span>
+      </a>
     </nav>
+
+
 
     <div class="nav-user-info" *ngIf="currentUser">
       <img src="assets/images/profilkep_placeholder.jpg" class="nav-avatar">
@@ -40,7 +47,7 @@
 
       <div class="header-right">
         <div class="notification-container">
-          <button class="icon-btn" (click)="toggleNotifications()">
+          <button class="icon-btn" (click)="toggleNotifications($event)">
             <img src="assets/images/icons/notificationsvg.svg" alt="Notifications" class="header-svg">
             <span class="badge" *ngIf="pendingRequests.length">{{ pendingRequests.length }}</span>
           </button>
@@ -53,8 +60,12 @@
               <div *ngFor="let req of pendingRequests" class="notif-item">
                 <img src="assets/images/profilkep_placeholder.jpg" class="item-avatar">
                 <div class="item-content">
-                  <p><strong>{{ req.nev }}</strong> kapcsolódni szeretne</p>
-                  <div class="item-actions">
+                  <p>
+                    <strong>{{ req.nev || req.tanar_neve }}</strong>
+                    {{ currentUser?.szerep === 'tanar' ? 'kapcsolódni szeretne' : 'elfogadta a kérésedet' }}
+                  </p>
+
+                  <div class="item-actions" *ngIf="currentUser?.szerep === 'tanar'">
                     <button (click)="handleRequest(req.request_id, 'accepted')" class="confirm-btn">Elfogadás</button>
                     <button (click)="handleRequest(req.request_id, 'rejected')" class="remove-btn">Elutasítás</button>
                   </div>
@@ -65,9 +76,31 @@
           </div>
         </div>
 
-        <button class="icon-btn" (click)="goToProfileEdit()">
-          <img src="assets/images/icons/settingssvg.svg" alt="Settings" class="header-svg">
-        </button>
+        <div class="settings-menu-container">
+          <button class="icon-btn" (click)="toggleSettingsMenu($event)">
+            <img src="assets/images/icons/settingssvg.svg" alt="Settings" class="header-svg">
+          </button>
+
+          <div class="settings-dropdown" *ngIf="isSettingsMenuOpen">
+            <div class="dropdown-item" (click)="goToProfileEdit()">
+              <img src="assets/images/icons/privacysett.svg" class="dropdown-svg">
+              <span>Beállítások és adatvédelem</span>
+            </div>
+
+            <div class="dropdown-item" (click)="toggleDarkMode()">
+              <img [src]="isDarkMode ? 'assets/images/icons/sun.svg' : 'assets/images/icons/moon.svg'"
+                class="dropdown-svg">
+              <span>{{ isDarkMode ? 'Világos mód' : 'Sötét mód' }}</span>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="dropdown-item logout-item" (click)="logout()">
+              <img src="assets/images/icons/logout.svg" class="dropdown-svg logout-svg">
+              <span>Kijelentkezés</span>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 

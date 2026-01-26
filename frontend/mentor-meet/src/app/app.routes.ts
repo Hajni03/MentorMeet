@@ -14,6 +14,7 @@ import { StudentProfileEdit } from './dashboard/student-profile-edit/student-pro
 import { authGuard } from './shared/guards/auth-guard';
 import { UserListComponent } from './user-list/user-list';
 import { DashboardLayoutComponent } from './dashboard/dashboard-layout/dashboard-layout'; // <--- Importáld be!
+import { Friends } from './pages/friends/friends';
 
 export const routes: Routes = [
     // PUBLIKUS OLDALAK (Nincs navbar/sidebar)
@@ -38,6 +39,7 @@ export const routes: Routes = [
             { path: 'teacher-profile-edit', component: TeacherProfileEditComponent },
             { path: 'student-profile-edit', component: StudentProfileEdit },
             { path: 'user-list', component: UserListComponent },
+            {path: 'friends', component: Friends}
         ]
     },
 
