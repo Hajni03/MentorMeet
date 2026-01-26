@@ -1,0 +1,28 @@
+<div class="friends-container">
+  <div class="header-section">
+    <h2>Ismerőseim ({{ friends.length }})</h2>
+  </div>
+
+  <div class="friends-grid">
+    <div *ngFor="let friend of friends" class="friend-card">
+      <div class="card-left">
+        <img [src]="friend.profilkep_eres || 'assets/images/profilkep_placeholder.jpg'" class="friend-avatar">
+        <span class="status-indicator" [class.online]="friend.is_online == 1"></span>
+      </div>
+      <div class="card-info">
+        <h3>{{ friend.nev }}</h3>
+        <p class="role-text">{{ friend.szerep === 'tanar' ? 'Oktató' : 'Tanuló' }}</p>
+      </div>
+      <div class="card-actions">
+        <button class="chat-btn">
+          <img src="assets/images/icons/chatsvg.svg" alt="Chat">
+          Üzenet
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="friends.length === 0" class="no-friends">
+    <p>Még nincsenek visszaigazolt ismerőseid.</p>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 // 1. ALAP ELRENDEZÉS (LAYOUT)
 .dashboard-wrapper {
   display: grid;
-  grid-template-columns: 260px 1fr; // Csak két oszlop: Bal menü + Tartalom
+  grid-template-columns: 260px 1fr;
   height: 100vh;
   background-color: #f0f2f5;
   overflow: hidden;
@@ -20,6 +20,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 3rem;
 
     .logo-img {
       width: 32px;
@@ -34,7 +35,6 @@
 
   .nav-menu {
     flex-grow: 1;
-    margin-top: 3rem;
 
     .nav-item {
       display: flex;
@@ -47,14 +47,29 @@
       margin-bottom: 8px;
       transition: all 0.2s;
 
+      .nav-svg {
+        width: 20px;
+        height: 20px;
+        filter: brightness(0) invert(1);
+        opacity: 0.8;
+      }
+
       &.active {
         background: rgba(255, 255, 255, 0.2);
         color: white;
         font-weight: bold;
+
+        .nav-svg {
+          opacity: 1;
+        }
       }
 
       &:hover:not(.active) {
         background: rgba(255, 255, 255, 0.1);
+
+        .nav-svg {
+          opacity: 1;
+        }
       }
     }
   }
@@ -75,15 +90,15 @@
     }
 
     .nav-name {
-      margin: 0;
       font-weight: 600;
       font-size: 0.9rem;
+      margin: 0;
     }
 
     .nav-role {
-      margin: 0;
       font-size: 0.75rem;
       opacity: 0.7;
+      margin: 0;
     }
   }
 }
@@ -114,7 +129,6 @@
       align-items: center;
       gap: 10px;
 
-      // Ikon gombok alapstílusa (Értesítés és Beállítások)
       .icon-btn {
         background: none;
         border: none;
@@ -163,103 +177,235 @@
   }
 }
 
-// 4. ÉRTESÍTÉSI DROPDOWN (Facebook stílus)
-.notification-container {
+// 4. DROPDOWN KONTÉNEREK
+.notification-container,
+.settings-menu-container {
   position: relative;
+}
 
-  .notif-dropdown {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    width: 360px;
+// ÉRTESÍTÉSI DROPDOWN
+.notif-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 360px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    border: 1px solid #ddd;
-    overflow: hidden;
 
-    .dropdown-header {
-      padding: 15px;
-      border-bottom: 1px solid #eee;
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #1c1e21;
+      font-weight: 700;
+    }
+  }
 
-      h3 {
-        margin: 0;
-        font-size: 1.1rem;
-        color: #1c1e21;
-      }
+  .notif-scroll-area {
+    max-height: 380px;
+    overflow-y: auto;
+    background: #fff;
+
+    &::-webkit-scrollbar {
+      width: 6px;
     }
 
-    .notif-scroll-area {
-      max-height: 400px;
-      overflow-y: auto;
+    &::-webkit-scrollbar-thumb {
+      background: #bcc0c4;
+      border-radius: 10px;
+    }
 
-      .notif-item {
-        display: flex;
-        padding: 12px;
-        gap: 12px;
-        border-bottom: 1px solid #f0f2f5;
-        transition: background 0.2s;
+    .notif-item {
+      display: flex;
+      padding: 12px;
+      gap: 12px;
+      border-bottom: 1px solid #f0f2f5;
+      transition: background 0.2s;
 
-        &:hover {
-          background: #f8f9fa;
+      &:hover {
+        background: #f2f3f5;
+      }
+
+      .item-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .item-content {
+        flex: 1;
+
+        p {
+          margin: 0 0 8px 0;
+          font-size: 0.9rem;
+          line-height: 1.4;
+          color: #050505;
         }
 
-        .item-avatar {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
+        .item-actions {
+          display: flex;
+          gap: 8px;
 
-        .item-content {
-          flex: 1;
+          button {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
 
-          p {
-            margin: 0 0 8px 0;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            color: #050505;
-          }
+            &.confirm-btn {
+              background: #1877f2;
+              color: white;
+            }
 
-          .item-actions {
-            display: flex;
-            gap: 8px;
-
-            button {
-              flex: 1;
-              padding: 6px 12px;
-              border-radius: 6px;
-              border: none;
-              font-weight: 600;
-              font-size: 13px;
-              cursor: pointer;
-              transition: filter 0.2s;
-
-              &.confirm-btn {
-                background: #1877f2;
-                color: white;
-              }
-
-              &.remove-btn {
-                background: #e4e6eb;
-                color: #050505;
-              }
-
-              &:hover {
-                filter: brightness(0.9);
-              }
+            &.remove-btn {
+              background: #e4e6eb;
+              color: #050505;
             }
           }
         }
       }
+    }
+  }
+}
 
-      .empty-notif {
-        padding: 40px 20px;
-        text-align: center;
-        color: #888;
-        font-size: 0.9rem;
+// ÉRTESÍTÉSI DROPDOWN JAVÍTÁSA
+.notif-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 360px; // Fix szélesség, hogy ne nyúljon el
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    background: white;
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #1c1e21;
+      font-weight: 700;
+      text-align: left; // Balra zárt fejléc
+    }
+  }
+
+  .notif-scroll-area {
+    max-height: 400px; // Itt korlátozzuk a magasságot
+    overflow-y: auto;
+    background: #fff;
+
+    // Ha nincs értesítés, ez a stílus felel a szövegért
+    .empty-notif {
+      padding: 20px;
+      text-align: left; // Vagy center, ízlés szerint
+      color: #65676b;
+      font-size: 0.95rem;
+      border-top: 1px solid #f0f2f5;
+    }
+
+    .notif-item {
+      display: flex;
+      padding: 12px;
+      gap: 12px;
+      border-bottom: 1px solid #f0f2f5;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f2f3f5;
+      }
+
+      .item-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .item-content {
+        flex: 1;
+        text-align: left;
+
+        p {
+          margin: 0;
+          font-size: 0.9rem;
+          line-height: 1.4;
+          color: #050505;
+        }
       }
     }
+  }
+}
+
+// BEÁLLÍTÁSOK DROPDOWN - Ez hiányzott vagy hibás volt!
+.settings-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border: 1px solid #ddd;
+  padding: 8px 0;
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #050505;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      background: #f2f3f5;
+    }
+
+    .dropdown-svg {
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+    }
+
+    &.logout-item {
+      color: #dc3545;
+
+      .dropdown-svg {
+        filter: invert(21%) sepia(100%) saturate(3500%) hue-rotate(340deg) brightness(90%) contrast(100%);
+      }
+    }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 8px 16px;
   }
 }

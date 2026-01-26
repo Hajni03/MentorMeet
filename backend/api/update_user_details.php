@@ -26,8 +26,21 @@ if (!empty($data['id'])) {
             'bio' => $data['bemutatkozas'] ?? null,
             'id' => $data['id']
         ]);
+        $count = $stmt->rowCount(); // Megnézzük, hány sor frissült
+
+    if ($count > 0) {
+        echo json_encode([
+            "success" => true,
+            "message" => "Profil sikeresen frissítve! ($count sor módosult)"
+        ]);
+    } else {
+        echo json_encode([
+            "success" => true, 
+            "message" => "A kérés sikeres, de az adatbázisban nem történt módosítás. (Lehet, hogy az adatok megegyeznek a régivel?)"
+        ]);
+    }
         
-        echo json_encode(["message" => "Profil sikeresen frissítve!", "success" => true]);
+      //echo json_encode(["message" => "Profil sikeresen frissítve!", "success" => true]);
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(["message" => "Adatbázis hiba: " . $e->getMessage()]);
