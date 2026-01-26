@@ -1,0 +1,194 @@
+/* Szekció alapok */
+.how-it-works {
+  padding: 5px 0;
+  background-color: #F5F5F0;
+  text-align: center;
+}
+
+/* Fejléc ikon és szöveg */
+.section-header {
+  margin-bottom: 60px;
+}
+
+.header-icon {
+  width: 240px;
+  margin-bottom: -20px;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.section-header p {
+  color: #777;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+/* Lépések elrendezése */
+.steps-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.step-item {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* A kis sorszám a kör szélén */
+.step-number {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  position: absolute;     /* Abszolút pozícionálás a pontos helyzetért */
+  top: 5px;               /* A kör tetejére igazítva */
+  left: 5px;
+  z-index: 3;
+}
+
+/* A szaggatott kör az ikon körül */
+.step-icon-wrapper {
+  width: 150px;           /* 120px-ről 220px-re növelve */
+  height: 150px;          /* 120px-ről 220px-re növelve */
+  border: 1.5px dashed #d1d5db; 
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F5F5F5;
+  margin-bottom: 30px;    /* Kicsit több hely a szöveg előtt */
+  position: relative;
+}
+
+.step-icon-wrapper img {
+  width: 160px;           /* 160px szélesség a látványos megjelenésért */
+  height: 160px;          /* Fix magasság az arányok megőrzéséhez */
+  object-fit: contain; 
+  display: block;
+}
+
+/* Szövegek a lépések alatt */
+.step-item h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.step-item p {
+  font-size: 0.95rem;
+  color: #888;
+  line-height: 1.5;
+  padding: 0 15px;
+  margin-bottom: 20px;
+}
+
+/* A szaggatott nyilak a lépések között */
+.step-arrow {
+  flex: 0 0 200px;        /* Több vízszintes hely a nyilaknak */
+  height: 220px;          /* A körök magasságához igazítva */
+  background-image: url('/assets/images/icons/Arrow.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Mobilos nézet */
+@media (max-width: 768px) {
+  .steps-row {
+    flex-direction: column;
+    gap: 50px;
+  }
+  .step-arrow {
+    display: none; /* Mobilon ne zavarjon a nyíl */
+  }
+}
+
+.cta-banner {
+  background-color: #8c96b8; 
+  /* KESKENYEBB SECTION: a paddinget 100px-ről 60px-re vettem */
+  padding: 40px 0; 
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  /* FEHÉR SZÖVEG: minden szöveg fehér lesz alapból */
+  color: #ffffff; 
+}
+
+/* KISEBB FOLTOK */
+.cta-blob {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  /* 400px-ről 280px-re csökkentve */
+  width: 200px; 
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cta-blob--left {
+  /* Kisebb folthoz közelebb húzzuk a széléhez */
+  left: 0px; 
+}
+
+.cta-blob--right {
+  right: 0px;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* NAGYOBB SZÖVEGMÉRET */
+.cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  /* 2.8rem-ről 3.2rem-re növelve */
+  font-size: 3.2rem; 
+  font-weight: 300;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  color: #ffffff; /* Biztonság kedvéért itt is fehér */
+}
+
+.cta-subtitle {
+  /* 1.3rem-ről 1.5rem-re növelve */
+  font-size: 1.5rem; 
+  margin-bottom: 35px;
+  color: #ffffff;
+  opacity: 1; /* Hogy ne legyen szürke a fehér felett */
+}
+
+/* REGISZTRÁLJ GOMB - változatlan sötét szín, fehér szöveggel */
+.btn--cta {
+  background-color: #434c76;
+  color: #ffffff;
+  padding: 18px 28px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
