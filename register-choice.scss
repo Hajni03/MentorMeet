@@ -1,0 +1,327 @@
+/* --- 1. Alapbeállítások & Betűtípus --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  overflow-x: hidden;
+  /* A foltok miatt fontos, ne legyen vízszintes görgetés */
+}
+
+.navbar {
+    background-color: #F5F5F0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    &__container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    &__logo img {
+        height: 40px;
+    }
+
+    &__menu {
+        display: flex;
+        list-style: none;
+        gap: 1.5rem;
+
+        li a {
+            text-decoration: none;
+            color: #1e1e1e;
+            font-weight: 500;
+            transition: color 0.3s;
+
+            &:hover {
+                color: #55559b;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: 1rem;
+
+        .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+
+            &--primary {
+                background-color: #55559b;
+                color: white;
+
+                &:hover {
+                    background-color: #3d3d82;
+                }
+            }
+
+            &--secondary {
+                background-color: #e5e6f3;
+                color: #55559b;
+
+                &:hover {
+                    background-color: #d3d4eb;
+                }
+            }
+        }
+    }
+}
+
+/* --- 3. REGISZTRÁCIÓS SZEKCIÓ (Main Content) --- */
+.register-container {
+  position: relative;
+  text-align: center;
+  padding: 40px 20px 10px 20px;
+  /* Felül több, alul kevés hely */
+  min-height: auto;
+  overflow: hidden;
+}
+
+.register-container h1 {
+  font-size: 2.2rem;
+  color: #4a4a8a;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.register-container p {
+  color: #8e8eb2;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Vízfesték foltok generálása --- */
+/* Bal oldali folt PNG-vel */
+.register-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0%; /* Állítsd be, mennyire lógjon be balról */
+    width: 400px; /* A kép szélessége */
+    height: 400px; /* A kép magassága */
+    background-image: url('/assets/images/kékfoltok.png'); /* IDE ÍRD A PNG ELÉRÉSI ÚTJÁT */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6; /* Itt tudod állítani, mennyire legyen áttetsző */
+}
+
+/* Jobb oldali folt PNG-vel */
+.register-container::after {
+    content: "";
+    position: absolute;
+    top: -5%;
+    right: -13%; /* Állítsd be, mennyire lógjon be jobbról */
+    width: 450px;
+    height: 450px;
+    background-image: url('/assets/images/lilafolt.png'); /* IDE ÍRD A PNG ELÉRÉSI ÚTJÁT */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* --- 4. KÁRTYÁK (Choice Wrapper) --- */
+.choice-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 40px;
+  margin-bottom: 80px;
+  /* Távolság a footer előtt */
+  position: relative;
+  z-index: 2;
+}
+
+.choice-card {
+  background-color: #9898d9;
+  border: none;
+  border-radius: 25px;
+  padding: 30px 15px;
+  width: 220px;
+  height: 140px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(152, 152, 217, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.choice-card:hover {
+  transform: translateY(-5px);
+  background-color: #8787c8;
+  box-shadow: 0 12px 25px rgba(152, 152, 217, 0.4);
+}
+
+.choice-card h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.main-footer {
+  background-color: #f9f9f7; /* A képen látható bézses-szürke */
+  padding: 30px 0 10px;
+  color: #6a6a6a;
+  font-family: 'Poppins', sans-serif;
+  margin: 20px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 50px;
+  margin-bottom: 50px;
+}
+
+.footer-logo {
+  height: 100px; /* A kép alapján picit nagyobb */
+  margin-bottom: -10px;
+}
+
+.footer-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.footer-title {
+  color: #1a1a1a;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #6a6a6a;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #8c96b8;
+}
+
+/* Kapcsolat oszlop ikonokkal */
+.contact-list {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+.contact-list i {
+  color: #8c96b8; /* Ikonok színe a képről */
+  font-size: 1.1rem;
+  width: 20px;
+}
+
+/* Social média ikonok */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  color: #8c96b8;
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+}
+
+.social-links a:hover {
+  transform: translateY(-3px);
+}
+
+/* Footer alsó sáv */
+.footer-bottom {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 25px;
+}
+
+.footer-bottom-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.footer-legal a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #888;
+}
+
+.footer-legal a:hover {
+  text-decoration: underline;
+}
+
+/* --- 6. Reszponzivitás --- */
+@media (max-width: 992px) {
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-links {
+    display: none;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-card {
+    width: 100%;
+    height: auto;
+    padding: 40px 20px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .legal-links a {
+    margin: 0 10px;
+  }
+}
