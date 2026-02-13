@@ -8,21 +8,23 @@ $current_id = $_GET['current_id'] ?? 0;
 $search = $_GET['search'] ?? '';
 
 try {
-  // 1. Lekérjük a te iskoládat
+    // 1. Felhasználó iskolájának lekérése
     $userStmt = $pdo->prepare("SELECT iskola_id FROM felhasznalok WHERE id = ?");
     $userStmt->execute([$current_id]);
     $currentUserData = $userStmt->fetch(PDO::FETCH_ASSOC);
     $my_school_id = $currentUserData['iskola_id'] ?? null;
 
-    // 2. SZIGORÚ SZŰRÉS: Csak azokat listázzuk, akik:
-    // - nem te vagy (id != :my_id)
-    // - ugyanabba az iskolába járnak (iskola_id = :my_school)
-    $sql = "SELECT id, nev, szerep, iskola_id 
+    // 2. SZŰRÉS + OLVASATLANOK SZÁMOLÁSA
+    // Hozzáadunk egy 'unread_count' oszlopot a találatokhoz
+    $sql = "SELECT id, nev, szerep, iskola_id, 
+            (SELECT COUNT(*) FROM uzenetek 
+             WHERE kuldo_id = felhasznalok.id 
+             AND fogado_id = :my_id 
+             AND olvasott = 0) as unread_count
             FROM felhasznalok 
             WHERE id != :my_id 
             AND iskola_id = :my_school";
     
-    // Ha van keresőszó, azt is figyelembe vesszük
     if ($search !== '') {
         $sql .= " AND nev LIKE :term";
     }
