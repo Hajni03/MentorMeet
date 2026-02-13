@@ -1,0 +1,84 @@
+<div class="chat-wrapper">
+    <aside class="chat-sidebar">
+        <div class="sidebar-search">
+            <input type="text" placeholder="Keresés...">
+        </div>
+        <div class="conversation-list">
+            <div *ngFor="let friend of friends" class="conversation-item"
+                [class.active]="selectedFriend?.id === friend.id" [class.unread-bold]="friend.unread_count > 0"
+                (click)="selectFriend(friend)">
+
+                <div class="avatar-container">
+                    <img [src]="friend.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" alt="">
+                    <span class="status-dot" [class.online]="friend.is_online == 1"></span>
+                </div>
+                <div class="convo-info">
+                    <div class="convo-header">
+                        <span class="name">{{ friend.nev }}</span>
+                        <span class="time">{{ friend.utolso_ido | date:'HH:mm' }}</span>
+                    </div>
+                    <p class="preview" [class.typing]="friend.is_typing == 1"
+                        [class.unread-text]="friend.unread_count > 0">
+                        {{ friend.is_typing == 1 ? 'Éppen gépel...' : (friend.utolso_uzenet ? (friend.utolso_uzenet |
+                        slice:0:30) + '...' : 'Nincs még üzenet') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="chat-main" *ngIf="selectedFriend; else emptyState">
+        <header class="chat-header">
+            <div class="user-info">
+                <h3>{{ selectedFriend.nev }}</h3>
+                <p *ngIf="selectedFriend.is_online == 1" class="online-text">Online</p>
+                <p *ngIf="selectedFriend.is_online != 1" class="offline-text">Offline</p>
+            </div>
+            <div class="header-actions">
+                <button class="action-icon"><img src="assets/images/icons/phonesvg.svg" alt="Hívás"></button>
+                <button class="action-icon"><img src="assets/images/icons/camerasvg.svg" alt="Videó"></button>
+            </div>
+        </header>
+
+        <div class="messages-viewport" #scrollContainer>
+            <ng-container *ngFor="let msg of messages; let i = index">
+
+                <div class="time-divider" *ngIf="i === 0 || isNewDay(messages[i-1].idopont, msg.idopont)">
+                    {{ msg.idopont | date:'MMM d, h:mm a' }}
+                </div>
+
+                <div class="unread-divider" *ngIf="shouldShowUnreadDivider(msg, i)">
+                    <span>Olvasatlan üzenetek</span>
+                </div>
+
+                <div class="message-row" [class.sent]="msg.kuldo_id === currentUser.id">
+                    <div class="message-bubble">
+                        {{ msg.szoveg }}
+                    </div>
+                </div>
+
+                <div class="message-status" *ngIf="i === messages.length - 1 && msg.kuldo_id === currentUser.id">
+                    <span *ngIf="msg.olvasott == 1">Látta {{ msg.olvasva_ekkor | date:'HH:mm' }}</span>
+                    <span *ngIf="msg.olvasott == 0">Elküldve</span>
+                </div>
+            </ng-container>
+        </div>
+
+        <footer class="chat-input-area">
+            <div class="input-wrapper">
+                <button class="attach-btn">+</button>
+                <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()"
+                    placeholder="Írj egy üzenetet...">
+                <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">➤</button>
+            </div>
+        </footer>
+    </main>
+
+    <ng-template #emptyState>
+        <div class="empty-state">
+            <img src="assets/images/icons/chatsvg.svg" alt="">
+            <h3>Válassz egy beszélgetést</h3>
+            <p>Kezdj el csevegni az ismerőseiddel!</p>
+        </div>
+    </ng-template>
+</div>

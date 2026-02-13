@@ -6,6 +6,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { SchoolService } from '../../shared/services/school.service';
 import { OsztalyService } from '../../shared/services/osztaly.service';
 
+
 @Component({
   selector: 'app-register-student',
   standalone: true,

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // ✅ A localhost:8000-et töröljük, a proxy /api/ előtagot használjuk

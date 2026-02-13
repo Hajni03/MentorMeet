@@ -1,1 +1,27 @@
-<p>header works!</p>
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="assets/images/egyszeru-logo.png" alt="MentorMeet Logo">
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Főoldal</a>
+      </li>
+      <li>
+        <a routerLink="/blog" routerLinkActive="active">Blog</a>
+      </li>
+      <li>
+        <a routerLink="/gyik" routerLinkActive="active">GYIK</a>
+      </li>
+      <li>
+        <a routerLink="/kapcsolat" routerLinkActive="active">Kapcsolat</a>
+      </li>
+    </ul>
+
+    <div class="nav-buttons">
+      <a routerLink="/register" class="btn-register btn btn--secondary">Regisztráció</a>
+      <a routerLink="/login" class="btn-login-nav btn btn--primary">Bejelentkezés</a>
+    </div>
+  </nav>
+</header>

@@ -1,15 +1,205 @@
-.btn-logout {
-  background-color: #e74c3c;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 20px;
-  transition: background 0.3s;
+// Színkonstansok
+$primary-purple: #4B3B73;
+$bg-cream: #F5F5F0;
+$secondary-blue: #848CAF;
 
-  &:hover {
-    background-color: #c0392b;
-  }
+.student-dashboard-container {
+    padding: 30px;
+    background-color: $bg-cream;
+    min-height: 100%;
+
+    .welcome-box {
+        margin-bottom: 40px;
+        
+        h1 {
+            color: $primary-purple;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            
+            .info-icon {
+                width: 22px;
+                height: 22px;
+                stroke: $secondary-blue;
+            }
+
+            p {
+                margin: 0;
+                color: $secondary-blue;
+                font-size: 1.1rem;
+                font-weight: 600;
+
+                strong {
+                    color: $primary-purple;
+                }
+            }
+        }
+    }
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 25px;
+
+    .card {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+        position: relative;
+        border: 1px solid rgba(132, 140, 175, 0.1);
+        box-shadow: 0 10px 30px rgba(75, 59, 115, 0.04);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(75, 59, 115, 0.1);
+            border-color: rgba(75, 59, 115, 0.3);
+
+            .card-icon-wrapper {
+                background: $primary-purple;
+                svg { stroke: white; }
+            }
+
+            .card-arrow {
+                transform: translateX(5px);
+                color: $primary-purple;
+            }
+        }
+
+        .card-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: $bg-cream;
+            border-radius: 20px; // Modern squircle
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+
+            svg {
+                width: 32px;
+                height: 32px;
+                stroke: $primary-purple;
+                transition: all 0.3s ease;
+            }
+        }
+
+        .card-content {
+            flex: 1;
+
+            h3 {
+                margin: 0 0 5px 0;
+                font-size: 1.25rem;
+                font-weight: 800;
+                color: $primary-purple;
+            }
+
+            p {
+                margin: 0;
+                font-size: 0.95rem;
+                color: $secondary-blue;
+                line-height: 1.5;
+                font-weight: 500;
+            }
+        }
+
+        .card-arrow {
+            color: rgba(132, 140, 175, 0.4);
+            transition: all 0.3s ease;
+            
+            svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.calendar-section {
+    background: white;
+    border-radius: 30px;
+    padding: 25px;
+    border: 1px solid rgba(132, 140, 175, 0.1);
+    box-shadow: 0 10px 30px rgba(75, 59, 115, 0.05);
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid $bg-cream;
+
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .calendar-icon {
+                width: 28px;
+                height: 28px;
+                stroke: $primary-purple;
+            }
+
+            h2 {
+                margin: 0;
+                color: $primary-purple;
+                font-weight: 800;
+                font-size: 1.4rem;
+            }
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $secondary-blue;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                
+                .dot {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    &.accepted { background: #10b981; }
+                    &.pending { background: #f59e0b; }
+                }
+            }
+        }
+    }
+}
+
+.calendar-container {
+    min-height: 500px;
+    // Itt a naptár belső stílusait (pl. .fc-event) is át kell színezni lilára/kékre
+}
+
+// A mini-card stílusa, hogy ne foglalja el az egész képernyőt felül
+.mini-card {
+    max-width: 350px;
+    padding: 15px 20px !important;
 }

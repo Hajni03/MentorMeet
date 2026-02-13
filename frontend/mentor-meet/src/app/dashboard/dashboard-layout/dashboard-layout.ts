@@ -17,19 +17,29 @@ export class DashboardLayoutComponent implements OnInit {
   private authService = inject(AuthService);
   private eRef = inject(ElementRef);
 
+  // --- DEKLARÁCIÓK (A piros hibák megszüntetése) ---
   currentUser: any = null;
-  pendingRequests: any[] = [];
+  notifications: any[] = [];      // Eltünteti a pirosat a loadNotifications-nál
+  unreadCount: number = 0;
+  unreadMessagesCount: number = 0;
+
   isSettingsMenuOpen = false;
   isNotificationOpen = false;
   isDarkMode = false;
+
+  pendingRequests: any[] = [];
+  apiUrl = 'http://localhost:8000/api'; // Fix API elérhetőség
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
     if (userData) {
       try {
         this.currentUser = JSON.parse(userData);
-        // Belépéskor azonnal betöltjük az adatokat
-        this.loadNotifications();
+        if (this.currentUser && this.currentUser.id) {
+          // Belépéskor azonnal betöltjük az adatokat
+          this.loadNotifications();
+          this.checkUnreadMessages();
+        }
       } catch (e) {
         console.error("Hiba a felhasználói adatok beolvasásakor", e);
         this.router.navigate(['/login']);
@@ -37,46 +47,42 @@ export class DashboardLayoutComponent implements OnInit {
     } else {
       this.router.navigate(['/login']);
     }
+
+    // 10 másodpercenként nézze meg, van-e összesített olvasatlan üzenet
+    setInterval(() => {
+      if (this.currentUser?.id) {
+        this.checkUnreadMessages();
+        this.loadNotifications(); // Frissítjük az értesítéseket is
+      }
+    }, 10000);
   }
 
   /**
-   * Értesítések betöltése szerepkör szerint
+   * Értesítések betöltése
    */
   loadNotifications() {
     if (!this.currentUser?.id) return;
 
-    if (this.currentUser.szerep === 'tanar') {
-      // Tanár: get_pending_requests.php használata user_id paraméterrel
-      this.http.get<any[]>(`/api/get_pending_requests.php?user_id=${this.currentUser.id}`)
-        .subscribe({
-          next: (res) => {
-            this.pendingRequests = res;
-            console.log("Tanár értesítései:", res);
-          },
-          error: (err) => console.error("Hiba a tanári kérések betöltésekor", err)
-        });
-    } else {
-      // Diák: get_student_notifications.php használata diak_id paraméterrel
-      this.http.get<any[]>(`/api/get_student_notifications.php?diak_id=${this.currentUser.id}`)
-        .subscribe({
-          next: (res) => {
-            this.pendingRequests = res;
-            console.log("Diák értesítései:", res);
-          },
-          error: (err) => console.error("Hiba a diák értesítések betöltésekor", err)
-        });
-    }
+    this.http.get<any[]>(`${this.apiUrl}/get_notifications.php?tanar_id=${this.currentUser.id}`)
+      .subscribe({
+        next: (data) => {
+          this.notifications = data || [];
+          // Az adatbázis 'is_read' mezőjét nézzük (0 = olvasatlan)
+          this.unreadCount = this.notifications.filter(n => n.is_read == 0).length;
+        },
+        error: (err) => console.error("Értesítés hiba:", err)
+      });
   }
 
   /**
-   * Kapcsolati kérés kezelése (Elfogadás/Elutasítás)
+   * Kapcsolati kérés kezelése
    */
   handleRequest(requestId: number, newStatus: string) {
-    this.http.post('/api/handle_request.php', { id: requestId, status: newStatus })
+    this.http.post(`${this.apiUrl}/handle_request.php`, { id: requestId, status: newStatus })
       .subscribe({
         next: (res: any) => {
           alert(res.message);
-          this.loadNotifications(); // Frissítés után újra lekérjük a listát
+          this.loadNotifications();
         },
         error: (err) => console.error("Hiba a kérés kezelésekor", err)
       });
@@ -85,10 +91,20 @@ export class DashboardLayoutComponent implements OnInit {
   // --- MENÜ KEZELÉS ---
 
   toggleNotifications(event: Event) {
-    event.stopPropagation(); // Megállítja a buborékolást a HostListener felé
+    event.stopPropagation();
     this.isNotificationOpen = !this.isNotificationOpen;
-    if (this.isNotificationOpen) {
-      this.isSettingsMenuOpen = false; // Csak egy menü lehet nyitva egyszerre
+
+    if (this.isNotificationOpen && this.unreadCount > 0) {
+      // Elküldjük a kérést a backendnek, hogy minden értesítés olvasott legyen
+      this.http.get(`${this.apiUrl}/mark_notifications_read.php?user_id=${this.currentUser.id}`)
+        .subscribe({
+          next: () => {
+            this.unreadCount = 0;
+            // Frissítjük a lokális listát is, hogy vizuálisan ne legyen "unread" stílusú
+            this.notifications.forEach(n => n.is_read = 1);
+          },
+          error: (err) => console.error("Hiba az olvasottá tételkor", err)
+        });
     }
   }
 
@@ -102,7 +118,6 @@ export class DashboardLayoutComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
-    // Ha a kattintás a komponens (sidebar/header) területén kívül történt, minden menüt bezárunk
     if (!this.eRef.nativeElement.contains(event.target)) {
       this.isSettingsMenuOpen = false;
       this.isNotificationOpen = false;
@@ -117,18 +132,29 @@ export class DashboardLayoutComponent implements OnInit {
   goToProfileEdit() {
     this.isSettingsMenuOpen = false;
     if (this.currentUser?.szerep === 'tanar') {
-      this.router.navigate(['/teacher-profile-edit']);
+      this.router.navigate(['/dashboard/teacher-profile-edit']);
     } else {
-      this.router.navigate(['/student-profile-edit']);
+      this.router.navigate(['/dashboard/student-profile-edit']);
     }
   }
 
   logout() {
     if (this.currentUser) {
-      this.http.get(`/api/logout.php?id=${this.currentUser.id}`).subscribe();
+      this.http.get(`${this.apiUrl}/logout.php?id=${this.currentUser.id}`).subscribe();
     }
     localStorage.removeItem('user');
     this.currentUser = null;
     this.router.navigate(['/login']);
+  }
+
+  checkUnreadMessages() {
+    if (!this.currentUser?.id) return;
+    this.http.get<any>(`${this.apiUrl}/get_unread_messages_count.php?user_id=${this.currentUser.id}`)
+      .subscribe({
+        next: (res) => {
+          this.unreadMessagesCount = res.unread || 0;
+        },
+        error: (err) => console.error("Hiba az üzenetek ellenőrzésekor", err)
+      });
   }
 }

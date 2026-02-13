@@ -1,118 +1,150 @@
+// Színkonstansok a Dashboard stílusában
+$primary-purple: #4B3B73;
+$bg-cream: #F5F5F0;
+$secondary-blue: #848CAF;
+
 .friends-container {
-    padding: 24px;
+    padding: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: $bg-cream;
+    min-height: 100%;
 
     .header-section {
-        margin-bottom: 30px;
-
+        margin-bottom: 35px;
         h2 {
-            color: #2c3e50;
-            font-size: 24px;
-            font-weight: 600;
+            color: $primary-purple;
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0;
         }
     }
 }
 
 .friends-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
 }
 
 .friend-card {
     background: white;
-    border-radius: 20px; // A Dashboardon is ilyen kerek
-    padding: 20px;
+    border-radius: 25px; // Extra kerekítés a MentorMeet stílushoz
+    padding: 22px;
     display: flex;
     align-items: center;
-    gap: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); // Finom árnyék
-    transition: transform 0.2s, box-shadow 0.2s;
+    gap: 18px;
+    box-shadow: 0 10px 30px rgba(75, 59, 115, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(132, 140, 175, 0.1);
 
     &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-}
-
-.card-left {
-    position: relative;
-
-    .friend-avatar {
-        width: 65px;
-        height: 65px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #f0f2f5;
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(75, 59, 115, 0.1);
+        border-color: rgba(75, 59, 115, 0.2);
     }
 
-    .status-indicator {
-        position: absolute;
-        bottom: 5px;
-        right: 0;
-        width: 14px;
-        height: 14px;
-        background: #bdc3c7; // Alapértelmezett szürke (offline)
-        border: 2px solid white;
-        border-radius: 50%;
-        transition: background 0.3s;
+    .card-left {
+        position: relative;
+        flex-shrink: 0;
 
-        &.online {
-            background: #2ecc71; // Világító zöld (online)
-            box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+        .friend-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px; // A modern lekerekített négyzet (squircle)
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            width: 16px;
+            height: 16px;
+            background: #bdc3c7; // Offline szürke
+            border: 3px solid white;
+            border-radius: 50%;
+            transition: all 0.3s;
+
+            &.online {
+                background: #10b981; // Élénk Mentor-zöld
+                box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            }
         }
     }
-}
 
-.card-info {
-    flex: 1;
-
-    h3 {
-        margin: 0;
-        font-size: 18px;
-        color: #333;
+    .card-info {
+        flex: 1;
+        h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: $primary-purple;
+        }
+        .role-text {
+            margin: 4px 0 0;
+            font-size: 0.9rem;
+            color: $secondary-blue;
+            font-weight: 600;
+        }
     }
 
-    .role-text {
-        margin: 4px 0 0;
-        font-size: 14px;
-        color: #8e44ad; // A MentorMeet lila színe
-        font-weight: 500;
-    }
-}
+    .card-actions {
+        .uzenet-btn {
+            background: #EBEBE6; // Törtfehér alap
+            border: none;
+            padding: 10px 16px;
+            border-radius: 14px;
+            color: $primary-purple;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.25s ease;
 
-.chat-btn {
-    background: #f3f0ff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 12px;
-    color: #8e44ad;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    transition: all 0.2s;
+            // Ha marad az IMG tag a gombban
+            img {
+                width: 18px;
+                height: 18px;
+                // Lila szűrő az ikonhoz, hogy passzoljon
+                filter: invert(24%) sepia(18%) saturate(2304%) hue-rotate(216deg) brightness(95%) contrast(89%);
+                transition: filter 0.25s ease;
+            }
 
-    img {
-        width: 18px;
-        filter: invert(34%) sepia(85%) saturate(1435%) hue-rotate(244deg) brightness(81%) contrast(92%);
-    }
+            // Ha SVG-re cseréled a gomb belsejét
+            svg {
+                width: 18px;
+                height: 18px;
+                stroke: $primary-purple;
+                transition: stroke 0.25s ease;
+            }
 
-    &:hover {
-        background: #8e44ad;
-        color: white;
+            &:hover {
+                background: $primary-purple;
+                color: white;
+                transform: scale(1.05);
 
-        img {
-            filter: brightness(0) invert(1);
+                img {
+                    filter: brightness(0) invert(1); // Fehérre vált az ikon
+                }
+                svg {
+                    stroke: white;
+                }
+            }
         }
     }
 }
 
 .no-friends {
     text-align: center;
-    margin-top: 100px;
-    color: #95a5a6;
+    margin-top: 120px;
+    color: $secondary-blue;
+    font-size: 1.1rem;
     font-style: italic;
+    opacity: 0.7;
 }
