@@ -14,7 +14,7 @@
         <p class="role-text">{{ friend.szerep === 'tanar' ? 'Oktató' : 'Tanuló' }}</p>
       </div>
       <div class="card-actions">
-        <button class="chat-btn">
+        <button class="uzenet-btn" (click)="openChat(friend.id)">
           <img src="assets/images/icons/chatsvg.svg" alt="Chat">
           Üzenet
         </button>

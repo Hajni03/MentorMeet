@@ -4,6 +4,7 @@ import { FormBuilder ,ReactiveFormsModule, Validators } from '@angular/forms';
 import { SchoolService, Iskola } from '../../shared/services/school.service';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-school-select',
   standalone: true,
