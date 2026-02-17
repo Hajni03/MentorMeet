@@ -1,27 +1,21 @@
 <header class="header-wrapper">
-  <nav class="navbar">
-    <div class="logo">
-      <img src="assets/images/egyszeru-logo.png" alt="MentorMeet Logo">
+<nav class="navbar">
+  <div class="navbar__container">
+    <div class="navbar__logo">
+      <img src="../../../assets/images/egyszeru-logo.png" alt="MentorMeet logó" />
     </div>
 
-    <ul class="nav-links">
-      <li>
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Főoldal</a>
-      </li>
-      <li>
-        <a routerLink="/blog" routerLinkActive="active">Blog</a>
-      </li>
-      <li>
-        <a routerLink="/gyik" routerLinkActive="active">GYIK</a>
-      </li>
-      <li>
-        <a routerLink="/kapcsolat" routerLinkActive="active">Kapcsolat</a>
-      </li>
+    <ul class="navbar__menu">
+      <li><button class="btn btn--secondary" routerLink="">Főoldal</button></li>
+      <li><button class="btn btn--secondary" routerLink="/blog">Blog</button></li>
+      <li><button class="btn btn--secondary" routerLink="/gyik">GYIK</button></li>
+      <li><button class="btn btn--secondary" routerLink="/kapcsolat">Kapcsolat</button></li>
     </ul>
 
-    <div class="nav-buttons">
-      <a routerLink="/register" class="btn-register btn btn--secondary">Regisztráció</a>
-      <a routerLink="/login" class="btn-login-nav btn btn--primary">Bejelentkezés</a>
+    <div class="navbar__actions">
+      <button class="btn btn--outline" routerLink="/register">Regisztráció</button>
+      <button class="btn btn--primary" routerLink="/login">Bejelentkezés</button>
     </div>
-  </nav>
+  </div>
+</nav>
 </header>
