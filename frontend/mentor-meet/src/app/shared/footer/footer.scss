@@ -1,9 +1,13 @@
+/* VÁLTOZÓK A FÁJL TETEJÉN */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
+$brand-color: #8c96b8;
+
 .main-footer {
-  background-color: #f9f9f7; /* A képen látható bézses-szürke */
-  padding: 30px 0 10px;
+  background-color: #f9f9f7; 
+  padding: 50px 0 20px; /* Megemelt felső padding a szellősebb érzetért */
   color: #6a6a6a;
-  font-family: 'Poppins', sans-serif;
-  margin: 20px;
+  font-family: $font-body; // Alapértelmezett betűtípus
 }
 
 .footer-grid {
@@ -11,86 +15,107 @@
   grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
   gap: 50px;
   margin-bottom: 50px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .footer-logo {
-  height: 100px; /* A kép alapján picit nagyobb */
-  margin-bottom: -10px;
+  height: 80px; 
+  margin-bottom: 15px;
+  cursor: pointer;
+  margin-left: 20px;
 }
 
 .footer-desc {
   font-size: 0.9rem;
   line-height: 1.6;
   margin-bottom: 25px;
+  margin-left: 20px;
 }
 
+/* LORA A CÍMEKNEK */
 .footer-title {
+  font-family: $font-title;
   color: #1a1a1a;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 30px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 25px;
 }
 
 .footer-links {
   list-style: none;
   padding: 0;
+  
+  li {
+    margin-bottom: 12px;
+  }
+
+  a {
+    text-decoration: none;
+    color: #6a6a6a;
+    font-size: 0.95rem;
+    transition: color 0.3s, padding-left 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: $brand-color;
+      padding-left: 5px; // Egy kis dinamika a linkeknek
+    }
+  }
 }
 
-.footer-links li {
-  margin-bottom: 12px;
-}
-
-.footer-links a {
-  text-decoration: none;
-  color: #6a6a6a;
-  font-size: 1rem;
-  transition: color 0.3s;
-}
-
-.footer-links a:hover {
-  color: #8c96b8;
-}
-
-/* Kapcsolat oszlop ikonokkal */
+/* KAPCSOLAT ÉS IKONOK */
 .contact-list {
   list-style: none;
   padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+  }
+
+  i {
+    color: $brand-color;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+  }
 }
 
-.contact-list li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 15px;
-  font-size: 0.95rem;
-}
-
-.contact-list i {
-  color: #8c96b8; /* Ikonok színe a képről */
-  font-size: 1.1rem;
-  width: 20px;
-}
-
-/* Social média ikonok */
 .social-links {
   display: flex;
   gap: 15px;
+  margin-top: 10px;
+  margin-left: 20px;
+
+  a {
+    color: $brand-color;
+    font-size: 1.3rem;
+    transition: transform 0.3s, color 0.3s;
+
+    &:hover {
+      transform: translateY(-3px);
+      color: darken($brand-color, 15%);
+    }
+  }
 }
 
-.social-links a {
-  color: #8c96b8;
-  font-size: 1.2rem;
-  transition: transform 0.3s;
-}
-
-.social-links a:hover {
-  transform: translateY(-3px);
-}
-
-/* Footer alsó sáv */
+/* FOOTER ALSÓ SÁV */
 .footer-bottom {
   border-top: 1px solid #e0e0e0;
   padding-top: 25px;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .footer-bottom-flex {
@@ -99,14 +124,29 @@
   align-items: center;
   font-size: 0.85rem;
   color: #888;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
 }
 
-.footer-legal a {
-  margin-left: 25px;
-  text-decoration: none;
-  color: #888;
-}
+.footer-legal {
+  a {
+    margin-left: 40px;
+    text-decoration: none;
+    color: #888;
+    cursor: pointer;
+    margin-right: 20px;
 
-.footer-legal a:hover {
-  text-decoration: underline;
+    &:hover {
+      color: $brand-color;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      margin: 0 10px;
+    }
+  }
 }
