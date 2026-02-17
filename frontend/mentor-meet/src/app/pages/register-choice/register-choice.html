@@ -1,16 +1,44 @@
 <div class="register-container">
   <h1>Regisztráció</h1>
-  <p>Válaszd ki, milyen fiókot szeretnél:</p>
+  <p>Csatlakozz a MentorMeet közösségéhez és fedezd fel a fejlődés új útját!</p>
 
   <div class="choice-wrapper">
-    <button class="choice-card" routerLink="/register/student">
-      <h2>🎓 Diák vagyok</h2>
-      <p>Időpontfoglalás tanárokhoz</p>
+    <button class="choice-card student" routerLink="/register/student">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="studentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f2fe" />
+              <stop offset="50%" stop-color="#4facfe" />
+              <stop offset="100%" stop-color="#0072ff" />
+            </linearGradient>
+          </defs>
+          <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" stroke="url(#studentGrad)"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5" stroke="url(#studentGrad)"></path>
+        </svg>
+      </div>
+      <h2>Diák vagyok</h2>
+      <p>Böngéssz a mentorok között, foglalj időpontot és tanulj rugalmasan.</p>
     </button>
 
-    <button class="choice-card" routerLink="/register/teacher">
-      <h2>👩‍🏫 Tanár vagyok</h2>
-      <p>Időpontok kezelése, konzultációk</p>
+    <button class="choice-card teacher" routerLink="/register/teacher">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="teacherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f093fb" />
+              <stop offset="50%" stop-color="#f5576c" />
+              <stop offset="100%" stop-color="#9d50bb" />
+            </linearGradient>
+          </defs>
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="url(#teacherGrad)"></path>
+          <circle cx="9" cy="7" r="4" stroke="url(#teacherGrad)"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="url(#teacherGrad)"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="url(#teacherGrad)"></path>
+        </svg>
+      </div>
+      <h2>Tanár vagyok</h2>
+      <p>Építsd fel a saját profilod, kezeld a naptárad és segíts másoknak fejlődni.</p>
     </button>
   </div>
 </div>
