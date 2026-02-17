@@ -2,69 +2,89 @@
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
 
-  <div class="form-card">
-    <h2>Tanár regisztráció</h2>
-
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      
-      <div class="input-group">
-        <label>Teljes név:</label>
-        <input type="text" formControlName="nev" placeholder="Dr. Kovács Péter" />
+  <div class="split-card">
+    <div class="form-section">
+      <div class="card-header">
+        <h2 class="gradient-text">Tanár regisztráció</h2>
+        <p class="subtitle">Csatlakozz szakmai közösségünkhöz és inspirálj!</p>
       </div>
 
-      <div class="input-group">
-        <label>Email (iskolai email javasolt):</label>
-        <input type="email" formControlName="email" placeholder="tanar@iskola.hu" />
-      </div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="inputs-grid">
+          
+          <div class="input-group">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Teljes név
+            </label>
+            <input type="text" formControlName="nev" placeholder="Dr. Kovács Péter" />
+          </div>
 
-      <div class="input-group">
-        <label>Jelszó:</label>
-        <input type="password" formControlName="jelszo" />
-      </div>
+          <div class="input-group">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              Email cím
+            </label>
+            <input type="email" formControlName="email" placeholder="tanar@iskola.hu" />
+          </div>
 
-      <div class="input-group">
-        <label>Jelszó megerősítése:</label>
-        <input type="password" formControlName="jelszoUjra" />
-        <div *ngIf="form.get('jelszoUjra')?.touched && form.errors?.['mismatch']" class="error-text">
-          A jelszavak nem egyeznek!
+          <div class="input-row">
+            <div class="input-group">
+              <label>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Jelszó
+              </label>
+              <input type="password" formControlName="jelszo" placeholder="••••••••" />
+            </div>
+            <div class="input-group">
+              <label>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3L15.5 7.5z"></path></svg>
+                Megerősítés
+              </label>
+              <input type="password" formControlName="jelszoUjra" placeholder="••••••••" />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              Iskola
+            </label>
+            <select formControlName="iskola_id">
+              <option [value]="null">-- Válassz iskolát --</option>
+              <option *ngFor="let iskola of iskolak()" [value]="iskola.id">{{ iskola.nev }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <div class="checkbox-wrapper">
+            <label class="custom-checkbox">
+              <input type="checkbox" formControlName="elfogadas" />
+              <span class="checkmark"></span>
+              <span class="label-text">Elfogadom a <a href="#">szabályzatot</a> és az <a href="#">adatkezelést</a></span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary-grad" [disabled]="form.invalid">
+            Tanár regisztráció
+          </button>
+
+          <div class="redirect">
+            Már van fiókod? <a routerLink="/login">Jelentkezz be</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="visual-section">
+      <div class="glass-box">
+        <img src="assets/images/teacher-reg-kep.png" alt="Mentor" class="floating-img">
+        
+        <div class="trust-text">
+          <p>Több mint 500+ aktív mentor</p>
         </div>
       </div>
-
-      <div class="input-group">
-        <label for="iskola">Iskola:</label>
-        <select formControlName="iskola_id" id="iskola">
-          <option [value]="null">-- Válassz iskolát --</option>
-          <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
-            {{ iskola.nev }}
-          {{ iskola.nev }}
-          </option>
-        </select>
-      </div>
-
-      <div class="input-group">
-        <label for="osztaly">Osztály (opcionális):</label>
-        <select formControlName="osztaly_id" id="osztaly">
-          <option [value]="null">-- Nincs fix osztályom / Több osztály --</option>
-          <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
-            {{ osztaly.nev }}
-          {{ osztaly.nev }}
-          </option>
-        </select>
-      </div>
-
-      <div class="checkbox-group">
-        <input type="checkbox" formControlName="elfogadas" id="elfogadas" />
-        <label for="elfogadas">Elfogadom a Tanári szabályzatot és az Adatkezelést</label>
-      </div>
-
-      <button type="submit" [disabled]="form.invalid">Tanár regisztráció</button>
-    </form>
-
-    <p class="footer-text">
-      Már van fiókod? <a routerLink="/login">Jelentkezz be</a>
-    </p>
-    <p class="footer-text sub">
-      Diák vagy? <a routerLink="/register-student">Regisztrálj itt</a>
-    </p>
+    </div>
   </div>
 </div>

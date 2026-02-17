@@ -1,159 +1,246 @@
-$primary-purple: #8187b1;
-$bg-color: #f5f5f0;
-$text-dark: #5a5a5a;
+/* ───────── 1. VÁLTOZÓK ÉS SZÍNEK ───────── */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
 
+$primary-lila: #7d84b2;
+$deep-lila: #5a6199;
+$bright-lila: #9da4d9;
+$light-bg: #F5F5F0;
+
+// A központi "MentorMeet" tükrös gradiens
+$main-grad: linear-gradient(135deg, $deep-lila 0%, $primary-lila 50%, $bright-lila 100%);
+
+/* ───────── 2. ALAPOK ÉS HÁTTÉR ───────── */
 .registration-container {
-  position: relative;
+  min-height: 100vh;
+  background-color: $light-bg;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: $bg-color;
+  padding: 60px 20px;
+  position: relative;
   overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: $font-body;
 
-  // Dekorációs foltok (Ugyanaz, mint a login/diák oldalon)
   .blob {
     position: absolute;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(129, 135, 177, 0.25) 0%, rgba(245, 245, 240, 0) 70%);
-    filter: blur(50px);
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
     z-index: 0;
   }
-  .blob-1 { top: -5%; left: -5%; }
-  .blob-2 { bottom: -5%; right: -5%; }
+  .blob-1 { width: 450px; height: 450px; background: $bright-lila; top: -150px; right: -150px; }
+  .blob-2 { width: 350px; height: 350px; background: $deep-lila; bottom: -100px; left: -100px; }
+}
 
-  .form-card {
-    position: relative;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(20px); // Erősebb üveghatás
-    padding: 3rem;
-    border-radius: 40px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-    width: 100%;
-    max-width: 420px;
-    text-align: center;
+/* ───────── 3. SPLIT CARD DESIGN ───────── */
+.split-card {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 720px;
+  display: flex;
+  background: white;
+  border-radius: 32px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
 
-    h2 {
-      color: $primary-purple;
-      margin-bottom: 2rem;
-      font-weight: 500;
-      font-size: 1.8rem;
-    }
-  }
-
-  form {
+  /* BAL OLDAL: FORM RÉSZ */
+  .form-section {
+    flex: 1.1;
+    padding: 50px 60px;
+    background: white;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    justify-content: center;
 
-    .input-group {
+    .card-header {
+      margin-bottom: 35px;
+      .gradient-text {
+        font-family: $font-title;
+        font-size: 2.6rem;
+        background: $main-grad;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        margin: 0;
+      }
+      .subtitle { color: #666; font-size: 1.05rem; margin-top: 8px; }
+    }
+  }
+
+  /* JOBB OLDAL: VIZUÁLIS PANEL (LILA SZÍNKÓDDAL) */
+  .visual-section {
+    flex: 0.9;
+    background: $main-grad;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      background: radial-gradient(circle, rgba($bright-lila, 0.2) 0%, transparent 70%);
+      z-index: 1;
+    }
+
+    .glass-box {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
       display: flex;
       flex-direction: column;
-      text-align: left;
-
-      label {
-        font-size: 0.85rem;
-        color: $text-dark;
-        margin-bottom: 4px;
-        font-weight: 600;
-      }
-
-      input, select {
-        padding: 12px 8px;
-        border: none;
-        border-bottom: 1.5px solid #d1d1d1;
-        background: transparent;
-        outline: none;
-        font-size: 1rem;
-        color: $text-dark;
-        transition: all 0.3s ease;
-
-        &:focus {
-          border-bottom-color: $primary-purple;
-          background: rgba(129, 135, 177, 0.02);
-        }
-
-        &::placeholder {
-          color: #bbb;
-          font-size: 0.9rem;
-        }
-      }
-    }
-
-    .checkbox-group {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 0.85rem;
-      color: $text-dark;
-      text-align: left;
-      cursor: pointer;
-      
-      input { 
-        margin-top: 3px;
-        cursor: pointer; 
-      }
-    }
-
-    .error-text {
-      color: #e74c3c;
-      font-size: 0.75rem;
-      margin-top: 4px;
-      font-weight: 500;
-    }
-
-    button {
-      background-color: $primary-purple;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       color: white;
-      padding: 14px;
-      border: none;
-      border-radius: 15px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-      &:hover:not(:disabled) {
-        background-color: darken($primary-purple, 8%);
-        box-shadow: 0 8px 20px rgba(129, 135, 177, 0.3);
-        transform: translateY(-2px);
+      .floating-img {
+        max-width: 80%;
+        height: auto;
+        // A lila környezethez igazított árnyék és szaturáció
+        filter: drop-shadow(0 20px 40px rgba($deep-lila, 0.4)) saturate(0.95);
+        animation: float 6s ease-in-out infinite;
       }
 
-      &:active:not(:disabled) {
-        transform: translateY(0);
-      }
-
-      &:disabled {
-        background-color: #bdc3c7;
-        cursor: not-allowed;
-        opacity: 0.7;
+      .trust-text {
+        margin-top: 30px;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
       }
     }
   }
 
-  .footer-text {
-    margin-top: 1.5rem;
+  @media (max-width: 992px) {
+    flex-direction: column;
+    .visual-section { display: none; }
+  }
+}
+
+/* ───────── 4. INPUTOK ÉS SVG IKONOK ───────── */
+.input-group {
+  margin-bottom: 22px;
+  position: relative;
+
+  label { 
+    font-size: 0.88rem; 
+    font-weight: 700; 
+    color: #444; 
+    margin-bottom: 10px; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: $primary-lila;
+      stroke-width: 2;
+      transition: all 0.3s ease;
+    }
+  }
+
+  input, select {
+    width: 100%; 
+    padding: 14px 16px; 
+    border-radius: 12px; 
+    border: 1.5px solid #eee;
+    background: #fafafa;
+    font-size: 1rem;
+    font-family: $font-body;
+    transition: all 0.3s ease;
+
+    &:focus { 
+      border-color: $primary-lila; 
+      background: white;
+      outline: none; 
+      box-shadow: 0 8px 20px rgba($primary-lila, 0.08);
+    }
+  }
+
+  /* Aktív állapotban az ikon is színesedik */
+  &:focus-within label {
+    color: $deep-lila;
+    svg { stroke: $deep-lila; transform: scale(1.1); }
+  }
+}
+
+.input-row { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 20px; 
+}
+
+/* ───────── 5. CHECKBOX ÉS GOMB ───────── */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  input { width: 18px; height: 18px; accent-color: $primary-lila; }
+  .label-text {
     font-size: 0.9rem;
-    color: $text-dark;
-
-    &.sub {
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
-
-    a {
-      color: $primary-purple;
-      text-decoration: none;
-      font-weight: 700;
-      
-      &:hover { 
-        text-decoration: underline; 
-      }
-    }
+    color: #555;
+    a { color: $deep-lila; font-weight: 700; text-decoration: none; }
   }
+}
+
+.btn-primary-grad {
+  width: 100%;
+  padding: 16px;
+  background: $main-grad;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 20px rgba($deep-lila, 0.25);
+
+  &:hover:not(:disabled) { 
+    transform: translateY(-4px); 
+    box-shadow: 0 15px 30px rgba($deep-lila, 0.35); 
+    filter: brightness(1.1); 
+  }
+
+  &:disabled { background: #bdc3c7; cursor: not-allowed; box-shadow: none; opacity: 0.7; }
+}
+
+.form-footer {
+  margin-top: 25px;
+  text-align: center;
+
+  .redirect {
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: #777;
+    a { color: $deep-lila; font-weight: 700; text-decoration: none; }
+  }
+}
+
+/* ───────── 6. ANIMÁCIÓ ───────── */
+@keyframes float { 
+  0%, 100% { transform: translateY(0) rotate(0deg); } 
+  50% { transform: translateY(-15px) rotate(1deg); } 
 }

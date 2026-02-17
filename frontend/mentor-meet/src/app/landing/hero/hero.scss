@@ -1,11 +1,19 @@
-  $font-title: 'Lora', serif;
-  $font-body: 'Inter', sans-serif;
+/* ───────── 0. VÁLTOZÓK ÉS STÍLUSOK ───────── */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
+
+// Az új, karakteresebb lila tónusok a tükrös hatáshoz
+$primary-lila: #7d84b2;
+$deep-lila: #5a6199;
+$bright-lila: #9da4d9;
+$main-grad: linear-gradient(135deg, $deep-lila 0%, $primary-lila 50%, $bright-lila 100%);
+
 :host {
   /* Alap színek és stílus változók */
   --hero-bg: #F5F5F0;
   --hero-ink: #232329;
   --hero-muted: #5a5a66;
-  --hero-brand: #6F77A8;
+  --hero-brand: #7d84b2;
 
   --hero-radius: 12px;
   --hero-shadow: 0 12px 24px rgba(0, 0, 0, .18);
@@ -74,7 +82,7 @@
 
 .hero__title {
   color: var(--hero-ink);
-  font-family: $font-title; // Lora alkalmazva
+  font-family: $font-title; 
   font-weight: 700;
   font-size: 48px;
   line-height: 1.12;
@@ -93,7 +101,7 @@
 
 .hero__subtitle {
   color: var(--hero-muted);
-  font-family: $font-body; // Marad Inter
+  font-family: $font-body; 
   font-size: 20px;
   line-height: 1.5;
   margin: 0 0 2.4rem;
@@ -121,31 +129,63 @@
   color: #3a3a42;
 }
 
-/* ───────── 4. GOMBOK ───────── */
+/* ───────── 4. GOMBOK - CSILLOGÓ GRADIENT STÍLUSBAN ───────── */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1.1rem 1.8rem;
+  padding: 1.1rem 2.2rem;
   border: 0;
   border-radius: var(--hero-radius);
   font-family: $font-body;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: transform .12s ease, box-shadow .18s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   will-change: transform, box-shadow;
+  outline: none;
 }
 
+/* ELSŐDLEGES GOMB - Teli tükrös gradiens */
 .btn--primary {
-  background: var(--hero-brand);
+  background: $main-grad;
   color: #fff;
-  box-shadow: 0 4px 14px rgba(111, 119, 168, .28);
+  box-shadow: 0 8px 20px rgba($deep-lila, 0.25);
 
   &:hover {
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 10px 24px rgba(111, 119, 168, .32);
+    transform: scale(1.05) translateY(-4px);
+    box-shadow: 0 15px 30px rgba($deep-lila, 0.35);
+    filter: brightness(1.1) saturate(1.1); // Csillogó hatás
+  }
+
+  &:active {
+    transform: scale(0.98) translateY(-1px);
+  }
+}
+
+/* MÁSODLAGOS GOMB - Gradiens keretes tükrös hatással */
+.btn--outline {
+  background-color: transparent;
+  color: $deep-lila;
+  border: 2px solid transparent;
+  
+  // Gradiens keret technika
+  background-image: linear-gradient(var(--hero-bg), var(--hero-bg)), $main-grad;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+
+  &:hover {
+    color: #fff;
+    background: $main-grad;
+    transform: scale(1.05) translateY(-4px);
+    box-shadow: 0 12px 25px rgba($deep-lila, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 }
 
