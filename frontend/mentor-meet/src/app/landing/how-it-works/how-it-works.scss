@@ -1,8 +1,13 @@
+/* 1. VÁLTOZÓK DEFINIÁLÁSA A FÁJL TETEJÉN */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
+
 /* SZEKCIÓ ALAPOK */
 .how-it-works {
-  padding: 60px 0; // Kicsit több paddinget adtam neki, hogy ne legyen túl szűk
+  padding: 80px 0;
   background-color: #F5F5F0;
   text-align: center;
+  font-family: $font-body; // Alapértelmezett marad az Inter
 }
 
 /* FEJLÉC IKON ÉS SZÖVEG */
@@ -15,13 +20,16 @@
   }
 
   h2 {
-    font-size: 2.5rem;
+    font-family: $font-title; // CSAK A FŐCÍM LORA
+    font-size: 2.8rem; // Picit emelt méret a serif font miatt
     color: #333;
     font-weight: 700;
     margin-bottom: 20px;
+    line-height: 1.2;
   }
 
   p {
+    font-family: $font-body;
     color: #777;
     font-size: 1.1rem;
     margin-bottom: 20px;
@@ -33,9 +41,16 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 20px;
-  max-width: 1100px;
+  gap: 10px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px;
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
 }
 
 .step-item {
@@ -44,23 +59,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 280px;
+  z-index: 2;
 
   h3 {
+    font-family: $font-body; // Marad Inter a hierarchia miatt
     font-size: 1.3rem;
     color: #333;
     margin-bottom: 12px;
+    font-weight: 700;
   }
 
   p {
     font-size: 0.95rem;
-    color: #888;
-    line-height: 1.5;
-    padding: 0 15px;
-    margin-bottom: 20px;
+    color: #666;
+    line-height: 1.6;
+    padding: 0;
   }
 }
 
-/* A KIS SORSZÁM A KÖR SZÉLÉN */
+/* A KIS SORSZÁM */
 .step-number {
   background-color: #f3f4f6;
   color: #9ca3af;
@@ -74,11 +92,11 @@
   font-size: 0.9rem;
   position: absolute;
   top: 5px;
-  left: 5px;
+  left: 15px;
   z-index: 3;
 }
 
-/* A SZAGGATOTT KÖR AZ IKON KÖRÜL */
+/* AZ IKON KÖRÜLI SZAGGATOTT KÖR */
 .step-icon-wrapper {
   width: 150px;
   height: 150px;
@@ -87,35 +105,90 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F5F5F5;
-  margin-bottom: 30px;
+  background-color: #F9F9F9;
+  margin-bottom: 25px;
   position: relative;
 
   img {
-    width: 160px; // Kicsit kilóghat a körből a látvány kedvéért
-    height: 160px;
+    width: 60px;
+    height: auto;
     object-fit: contain; 
     display: block;
   }
 }
 
-/* A SZAGGATOTT NYILAK A LÉPÉSEK KÖZÖTT */
-.step-arrow {
-  flex: 0 0 200px;
-  height: 220px;
-  background-image: url('/assets/images/icons/Arrow.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+/* JAVÍTOTT ANIMÁLT NYILAK */
+.curved-arrow {
+  flex: 0 0 150px;
+  height: 80px;
+  margin-top: 35px;
+  align-self: flex-start;
+  z-index: 1;
+  overflow: visible;
+
+  .arrow-path {
+    stroke-dasharray: 500; 
+    stroke-dashoffset: 500;
+    opacity: 0;
+    transition: stroke-dashoffset 1.5s ease-in-out, opacity 0.2s;
+  }
+
+  &.animate {
+    .arrow-path {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+    .arrow-head {
+      transition-delay: 1.7s; 
+      opacity: 1;
+    }
+  }
+
+  &.arrow-1.animate .arrow-path { transition-delay: 0.3s; }
+  &.arrow-2.animate .arrow-path { transition-delay: 1.8s; }
+  &.arrow-2.animate .arrow-head { transition-delay: 3.2s; }
+
+  .arrow-head {
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+  }
+
+  @media (max-width: 992px) {
+    transform: rotate(90deg);
+    width: 60px;
+    height: 100px;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
 }
 
-/* MOBILOS NÉZET */
-@media (max-width: 768px) {
-  .steps-row {
-    flex-direction: column;
-    gap: 50px;
+/* IKON CSILLOGÁS EFFEKT */
+.header-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 50%;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -150%;
+    left: -150%;
+    width: 100%;
+    height: 300%;
+    background: linear-gradient(
+      to right, 
+      transparent, 
+      rgba(255, 255, 255, 0.5), 
+      transparent
+    );
+    transform: rotate(45deg);
+    animation: iconShine 4s infinite;
   }
-  .step-arrow {
-    display: none; // Mobilon elrejtjük a nyilakat, mert függőlegesen nem mutatnak jól
-  }
+}
+
+@keyframes iconShine {
+  0% { left: -150%; }
+  20% { left: 150%; }
+  100% { left: 150%; }
 }

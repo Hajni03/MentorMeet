@@ -5,10 +5,11 @@ import { HowItWorks } from '../how-it-works/how-it-works';
 import { Stats } from '../stats/stats';
 import { Cta } from '../cta/cta';
 import { Navbar } from '../../core/navbar/navbar';
+import { TrustBar } from '../trust-bar/trust-bar';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [Hero, Features, HowItWorks, Stats, Cta, Navbar], 
+  imports: [Hero, Features, HowItWorks, Stats, Cta, Navbar, TrustBar], 
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss',
 })
