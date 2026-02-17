@@ -1,0 +1,78 @@
+/* CTA BANNER SZECKCIÓ */
+.cta-banner {
+  background-color: #8c96b8; 
+  padding: 40px 0; 
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  color: #ffffff; 
+}
+
+/* DEKORATÍV FOLTOK (BLOBS) */
+.cta-blob {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px; 
+  z-index: 1;
+  pointer-events: none;
+
+  &--left {
+    left: 0px; 
+  }
+
+  &--right {
+    right: 0px;
+    transform: translateY(-50%) rotate(180deg);
+  }
+}
+
+/* TARTALMI KONTÉNER */
+.cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-size: 3.2rem; 
+  font-weight: 300;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.cta-subtitle {
+  font-size: 1.5rem; 
+  margin-bottom: 50px; // Megemelt távolság a gomb előtt
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* REGISZTRÁCIÓS GOMB */
+.btn--cta {
+  background-color: #434c76;
+  color: #ffffff;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+  border-radius: 6px; 
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: lighten(#434c76, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
