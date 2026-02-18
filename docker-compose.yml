@@ -3,7 +3,8 @@ services:
     image: node:20
     working_dir: /app
     volumes:
-      - ./MentorMeet/frontend/mentor-meet:/app
+      # Feltételezve, hogy a frontend mappa a docker-compose.yml mellett van
+      - ./frontend/mentor-meet:/app
       - /app/node_modules
     ports:
       - "4200:4200"
@@ -15,12 +16,13 @@ services:
 
   backend:
     build:
-      context: ./MentorMeet/backend
+      # A '.' jelenti az aktuális mappát, ahol az yml van
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8000:80"
     volumes:
-      - ./MentorMeet/backend:/var/www/html
+      - ./backend:/var/www/html
     depends_on:
       - db
 

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../../node_modules/@fullcalendar/core/locales/hu.js"],
+  "sourcesContent": ["var l36 = {\n    code: 'hu',\n    week: {\n        dow: 1,\n        doy: 4, // The week that contains Jan 4th is the first week of the year.\n    },\n    buttonText: {\n        prev: 'vissza',\n        next: 'előre',\n        today: 'ma',\n        year: 'Év',\n        month: 'Hónap',\n        week: 'Hét',\n        day: 'Nap',\n        list: 'Lista',\n    },\n    weekText: 'Hét',\n    allDayText: 'Egész nap',\n    moreLinkText: 'további',\n    noEventsText: 'Nincs megjeleníthető esemény',\n};\n\nexport { l36 as default };\n"],
+  "mappings": ";;;AAAA,IAAI,MAAM;AAAA,EACN,MAAM;AAAA,EACN,MAAM;AAAA,IACF,KAAK;AAAA,IACL,KAAK;AAAA;AAAA,EACT;AAAA,EACA,YAAY;AAAA,IACR,MAAM;AAAA,IACN,MAAM;AAAA,IACN,OAAO;AAAA,IACP,MAAM;AAAA,IACN,OAAO;AAAA,IACP,MAAM;AAAA,IACN,KAAK;AAAA,IACL,MAAM;AAAA,EACV;AAAA,EACA,UAAU;AAAA,EACV,YAAY;AAAA,EACZ,cAAc;AAAA,EACd,cAAc;AAClB;",
+  "names": []
+}
