@@ -1,4 +1,5 @@
 <?php
+
 // Mivel Dockerben vagyunk, a host neve 'db', mert ez a service neve a compose-ban
 $host = 'db'; 
 $db   = 'mentormeet'; // A compose-ban megadott MYSQL_DATABASE

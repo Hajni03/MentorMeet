@@ -3,6 +3,6 @@
     "target": "http://backend:80",   
     "secure": false,
     "changeOrigin": true,
-    "pathRewrite": { "^/api": "/api" }  
+    "logLevel": "debug" 
   }
 }

@@ -20,7 +20,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./MentorMeet/backend:/var/www/html
+      - ./backend:/var/www/html
     depends_on:
       - db
 
@@ -30,8 +30,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mentormeet
-      MYSQL_USER: mentormeet
-      MYSQL_PASSWORD: mentormeet
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     volumes:
       - db-data:/var/lib/mysql
     ports:

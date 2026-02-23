@@ -49,16 +49,6 @@ export class RegisterTeacher implements OnInit {
       next: (data) => this.iskolak.set(data),
       error: (err) => console.error('Hiba az iskolák betöltésekor:', err)
     });
-
-    // Ha változik az iskola, töltsük be az osztályokat (opcionális infó a tanárnak)
-    this.form.get('iskola_id')?.valueChanges.subscribe(iskolaId => {
-      if (iskolaId) {
-        this.osztalyService.getOsztalyokByIskola(iskolaId).subscribe({
-          next: (data) => this.osztalyok.set(data),
-          error: (err) => console.error('Hiba az osztályok betöltésekor:', err)
-        });
-      }
-    });
   }
 
   // Jelszó egyezés ellenőrző

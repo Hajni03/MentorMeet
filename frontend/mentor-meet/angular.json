@@ -67,6 +67,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "mentor-meet:build:production"
@@ -83,7 +86,6 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "proxyConfig": "proxy.conf.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
