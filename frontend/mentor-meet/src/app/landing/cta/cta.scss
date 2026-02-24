@@ -1,0 +1,115 @@
+/* 1. VÁLTOZÓK DEFINIÁLÁSA A FÁJL TETEJÉN */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
+
+/* CTA BANNER SZEKCIÓ */
+.cta-banner {
+  background-color: #8c96b8; 
+  padding: 50px 0; 
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #8c96b8 0%, #7681a6 100%);
+  font-family: $font-body; // Alapértelmezett betűtípus itt is az Inter
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  h2 {
+    font-family: $font-title; // CSAK A FŐCÍM LORA
+    font-size: 2.2rem; 
+    font-weight: 700;
+    margin-bottom: 15px; 
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  p {
+    font-family: $font-body;
+    font-size: 1.05rem; 
+    margin-bottom: 30px; 
+    opacity: 0.9;
+  }
+}
+
+/* DEKORATÍV FOLTOK */
+.cta-blob {
+  position: absolute;
+  top: 50%;
+  width: 250px; // A kisebb, finomabb méret
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.6;
+  filter: blur(20px);
+  
+  &--left {
+    left: -100px;
+    animation: floatingLeft 12s infinite ease-in-out;
+  }
+
+  &--right {
+    right: -100px;
+    transform: rotate(180deg);
+    animation: floatingRight 15s infinite ease-in-out;
+  }
+}
+
+/* CSILLOGÓ GOMB EFFEKT */
+.btn--cta {
+  position: relative;
+  background-color: #434c76;
+  color: #ffffff;
+  padding: 16px 40px;
+  font-family: $font-body;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 12px;
+  overflow: hidden; 
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 100%;
+    height: 200%;
+    background: linear-gradient(
+      to right, 
+      transparent, 
+      rgba(255, 255, 255, 0.4), 
+      transparent
+    );
+    transform: rotate(45deg);
+    transition: all 0.7s ease;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(67, 76, 118, 0.4);
+
+    &::after {
+      left: 150%;
+    }
+  }
+}
+
+/* ANIMÁCIÓK */
+@keyframes floatingLeft {
+  0%, 100% { transform: translateY(-50%) translateX(0) scale(1); }
+  50% { transform: translateY(-45%) translateX(20px) scale(1.1); }
+}
+
+@keyframes floatingRight {
+  0%, 100% { transform: translateY(-50%) rotate(180deg) scale(1); }
+  50% { transform: translateY(-55%) rotate(190deg) scale(1.05); }
+}

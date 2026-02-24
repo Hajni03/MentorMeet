@@ -1,37 +1,54 @@
-// Változók - így könnyebb lesz később színt cserélni
+/* 1. VÁLTOZÓK - Erősebb lila tónusok a tükrös hatáshoz */
 $primary-lila: #7d84b2;
+$deep-lila: #5a6199;
+$bright-lila: #9da4d9;
 $light-bg: #F5F5F0;
 $text-dark: #333;
 
+/* A központi tükrös gradiens */
+$main-grad: linear-gradient(135deg, $deep-lila 0%, $primary-lila 50%, $bright-lila 100%);
+
+/* 2. HEADER ALAPOK */
 .header-wrapper {
-  background-color: $light-bg; // Ez színezi be a két szélét is!
+  background-color: $light-bg;
   width: 100%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); // Egy kis árnyék a profibb hatásért
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  
+  // A sötétebb, elegáns csík a legtetején
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: $main-grad;
+  }
 }
 
 .navbar {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.5rem;
 
   &__container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 70px;
+    min-height: 80px;
   }
 
   &__logo {
-    img {
-      height: 50px; // Itt állítsd be a logód méretét
-      display: block;
-    }
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    img { height: 55px; display: block; }
+    &:hover { transform: scale(1.05); }
   }
 
+  /* 3. MENÜPONTOK - Az eredeti design megtartásával */
   &__menu {
     list-style: none;
     display: flex;
-    gap: 0.5rem; // Kicsit közelebb a gombok egymáshoz
+    gap: 0.5rem; // Az eredeti kódod szerinti szűkebb gap
     margin: 0;
     padding: 0;
 
@@ -47,67 +64,70 @@ $text-dark: #333;
   }
 }
 
-// GOMBOK (Gyakori elemek, amiket a menüben és az akciókban is használsz)
+/* 4. GOMBOK ÉS MENÜPONT-STÍLUSOK (BTN osztály) */
 .btn {
   padding: 0.6rem 1.4rem;
   font-size: 0.95rem;
-  // 25px helyett állítsd 4px-re vagy 6px-re a szögletesebb, de modern sarkokért
-  border-radius: 6px; 
+  border-radius: 6px; // Az eredeti szögletesebb, modern forma
   cursor: pointer;
   border: none;
   font-weight: 600;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); // Finomabb mozgás
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
-  outline: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  outline: none;
 
-  //Menüpontok
+  /* Menüpontok designja (Secondary) - Az eredeti logika, új színekkel */
   &--secondary {
-    background-color: transparent !important; // A biztonság kedvéért kényszerítsük az átlátszóságot
-    color: #333; // $text-dark helyett írd be direktbe a teszthez
+    background-color: transparent !important;
+    color: $text-dark;
 
     &:hover {
-      background-color: #7d84b2 !important; // $primary-lila helyett direkt szín
+      background: $main-grad !important; // Itt jelenik meg a csillogó lila
       color: #fff !important;
       transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(125, 132, 178, 0.3);
+      box-shadow: 0 4px 12px rgba($deep-lila, 0.3);
+      
+      // Egy kis extra csillogás hoverre
+      filter: brightness(1.1);
     }
   }
-  // BEJELENTKEZÉS (Teli gomb)
+
+  /* BEJELENTKEZÉS (Primary) - Teli gradiens */
   &--primary {
-    background-color: $primary-lila;
+    background: $main-grad;
     color: #fff;
+    box-shadow: 0 4px 12px rgba($primary-lila, 0.3);
     
     &:hover {
-      background-color: darken($primary-lila, 8%);
-      // Kiugró effekt: emelkedés + árnyék
+      filter: saturate(1.1) brightness(1.15);
       transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba($primary-lila, 0.3);
+      box-shadow: 0 6px 15px rgba($deep-lila, 0.4);
     }
 
-    &:active {
-      transform: translateY(-1px); // Kattintáskor kicsit visszasüllyed
-    }
+    &:active { transform: translateY(-1px); }
   }
 
-  // REGISZTRÁCIÓ (Keretes gomb)
+  /* REGISZTRÁCIÓ (Outline) - Tükrös kerettel */
   &--outline {
     background-color: transparent;
-    color: $primary-lila;
-    border: 2px solid $primary-lila;
+    color: $deep-lila;
+    border: 2px solid transparent;
+    
+    // Gradiens keret technika
+    background-image: linear-gradient($light-bg, $light-bg), $main-grad;
+    background-origin: border-box;
+    background-clip: padding-box, border-box; 
     
     &:hover {
-      background-color: $primary-lila;
+      background: $main-grad;
       color: #fff;
-      // Kiugró effekt itt is
       transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba($primary-lila, 0.2);
+      box-shadow: 0 6px 15px rgba($deep-lila, 0.2);
     }
 
-    &:active {
-      transform: translateY(-1px);
-    }
+    &:active { transform: translateY(-1px); }
   }
 }

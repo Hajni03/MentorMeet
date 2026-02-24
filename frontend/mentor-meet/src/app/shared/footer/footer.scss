@@ -1,35 +1,152 @@
-footer {
-  background-color: #f5f5f5;
-  padding: 2rem 1rem 1rem;
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: auto; // Ez segít lent tartani a láblécet
+/* VÁLTOZÓK A FÁJL TETEJÉN */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
+$brand-color: #8c96b8;
+
+.main-footer {
+  background-color: #f9f9f7; 
+  padding: 50px 0 20px; /* Megemelt felső padding a szellősebb érzetért */
+  color: #6a6a6a;
+  font-family: $font-body; // Alapértelmezett betűtípus
 }
 
-.footer-content {
+.footer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto 1rem;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 50px;
+  margin-bottom: 50px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.footer-col h4 {
-  margin-bottom: 1rem;
-  font-weight: bold;
-  color: #333;
+.footer-logo {
+  height: 80px; 
+  margin-bottom: 15px;
+  cursor: pointer;
+  margin-left: 20px;
 }
 
-.footer-col ul {
+.footer-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  margin-left: 20px;
+}
+
+/* LORA A CÍMEKNEK */
+.footer-title {
+  font-family: $font-title;
+  color: #1a1a1a;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.footer-links {
   list-style: none;
   padding: 0;
   
   li {
-    margin-bottom: 0.5rem;
-    a {
-      color: #555;
-      text-decoration: none;
-      &:hover { text-decoration: underline; }
+    margin-bottom: 12px;
+  }
+
+  a {
+    text-decoration: none;
+    color: #6a6a6a;
+    font-size: 0.95rem;
+    transition: color 0.3s, padding-left 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: $brand-color;
+      padding-left: 5px; // Egy kis dinamika a linkeknek
+    }
+  }
+}
+
+/* KAPCSOLAT ÉS IKONOK */
+.contact-list {
+  list-style: none;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+  }
+
+  i {
+    color: $brand-color;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+  }
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  margin-left: 20px;
+
+  a {
+    color: $brand-color;
+    font-size: 1.3rem;
+    transition: transform 0.3s, color 0.3s;
+
+    &:hover {
+      transform: translateY(-3px);
+      color: darken($brand-color, 15%);
+    }
+  }
+}
+
+/* FOOTER ALSÓ SÁV */
+.footer-bottom {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 25px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.footer-bottom-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #888;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+.footer-legal {
+  a {
+    margin-left: 40px;
+    text-decoration: none;
+    color: #888;
+    cursor: pointer;
+    margin-right: 20px;
+
+    &:hover {
+      color: $brand-color;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      margin: 0 10px;
     }
   }
 }

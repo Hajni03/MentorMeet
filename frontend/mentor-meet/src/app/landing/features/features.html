@@ -2,17 +2,14 @@
     <div class="container">
         <header class="features-header">
             <h2 class="features-title">
-                <img 
-                    src="/assets/images/teljes_logo.png"
-                    alt="MentorMeet logó" 
-                    class="logo-image"
-                >
+                <img src="/assets/images/teljes_logo.png" alt="MentorMeet logó" class="logo-image">
                 <span class="trailing-text">– a konzultáció egyszerűbb jövője</span>
             </h2>
             <p class="features-subtitle">
-                Foglalj időpontot pár kattintással, kövesd nyomon a konzultációkat, és felejtsd el a hosszas egyeztetéseket.
+                Foglalj időpontot pár kattintással, kövesd nyomon a konzultációkat, és felejtsd el a hosszas
+                egyeztetéseket.
             </p>
-            
+
             <ul class="features-list">
                 <li class="features-list-item student">
                     <span class="icon">📅</span>
@@ -25,8 +22,10 @@
             </ul>
         </header>
 
+
+
         <div class="cards-grid">
-            <article class="feature-card">
+            <article class="feature-card" #featureCard>
                 <div class="card-image-wrapper">
                     <img src="/assets/images/idopontfoglalas.png" alt="Naptár és időpontfoglalás" class="card-image">
                 </div>
@@ -37,9 +36,10 @@
                 <a routerLink="/join" class="card-button primary">Csatlakozz hozzánk</a>
             </article>
 
-            <article class="feature-card">
+            <article class="feature-card" #featureCard>
                 <div class="card-image-wrapper">
-                    <img src="/assets/images/atlathato_rendszer.png" alt="Adatok vizualizálása a dashboardon" class="card-image">
+                    <img src="/assets/images/atlathato_rendszer.png" alt="Adatok vizualizálása a dashboardon"
+                        class="card-image">
                 </div>
                 <h3 class="card-title">Átlátható rendszer</h3>
                 <p class="card-description">
@@ -48,7 +48,7 @@
                 <a routerLink="/how-it-works" class="card-button secondary">Nézd meg, hogyan működik</a>
             </article>
 
-            <article class="feature-card">
+            <article class="feature-card" #featureCard>
                 <div class="card-image-wrapper">
                     <img src="/assets/images/gyors_segitseg.png" alt="Mosolygós diák hátizsákkal" class="card-image">
                 </div>
@@ -60,4 +60,5 @@
             </article>
         </div>
     </div>
+
 </section>

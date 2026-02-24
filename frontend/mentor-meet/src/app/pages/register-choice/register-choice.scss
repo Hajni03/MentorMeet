@@ -1,31 +1,160 @@
+/* 1. VÁLTOZÓK */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
+$bg-light: #F5F5F0;
+$brand-color: #6F77A8;
+
+/* 2. KONTÉNER */
 .register-container {
-  max-width: 500px;
-  margin: 60px auto;
-  padding: 16px;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background-color: $bg-light;
+  font-family: $font-body;
   text-align: center;
+
+  h1 {
+    font-family: $font-title;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+  }
 }
 
 .choice-wrapper {
-  display: grid;
-  gap: 16px;
-  margin-top: 24px;
+  display: flex;
+  gap: 30px;
+  max-width: 950px;
+  width: 100%;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
+/* 3. KÁRTYA STÍLUS */
 .choice-card {
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  background: #fff;
+  background: white;
+  border: none;
+  border-radius: 24px;
+  padding: 45px 40px;
+  flex: 1;
+  max-width: 420px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s ease;
-}
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden; // Ez fontos a sarokban lévő gömb miatt
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 
-.choice-card:hover {
-  border-color: #999;
-  transform: translateY(-2px);
-}
+  /* A dekoratív gömb a sarokban */
+  &::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 140px;
+    height: 140px;
+    background: rgba($brand-color, 0.03);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
 
-.choice-card h2 {
-  margin: 0 0 6px 0;
+  .card-icon {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    z-index: 2;
+
+    svg {
+      width: 40px;
+      height: 40px;
+      transition: all 0.3s ease;
+      filter: saturate(1.2) brightness(1.1);
+    }
+  }
+
+  h2 {
+    font-size: 1.85rem;
+    color: #1a1a1a;
+    margin: 0 0 12px;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: #777;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* SZEREPKÖR SPECIFIKUS SZÍNEK */
+  &.student {
+    &:hover {
+      background: linear-gradient(135deg, #ffffff, #f0fbff);
+      h2 { color: #0072ff; }
+      .card-icon svg { 
+        filter: drop-shadow(0 0 8px rgba(79, 172, 254, 0.5)) saturate(1.4);
+      }
+      &::before { background: rgba(#4facfe, 0.08); }
+    }
+  }
+
+  &.teacher {
+    &:hover {
+      background: linear-gradient(135deg, #ffffff, #fcf5ff);
+      h2 { color: #9d50bb; }
+      .card-icon svg { 
+        filter: drop-shadow(0 0 8px rgba(157, 80, 187, 0.5)) saturate(1.4);
+      }
+      &::before { background: rgba(#9d50bb, 0.08); }
+    }
+  }
+
+  /* HOVER HATÁSOK */
+  &:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+
+    &::before {
+      transform: scale(1.5); // Itt nő meg a gömb a sarokban
+    }
+
+    .card-icon {
+      transform: scale(1.1);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
 }

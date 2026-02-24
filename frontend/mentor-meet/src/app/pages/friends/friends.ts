@@ -14,6 +14,7 @@ export class Friends {
 
   private http = inject(HttpClient);
   friends: any[] = [];
+  suggestedStudents: any[] = [];
   currentUser: any = null;
 
   ngOnInit() {
@@ -21,12 +22,18 @@ export class Friends {
     if (userData) {
       this.currentUser = JSON.parse(userData);
       this.loadFriends();
+      this.loadSchoolStudents();
     }
   }
 
   loadFriends() {
     this.http.get<any[]>(`/api/get_friends.php?user_id=${this.currentUser.id}`)
       .subscribe(res => this.friends = res);
+  }
+  loadSchoolStudents() {
+    // Itt küldjük el az iskola_id-t is, amit a bejelentkezéskor mentettünk el
+    this.http.get<any[]>(`/api/get_school_students.php?user_id=${this.currentUser.id}&iskola_id=${this.currentUser.iskola_id}`)
+      .subscribe(res => this.suggestedStudents = res);
   }
 
   // Chat

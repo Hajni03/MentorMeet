@@ -16,6 +16,7 @@ export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -32,6 +33,7 @@ export class Login {
             
             // Adatok mentése a böngészőbe
             localStorage.setItem('user', JSON.stringify(res.user));
+            this.authService.isLoggedIn.set(true);
 
             // SZEREPKÖR ALAPÚ IRÁNYÍTÁS MÓDOSÍTÁSA
             if (res.user.szerep === 'tanar') {

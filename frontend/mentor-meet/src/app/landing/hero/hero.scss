@@ -1,269 +1,227 @@
-:host{
-  /* Alap változók */
-  --hero-bg:#F5F5F0;
-  --hero-ink:#232329;
-  --hero-muted:#5a5a66;
-  --hero-brand:#6F77A8;
+/* ───────── 0. VÁLTOZÓK ÉS STÍLUSOK ───────── */
+$font-title: 'Lora', serif;
+$font-body: 'Inter', sans-serif;
 
-  --hero-radius:12px;
-  --hero-shadow:0 12px 24px rgba(0,0,0,.18);
+// Az új, karakteresebb lila tónusok a tükrös hatáshoz
+$primary-lila: #7d84b2;
+$deep-lila: #5a6199;
+$bright-lila: #9da4d9;
+$main-grad: linear-gradient(135deg, $deep-lila 0%, $primary-lila 50%, $bright-lila 100%);
 
-  /* Pozícionálás / vágás */
-  --hero-pad-top:clamp(12px,1vw,20px);
-  --hero-copy-overlap:80px;
-  --copy-up:-46px;
-  --girl-up:-5px;
+:host {
+  /* Alap színek és stílus változók */
+  --hero-bg: #F5F5F0;
+  --hero-ink: #232329;
+  --hero-muted: #5a5a66;
+  --hero-brand: #7d84b2;
 
-  /* Kép eltolások */
-  --hero-image-shift:clamp(100px,30vw,160px);
-  --hero-image-out:clamp(-28px,-3vw,-72px);
+  --hero-radius: 12px;
+  --hero-shadow: 0 12px 24px rgba(0, 0, 0, .18);
 
-  /* „Rátolás” a következő szekcióra */
-  --cut-gap:180px;
-
-  /* Átmenet a következő szekció hátterére */
-  --next-bg:#F5F5F0;
-  --hero-bg-cut:80px;
+  /* Pozícionálás */
+  --hero-pad-top: clamp(12px, 1vw, 20px);
+  --girl-up: -5px;
+  --hero-image-shift: 0;
+  --hero-image-out: 0;
+  --cut-gap: 180px;
 }
 
-/* ───────── Hero alapok ───────── */
-.hero{
-  position:relative;
-  background:var(--hero-bg);
-  padding:var(--hero-pad-top) 0 clamp(80px,8vw,120px);
-  padding-bottom:0 !important; /* ne hagyjon extra helyet alul */
+/* ───────── 1. ANIMÁCIÓK ───────── */
+
+@keyframes heroRevealUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Finom árnyék a header alatt */
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0 0 auto 0;
-  height:10px;
-  box-shadow:0 8px 18px rgba(0,0,0,.12);
-  opacity:.25;
-  pointer-events:none;
+@keyframes heroRevealRight {
+  0% { opacity: 0; transform: translate(calc(var(--hero-image-shift) + 40px), var(--girl-up)); }
+  100% { opacity: 1; transform: translate(var(--hero-image-shift), var(--girl-up)); }
 }
 
-/* A hero alján „ráfestjük” a következő szekció színét */
-.hero::after{
-  content:"";
-  position:absolute;
-  left:0; right:0; bottom:0;
-  height:var(--hero-bg-cut);
-  background:var(--next-bg);
-  pointer-events:none;
-  z-index:0;
+@keyframes blobFloat {
+  0%, 100% { transform: translateY(-200px) scale(1) rotate(0deg); }
+  50% { transform: translateY(-215px) scale(1.05) rotate(2deg); }
 }
 
-/* Rács: bal (copy) + jobb (kép) */
-.hero__row{
-  width:min(1120px, calc(100% - 32px));
-  margin-inline:auto;
-  display:grid;
-  grid-template-columns:minmax(320px,560px) 1fr;
-  align-items:center;
-  gap:clamp(32px,5vw,72px);
-  position:relative;
-  z-index:1;
+@keyframes lineSlideIn {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
-.hero__copy{
-  position:relative;
-  z-index:2;
-  margin-right:calc(-1 * var(--hero-copy-overlap));
-  transform:translateY(var(--copy-up));
+/* ───────── 2. HERO ALAPOK ───────── */
+
+.hero {
+  position: relative;
+  background: var(--hero-bg);
+  padding: var(--hero-pad-top) 0 clamp(80px, 8vw, 120px);
+  padding-bottom: 0 !important;
+  overflow: hidden;
+  font-family: $font-body;
 }
 
-.hero__title{
-  color:var(--hero-ink);
-  font-size:45px;
-  line-height:1.12;
-  letter-spacing:-.3px;
-  margin:-15px 0 1.2rem;
-}
+/* ───────── 3. TARTALOM ───────── */
 
-.hero__subtitle{
-  color:var(--hero-muted);
-  font-size:20px;
-  line-height:22px;
-  margin:0 0 2.4rem;
-  max-width:58ch;
-}
-
-.hero__line1{ white-space:nowrap; display:inline-block; }
-.hero__line2{ display:inline-block; transform:translateY(-2px); }
-
-/* Infó blokkok + gombok */
-.hero__meta{
-  display:grid;
-  grid-template-columns:auto auto;
-  gap:clamp(22px,3vw,42px);
-  margin-top:.5rem;
-}
-.hero__meta-label{ display:block; margin-bottom:.6rem; font-weight:600; color:#3a3a42; }
-
-/* ───────── Gombok ───────── */
-.btn,
-.btn:link,
-.btn:visited{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:1.1rem 1.6rem;
-  border:0;
-  border-radius:var(--hero-radius);
-  font-weight:600;
-  cursor:pointer;
-  text-decoration:none;
-  transition:transform .12s ease, box-shadow .18s ease;
-}
-.btn--primary,
-.btn--primary:link,
-.btn--primary:visited{
-  background:var(--hero-brand);
-  color:#fff;
-  box-shadow:0 4px 14px rgba(111,119,168,.28);
-}
-.btn--primary:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(111,119,168,.32); }
-.btn--primary:active{ transform:translateY(0); }
-
-.btn--ghost,
-.btn--ghost:link,
-.btn--ghost:visited{
-  background:transparent;
-  color:var(--hero-brand);
-  border:1px solid var(--hero-brand);
-}
-
-/* ───────── Jobb oldal – vizuál ───────── */
-.hero__visual{
-  justify-self:end;
-  position:relative;                  /* csík pszeudo-elemhez */
-  margin-right:var(--hero-image-out);
-  margin-bottom:calc(-1 * var(--cut-gap)) !important; /* „rátolás” */
-  z-index:2;                          /* a hero ::after fölött legyen */
-}
-
-.hero__img{
-  width:min(550px,50vw);
-  height:auto;
-  display:block;
-  transform:translate(var(--hero-image-shift), var(--girl-up));
-  filter:drop-shadow(var(--hero-shadow));
-  margin:-50px 0 1.2rem;
-}
-
-/* Bal szürke „vízfesték” folt */
-.hero__bg{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-.hero__bg--left img{
-   position: absolute;
-  /* kevesebbet lógjon ki balra */
-  left: clamp(-40px, -5vw, -16px);
-  top: 100px;
-
-  /* kicsit kisebb, hogy biztosan beférjen */
-  width: clamp(260px, 26vw, 420px);
-
-  opacity: .40;
-
-  /* csak felfelé tolás – NINCS vízszintes eltolás */
-  transform: translateY(-200px);
-
-  /* biztosíték: sose legyen szélesebb a konténertől */
-  max-width: 100%;
-}
-/* ───────── Interakciós finomítás ───────── */
-.hero .btn,
-.hero .btn:link,
-.hero .btn:visited{
-  transform:translateZ(0);
-  will-change:transform, box-shadow;
-}
-.hero .btn:hover,
-.hero .btn:focus-visible{
-  transform:scale(1.07);
-  box-shadow:0 10px 24px rgba(111,119,168,.32);
-  outline:none;
-}
-.hero .btn:active{ transform:scale(1.03); }
-@media (prefers-reduced-motion: reduce){
-  .hero .btn,
-  .hero .btn:hover,
-  .hero .btn:focus-visible,
-  .hero .btn:active{
-    transition:none; transform:none;
-  }
-}
-
-/* ───────── Reszponzív ───────── */
-@media (max-width:1200px){
-  :host{
-    --hero-image-shift:clamp(28px,4vw,60px);
-    --hero-image-out:clamp(-16px,-2vw,-40px);
-  }
-}
-
-@media (max-width:992px){
-  .hero__row{
-    grid-template-columns:1fr;
-    gap:32px;
-  }
-  .hero__copy{
-    margin-right:0;
-    transform:none;
-  }
-  .hero__line1{ white-space:normal; }
-
-  .hero__visual{
-    justify-self:center;
-    margin-right:0;
-    margin-bottom:0 !important;       /* mobilon ne toljuk össze */
-  }
-  .hero{ padding-bottom:24px !important; }
-
-  .hero__img{
-    width:min(520px,90vw);
-    transform:none;
-  }
-  .hero__meta{
-    grid-template-columns:1fr;
-    gap:16px;
-  }
-  .hero__bg--left img{
-    left:-120px; top:120px;
-    width:120%;
-    opacity:.35;
-    transform:none;
-  }
-  .hero{ --hero-bg-cut:40px; }        /* hero aljának rövidítése mobilon */
-}
-
-/* Divider beállítások (szín/magasság igény szerint) */
-.hero{
-  --divider-color: #848CAF;
-  --divider-height: 1.5px;
-  --divider-nudge: -143px; 
-}
-
-.hero__row{
-  position: relative; /* hogy legyen referenciapont a ::after-nek */
+.hero__row {
+  width: min(1120px, calc(100% - 32px));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 60px;
+  position: relative;
   z-index: 1;
 }
 
-/* Vékony, container-szélességű csík a hero alján */
-.hero__row::after{
-  content: "";
+.hero__copy {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: heroRevealUp 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  animation-delay: 0.2s;
+}
+
+.hero__title {
+  color: var(--hero-ink);
+  font-family: $font-title; 
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1.12;
+  letter-spacing: -.3px;
+  margin: -15px 0 1.2rem;
+
+  .hero__line1, .hero__line2 {
+    display: inline-block;
+    opacity: 0;
+    animation: lineSlideIn 0.8s ease-out forwards;
+  }
+
+  .hero__line1 { animation-delay: 0.4s; }
+  .hero__line2 { transform: translateY(-2px); animation-delay: 0.6s; }
+}
+
+.hero__subtitle {
+  color: var(--hero-muted);
+  font-family: $font-body; 
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 0 0 2.4rem;
+  max-width: 58ch;
+  opacity: 0;
+  animation: lineSlideIn 0.8s ease-out forwards;
+  animation-delay: 0.8s;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: clamp(22px, 3vw, 42px);
+  margin-top: .5rem;
+  opacity: 0;
+  animation: heroRevealUp 0.8s ease-out forwards;
+  animation-delay: 1s;
+}
+
+.hero__meta-label {
+  display: block;
+  margin-bottom: .6rem;
+  font-weight: 600;
+  font-size: 14px;
+  color: #3a3a42;
+}
+
+/* ───────── 4. GOMBOK - CSILLOGÓ GRADIENT STÍLUSBAN ───────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.1rem 2.2rem;
+  border: 0;
+  border-radius: var(--hero-radius);
+  font-family: $font-body;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: transform, box-shadow;
+  outline: none;
+}
+
+/* ELSŐDLEGES GOMB - Teli tükrös gradiens */
+.btn--primary {
+  background: $main-grad;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba($deep-lila, 0.25);
+
+  &:hover {
+    transform: scale(1.05) translateY(-4px);
+    box-shadow: 0 15px 30px rgba($deep-lila, 0.35);
+    filter: brightness(1.1) saturate(1.1); // Csillogó hatás
+  }
+
+  &:active {
+    transform: scale(0.98) translateY(-1px);
+  }
+}
+
+/* MÁSODLAGOS GOMB - Gradiens keretes tükrös hatással */
+.btn--outline {
+  background-color: transparent;
+  color: $deep-lila;
+  border: 2px solid transparent;
+  
+  // Gradiens keret technika
+  background-image: linear-gradient(var(--hero-bg), var(--hero-bg)), $main-grad;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+
+  &:hover {
+    color: #fff;
+    background: $main-grad;
+    transform: scale(1.05) translateY(-4px);
+    box-shadow: 0 12px 25px rgba($deep-lila, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* ───────── 5. VIZUÁLIS ELEMEK ───────── */
+
+.hero__visual {
+  justify-self: end;
+  position: relative;
+  margin-bottom: calc(-1 * var(--cut-gap)) !important;
+  z-index: 2;
+}
+
+.hero__img {
+  width: min(550px, 50vw);
+  height: auto;
+  display: block;
+  filter: drop-shadow(var(--hero-shadow));
+  opacity: 0;
+  animation: heroRevealRight 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  animation-delay: 0.3s;
+}
+
+.hero__bg--left img {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(var(--cut-gap) + var(--divider-nudge));
-  width: 1300px;
-  height: var(--divider-height);
-  background: var(--divider-color);
-  border-radius: 999px;
-  opacity: .9;
-  z-index: 3; /* a hero ::after (z-index:0) fölé kerüljön */
-  box-shadow: 0 4px 10px rgba(0,0,0,.04); /* finom „air” – opcionális */
-  margin-bottom: -18px;
+  left: clamp(-40px, -5vw, -16px);
+  top: 100px;
+  width: clamp(260px, 26vw, 420px);
+  opacity: .40;
+  animation: blobFloat 10s ease-in-out infinite;
+}
+
+/* ───────── 6. MOBIL NÉZET ───────── */
+
+@media (max-width: 992px) {
+  .hero__row { grid-template-columns: 1fr; gap: 32px; }
+  .hero__title { font-size: 38px; }
+  .hero__visual { max-width: 500px; overflow: hidden; }
+  .hero__img { height: 400px; object-fit: contain; }
 }

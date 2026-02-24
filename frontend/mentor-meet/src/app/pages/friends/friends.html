@@ -1,7 +1,21 @@
-<div class="friends-container">
-  <div class="header-section">
-    <h2>Ismerőseim ({{ friends.length }})</h2>
+<div class="header-section">
+  <h2>Menteek ({{ friends.length }})</h2>
+  <button class="search-btn" (click)="showSuggested = !showSuggested">
+    {{ showSuggested ? 'Vissza az ismerősökhöz' : 'Új kollégák keresése' }}
+  </button>
+</div>
+
+<div *ngIf="showSuggested" class="suggested-section">
+  <h3>Kollégák az iskoládból:</h3>
+  <div class="friends-grid">
+     <div *ngFor="let teacher of suggestedTeachers" class="friend-card suggested">
+        <div class="card-info">
+           <h3>{{ teacher.nev }}</h3>
+           <button (click)="sendRequest(teacher.id)">Ismerősnek jelölés</button>
+        </div>
+     </div>
   </div>
+</div>
 
   <div class="friends-grid">
     <div *ngFor="let friend of friends" class="friend-card">
