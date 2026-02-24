@@ -14,14 +14,14 @@ export class UserProfile {
   loading = true;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Az 'id' paramétert az app.routes.ts-ben definiált :id-ból vesszük
     const id = this.route.snapshot.paramMap.get('id');
-    
+
     if (id) {
       this.http.get(`/api/get_user_details.php?id=${id}`)
         .subscribe({
@@ -35,6 +35,10 @@ export class UserProfile {
           }
         });
     }
+  }
+
+  goBack() {
+    window.history.back();
   }
 
 }

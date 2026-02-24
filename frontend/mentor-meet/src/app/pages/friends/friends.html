@@ -1,26 +1,38 @@
 <div class="header-section">
-  <h2>Menteek ({{ friends.length }})</h2>
+  <h2>{{ showSuggested ? 'Új menteek keresése' : 'Ismerősök' }} ({{ friends.length }})</h2>
   <button class="search-btn" (click)="showSuggested = !showSuggested">
-    {{ showSuggested ? 'Vissza az ismerősökhöz' : 'Új kollégák keresése' }}
+    {{ showSuggested ? 'Vissza a Menteekhez' : 'Új Menteek keresése' }}
   </button>
 </div>
 
 <div *ngIf="showSuggested" class="suggested-section">
-  <h3>Kollégák az iskoládból:</h3>
+  <h3>Menteek az iskoládból:</h3>
   <div class="friends-grid">
-     <div *ngFor="let teacher of suggestedTeachers" class="friend-card suggested">
-        <div class="card-info">
-           <h3>{{ teacher.nev }}</h3>
-           <button (click)="sendRequest(teacher.id)">Ismerősnek jelölés</button>
+    <div *ngFor="let student of suggestedStudents" class="friend-card suggested">
+      <div class="card-info">
+        <h3>{{ student.nev }}</h3>
+        <div class="card-actions">
+          <button class="view-profile-btn" [routerLink]="['/user-profile', student.id]">
+            Profil
+          </button>
+          <button class="request-btn" (click)="sendRequest(student.id)">
+            Jelölés
+          </button>
         </div>
-     </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="suggestedStudents.length === 0" class="no-results">
+    <p>Nincs több elérhető mentee az iskoládban.</p>
   </div>
 </div>
 
+<div *ngIf="!showSuggested">
   <div class="friends-grid">
     <div *ngFor="let friend of friends" class="friend-card">
       <div class="card-left">
-        <img [src]="friend.profilkep_eres || 'assets/images/profilkep_placeholder.jpg'" class="friend-avatar">
+        <img [src]="friend.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" class="friend-avatar">
         <span class="status-indicator" [class.online]="friend.is_online == 1"></span>
       </div>
       <div class="card-info">
