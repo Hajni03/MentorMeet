@@ -18,6 +18,7 @@ export class Friends implements OnInit { // Érdemes az implemenst odaírni
   suggestedStudents: any[] = []; // <--- Ezt használjuk a HTML-ben is!
   currentUser: any = null;
   showSuggested = false; // <--- Ez valószínűleg hiányzott, a HTML-ben viszont használod a kapcsolót!
+  sentRequests = new Set<number>();
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
@@ -46,8 +47,24 @@ export class Friends implements OnInit { // Érdemes az implemenst odaírni
   }
 
   // Ezt hívja meg a jelölés gomb
-  sendRequest(targetId: number) {
-    console.log('Jelölés küldése:', targetId);
-    // Ide jön majd az add_friend.php hívása
-  }
+ sendRequest(targetId: number) {
+  const payload = {
+    tanar_id: this.currentUser.id, // A bejelentkezett tanár
+    diak_id: targetId              // A kártyán lévő diák
+  };
+
+  this.http.post('http://localhost:8000/api/add_contact.php', payload)
+    .subscribe({
+      next: (res: any) => {
+        // Mivel a PHP-d sikeres beszúrásnál is 200-as kódot küld:
+        if (res.message === 'Jelölés sikeresen elküldve!' || res.message === 'Már küldtél jelölést ennek a felhasználónak.') {
+          this.sentRequests.add(targetId);
+          console.log('Siker:', res.message);
+        }
+      },
+      error: (err) => {
+        console.error('Hiba történt a jelölésnél:', err);
+      }
+    });
+}
 }

@@ -12,17 +12,18 @@
       <div class="card-info">
         <h3>{{ student.nev }}</h3>
         <div class="card-actions">
-          <button class="view-profile-btn" [routerLink]="['/user-profile', student.id]">
+          <button class="view-profile-btn" routerLink="/user-profile/{{student.id}}">
             Profil
           </button>
-          <button class="request-btn" (click)="sendRequest(student.id)">
-            Jelölés
+          <button class="request-btn" (click)="sendRequest(student.id)" [disabled]="sentRequests.has(student.id)"
+            [class.sent]="sentRequests.has(student.id)">
+            {{ sentRequests.has(student.id) ? 'Jelölés elküldve' : 'Jelölés' }}
           </button>
         </div>
       </div>
     </div>
   </div>
-  
+
   <div *ngIf="suggestedStudents.length === 0" class="no-results">
     <p>Nincs több elérhető mentee az iskoládban.</p>
   </div>

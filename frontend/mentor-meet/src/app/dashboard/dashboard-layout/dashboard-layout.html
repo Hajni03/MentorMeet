@@ -34,7 +34,7 @@
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        Ismerősök
+        Menteek/Mentorok keresése
       </a>
     </nav>
 
@@ -81,13 +81,22 @@
                 <h3>Értesítések</h3>
               </div>
               <div class="dropdown-body">
-                <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.is_read == 0">
+                <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.olvasott == 0">
                   <div class="notif-content">
                     <p>{{ n.uzenet }}</p>
-                    <span>{{ n.created_at | date:'HH:mm' }}</span>
+
+                    <span>{{ n.datum | date:'yyyy.MM.dd. HH:mm' }}</span>
+
+                    <div class="notif-actions" *ngIf="n.tipus === 'jeloles' && n.olvasott == 0">
+                      <button class="btn-accept"
+                        (click)="handleRequest(n.id, 'accepted'); $event.stopPropagation()">Elfogad</button>
+                      <button class="btn-reject"
+                        (click)="handleRequest(n.id, 'rejected'); $event.stopPropagation()">Elutasít</button>
+                    </div>
                   </div>
-                  <div class="unread-indicator" *ngIf="n.is_read == 0"></div>
+                  <div class="unread-indicator" *ngIf="n.olvasott == 0"></div>
                 </div>
+
                 <div *ngIf="notifications.length === 0" class="empty-notif">
                   Nincs új értesítésed.
                 </div>

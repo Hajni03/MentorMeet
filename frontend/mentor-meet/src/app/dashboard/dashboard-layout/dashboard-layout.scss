@@ -390,3 +390,54 @@ $secondary-blue: #848CAF;
   border-radius: 10px;
   margin-left: auto; // Kitolja a szélére
 }
+// --- ÚJ: ÉRTESÍTÉSI AKCIÓ GOMBOK STÍLUSA ---
+.notif-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  padding-bottom: 5px;
+
+  button {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+
+    &.btn-accept {
+      background-color: $primary-purple;
+      color: white;
+      box-shadow: 0 4px 10px rgba(75, 59, 115, 0.2);
+
+      &:hover {
+        background-color: lighten($primary-purple, 10%);
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    &.btn-reject {
+      background-color: transparent;
+      color: $secondary-blue;
+      border: 1px solid rgba(132, 140, 175, 0.3);
+
+      &:hover {
+        background-color: #ef4444; // Piros háttér elutasításnál
+        color: white;
+        border-color: #ef4444;
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}

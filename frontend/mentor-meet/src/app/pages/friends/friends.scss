@@ -235,3 +235,8 @@ $secondary-blue: #848CAF;
 .request-btn:hover, .view-profile-btn:hover {
   opacity: 0.8;
 }
+.request-btn.sent {
+  background-color: #a5a5a5;
+  cursor: not-allowed;
+  transform: none;
+}

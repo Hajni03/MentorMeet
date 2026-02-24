@@ -68,7 +68,7 @@ export class DashboardLayoutComponent implements OnInit {
         next: (data) => {
           this.notifications = data || [];
           // Az adatbázis 'is_read' mezőjét nézzük (0 = olvasatlan)
-          this.unreadCount = this.notifications.filter(n => n.is_read == 0).length;
+          this.unreadCount = this.notifications.filter(n => n.olvasott == 0).length;
         },
         error: (err) => console.error("Értesítés hiba:", err)
       });

@@ -16,6 +16,7 @@ import { StudentProfileEdit } from './dashboard/student-profile-edit/student-pro
 import { UserListComponent } from './user-list/user-list';
 import { Friends } from './pages/friends/friends';
 import { Chat } from './dashboard/chat/chat/chat';
+import { UserProfile } from './pages/user-profile/user-profile';
 
 export const routes: Routes = [
     // 1. PUBLIKUS OLDALAK
@@ -43,7 +44,8 @@ export const routes: Routes = [
             { path: 'student-profile-edit', component: StudentProfileEdit },
             { path: 'user-list', component: UserListComponent },
             { path: 'friends', component: Friends },
-            { path: 'chat', component: Chat }
+            { path: 'chat', component: Chat },
+            {path: 'user-profile/:id', component: UserProfile}
         ]
     },
 
