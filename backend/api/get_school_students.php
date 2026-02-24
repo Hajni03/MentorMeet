@@ -1,13 +1,18 @@
 <?php
-include 'db.php';
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
+header("Content-Type: application/json; charset=UTF-8");
+include __DIR__ . '/../config/db.php';
 
-$user_id = $_GET['user_id'] ?? 0;
+$user_id = $_GET['felhasznalo_id'] ?? 0;
 $iskola_id = $_GET['iskola_id'] ?? 0;
 
 try {
-    // Csak DIÁKOKAT keresünk, akik:
     // 1. Ugyanabba az iskolába járnak
-    // 2. Még nincsenek kapcsolatban ezzel a tanárral
+    // 2. Szerepük 'diak'
+    // 3. Még nincsenek benne a kapcsolatok táblában ezzel a tanárral
     $sql = "SELECT id, nev, email, profilkep_eleres, szerep 
             FROM felhasznalok 
             WHERE iskola_id = :iid 
@@ -24,5 +29,6 @@ try {
 
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
+    // Fejlesztés alatt hagyd bent az error üzenetet, élesben majd vedd ki!
+    echo json_encode(["error" => "Adatbázis hiba: " . $e->getMessage()]);
 }
