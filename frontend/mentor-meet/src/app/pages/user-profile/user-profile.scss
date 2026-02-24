@@ -1,0 +1,58 @@
+.profile-container {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  background: #6a1b9a;
+  color: white;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+}
+
+.badge {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.info-group {
+  margin-top: 25px;
+  text-align: left;
+}
+
+.info-group label {
+  color: #777;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.msg-btn {
+  background: #6a1b9a;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  margin-top: 30px;
+  cursor: pointer;
+}
