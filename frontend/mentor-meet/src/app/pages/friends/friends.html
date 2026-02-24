@@ -1,7 +1,10 @@
 <div class="header-section">
-  <h2>{{ showSuggested ? 'Új menteek keresése' : 'Ismerősök' }} ({{ friends.length }})</h2>
+  <h2>
+    {{ showSuggested ? 'Új menteek keresése' : 'Ismerősök' }} 
+    ({{ showSuggested ? suggestedStudents.length : friends.length }})
+  </h2>
   <button class="search-btn" (click)="showSuggested = !showSuggested">
-    {{ showSuggested ? 'Vissza a Menteekhez' : 'Új Menteek keresése' }}
+    {{ showSuggested ? 'Vissza az Ismerősökhöz' : 'Új Menteek keresése' }}
   </button>
 </div>
 
@@ -12,11 +15,13 @@
       <div class="card-info">
         <h3>{{ student.nev }}</h3>
         <div class="card-actions">
-          <button class="view-profile-btn" routerLink="/user-profile/{{student.id}}">
+          <button class="view-profile-btn" [routerLink]="['/user-profile', student.id]">
             Profil
           </button>
-          <button class="request-btn" (click)="sendRequest(student.id)" [disabled]="sentRequests.has(student.id)"
-            [class.sent]="sentRequests.has(student.id)">
+          <button class="request-btn" 
+                  (click)="sendRequest(student.id)" 
+                  [disabled]="sentRequests.has(student.id)"
+                  [class.sent]="sentRequests.has(student.id)">
             {{ sentRequests.has(student.id) ? 'Jelölés elküldve' : 'Jelölés' }}
           </button>
         </div>
@@ -38,12 +43,13 @@
       </div>
       <div class="card-info">
         <h3>{{ friend.nev }}</h3>
-        <p class="role-text">{{ friend.szerep === 'tanar' ? 'Oktató' : 'Tanuló' }}</p>
+        <p class="role-text">{{ friend.szerep === 'tanar' ? 'Mentor' : 'Mentee' }}</p>
       </div>
       <div class="card-actions">
         <button class="uzenet-btn" (click)="openChat(friend.id)">
-          <img src="assets/images/icons/chatsvg.svg" alt="Chat">
-          Üzenet
+          <img src="assets/images/icons/chatsvg.svg" alt="Chat" *ngIf="!friend.is_typing">
+          <span *ngIf="friend.is_typing">Ír...</span>
+          {{ friend.is_typing ? '' : 'Üzenet' }}
         </button>
       </div>
     </div>
