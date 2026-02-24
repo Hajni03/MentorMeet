@@ -6,15 +6,18 @@ import { ModuleModule } from './module/module-module';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './shared/services/auth.service';
+import { Navbar } from './core/navbar/navbar';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, ModuleModule, RouterModule, CommonModule],
+  imports: [RouterOutlet, Header, Footer, ModuleModule, RouterModule, CommonModule, Navbar],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
+  authService = inject(AuthService);
   protected readonly title = signal('mentor-meet');
   // Új Signal, ami vezérli a láthatóságot
   showPublicElements = signal(true); 

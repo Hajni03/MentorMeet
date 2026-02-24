@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 
@@ -9,6 +9,8 @@ export class AuthService {
   // ✅ A localhost:8000-et töröljük, a proxy /api/ előtagot használjuk
   private baseUrl = '/api';
   private router = inject(Router);
+
+  isLoggedIn = signal<boolean>(false);
 
   constructor(private http: HttpClient) { }
 
@@ -27,12 +29,20 @@ export class AuthService {
   //LOGIN
 
   login(credentials: { email: string; jelszo: string }): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login.php`, credentials);
+    return this.http.post<any>(`${this.baseUrl}/login.php`, credentials).pipe(
+    tap(response => {
+      if (response && response.success) {
+        localStorage.setItem('user', JSON.stringify(response.user));
+        this.isLoggedIn.set(true); // <--- Itt váltunk "bejelentkezett" módba
+      }
+    })
+  );;
   }
 
   //Kijelentkezésnél törli a memóriát
   logout() {
     localStorage.removeItem('user'); // Töröljük a mentett usert
+    this.isLoggedIn.set(false);
     this.router.navigate(['/login']);
   }
 
