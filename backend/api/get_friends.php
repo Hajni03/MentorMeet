@@ -3,9 +3,22 @@ header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
-require_once "../config/db.php";
+header("Content-Type: application/json; charset=UTF-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// JAVÍTÁS: Biztos útvonal az adatbázishoz
+require_once __DIR__ . "/../config/db.php";
 
 $user_id = $_GET['user_id'] ?? 0;
+
+if ($user_id == 0) {
+    echo json_encode([]);
+    exit;
+}
 
 try {
     $sql = "SELECT 
@@ -13,19 +26,19 @@ try {
                 f.nev, 
                 f.szerep, 
                 f.email,
-                f.profilkep_eleres,
+                f.profilkep_eleres, -- Itt ellenőrizd, hogy nem csak 'profilkep' a neve!
                 f.is_online,
                 
-                -- GÉPELÉS FIGYELÉSE: Megnézzük az utolsó 3 másodpercet
+                -- GÉPELÉS FIGYELÉSE
                 (f.utolso_gepeles > NOW() - INTERVAL 3 SECOND AND f.gepel_szamara = :uid) as is_typing,
 
-                -- 1. AL-LEKÉRDEZÉS: Utolsó üzenet szövege
+                -- Utolsó üzenet szövege
                 (SELECT szoveg FROM uzenetek 
                  WHERE (kuldo_id = :uid AND fogado_id = f.id) 
                     OR (kuldo_id = f.id AND fogado_id = :uid) 
                  ORDER BY idopont DESC LIMIT 1) as utolso_uzenet,
                  
-                -- 2. AL-LEKÉRDEZÉS: Utolsó üzenet időpontja
+                -- Utolsó üzenet időpontja
                 (SELECT idopont FROM uzenetek 
                  WHERE (kuldo_id = :uid AND fogado_id = f.id) 
                     OR (kuldo_id = f.id AND fogado_id = :uid) 
@@ -38,8 +51,6 @@ try {
             )
             WHERE k.statusz = 'accepted' 
             AND (k.tanar_id = :uid OR k.diak_id = :uid)
-            
-            -- Rendezzük a listát: aki legutóbb írt, kerül előre
             ORDER BY utolso_ido DESC";
 
     $stmt = $pdo->prepare($sql);
@@ -50,6 +61,6 @@ try {
 
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
+    echo json_encode(["error" => "Adatbázis hiba: " . $e->getMessage()]);
 }
 ?>

@@ -14,7 +14,7 @@ $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 if ($user_id) {
     try {
         // Frissítjük az összes olvasatlan értesítést olvasottra (is_read = 1) az új táblában
-        $sql = "UPDATE ertesitesek SET is_read = 1 WHERE felhasznalo_id = :uid AND is_read = 0";
+        $sql = "UPDATE ertesitesek SET olvasott = 1 WHERE felhasznalo_id = :uid AND olvasott = 0";
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['uid' => $user_id]);

@@ -1,45 +1,52 @@
 <?php
-// 1. Fejlécek MINDEN előtt
 header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-// 2. OPTIONS azonnali kezelése (Preflight kérés)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
 
-// 3. Adatbázis kapcsolat
 require_once __DIR__ . "/../config/db.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['id']) || !isset($data['status'])) {
-    http_response_code(400);
     echo json_encode(["message" => "Hiányzó adatok!"]);
     exit;
 }
 
 try {
-    // Mivel az Angular az ertesites.id-t küldi, meg kell keresnünk a hozzá tartozó kapcsolatot.
-    // Ha az ertesitesek tábládba nem mentetted el a kapcsolat_id-t, 
-    // akkor a legegyszerűbb, ha a tanar_id és diak_id alapján keresünk.
-    
-    // IDEIGLENES JAVÍTÁS: Frissítsük a státuszt. 
-    // MEGJEGYZÉS: Ha van kapcsolat_id-d az értesítésben, használd azt!
-    $stmt = $pdo->prepare("UPDATE kapcsolatok SET statusz = ? WHERE id = ?");
-    $stmt->execute([$data['status'], $data['id']]);
+    $pdo->beginTransaction();
 
-    if ($stmt->rowCount() === 0) {
-        echo json_encode(["message" => "Nem találtam frissíthető kapcsolatot ezzel az ID-val: " . $data['id']]);
+    // 1. Megkeressük az értesítést (itt csak felhasznalo_id van az image_9671cb alapján)
+    $stmtNoti = $pdo->prepare("SELECT felhasznalo_id FROM ertesitesek WHERE id = ?");
+    $stmtNoti->execute([$data['id']]);
+    $noti = $stmtNoti->fetch();
+
+    if ($noti) {
+        // 2. Mivel nincs felado_id-nk az értesítésben, megkeressük a hozzá tartozó 'pending' kapcsolatot
+        // Feltételezzük, hogy a diák (felhasznalo_id) kapta a kérést
+        $stmtUpdate = $pdo->prepare("
+            UPDATE kapcsolatok 
+            SET statusz = ? 
+            WHERE diak_id = ? AND statusz = 'pending'
+            LIMIT 1
+        ");
+        $stmtUpdate->execute([$data['status'], $noti['felhasznalo_id']]);
+
+        // 3. Értesítés olvasottá tétele (image_9671cb oszlopneveivel)
+        $stmtMarkRead = $pdo->prepare("UPDATE ertesitesek SET olvasott = 1 WHERE id = ?");
+        $stmtMarkRead->execute([$data['id']]);
+
+        $pdo->commit();
+        echo json_encode(["message" => "Sikeresen frissítve: " . $data['status']]);
     } else {
-        $msg = $data['status'] === 'accepted' ? "Kapcsolat elfogadva!" : "Kapcsolat elutasítva.";
-        echo json_encode(["message" => $msg]);
+        $pdo->rollBack();
+        echo json_encode(["message" => "Hiba: Az értesítés (ID: ".$data['id'].") nem található!"]);
     }
 
 } catch (Exception $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
     http_response_code(500);
-    echo json_encode(["message" => "Hiba: " . $e->getMessage()]);
+    echo json_encode(["message" => "SQL hiba: " . $e->getMessage()]);
 }
