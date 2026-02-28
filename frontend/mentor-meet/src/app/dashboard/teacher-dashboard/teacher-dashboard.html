@@ -1,79 +1,113 @@
-<div class="calendar-wrapper" [class.sidebar-open]="isAddPanelOpen">
-  <div class="calendar-main-area">
-    <div class="calendar-controls">
-      <div class="view-selector">
-        <button [class.active]="view === 'month'" (click)="changeView('month')">Hónap</button>
-        <button [class.active]="view === 'week'" (click)="changeView('week')">Hét</button>
-        <button [class.active]="view === 'day'" (click)="changeView('day')">Nap</button>
-      </div>
+<div class="dashboard-layout">
 
-      <div class="calendar-nav">
-        <h2>{{ currentMonthName }} {{ currentYear }}</h2>
-        <div class="nav-btns">
-          <button (click)="prev()">‹</button>
-          <button (click)="next()">›</button>
+  <div class="mentor-header-cards">
+
+    <div class="info-card profile-card">
+      <div class="profile-header">
+        <div class="avatar-circle">{{ userInitials }}</div>
+        <div class="name-box">
+          <h2>{{ currentUser?.nev }}</h2>
+          <span class="school-tag">🏫 {{ currentUser?.iskola_nev || 'Nincs megadva iskola' }}</span>
         </div>
       </div>
-
-      <button class="btn-add-main" (click)="toggleAddPanel()">
-        + Időpont hozzáadása
-      </button>
+      <div class="subject-list">
+        <span class="subject-badge" *ngFor="let s of mySubjects">{{ s.nev }}</span>
+        <span *ngIf="mySubjects.length === 0" class="school-tag">Nincsenek tantárgyak</span>
+      </div>
+      <button class="btn-message">✉️ Üzenetek megnyitása</button>
     </div>
 
-    <div class="calendar-grid" [ngClass]="view">
-      <div class="grid-header" *ngIf="view !== 'day'">
-        <div *ngFor="let dayName of hetiNapok">{{ dayName }}</div>
-      </div>
-      <div class="grid-header single-header" *ngIf="view === 'day'">
-        <div>{{ hetiNapok[(currentDate.getDay() + 6) % 7] }}</div>
-      </div>
-
-      <div class="grid-body" [ngClass]="view">
-        <div class="grid-cell" 
-             *ngFor="let day of calendarDays" 
-             [class.other-month]="!day.isCurrentMonth"
-             [class.is-today]="day.isToday">
-
-          <span class="day-number">{{ day.date.getDate() }}</span>
-
-          <div class="cell-content">
-            <div *ngFor="let slot of day.slots" 
-                 class="slot-pill" 
-                 [ngClass]="slot.diak_id ? 'booked' : 'free'">
-              <div class="slot-title" *ngIf="slot.cim">{{ slot.cim }}</div>
-              <div class="slot-time">{{ slot.kezdes | slice:0:5 }} - {{ slot.befejezes | slice:0:5 }}</div>
-            </div>
-            </div>
+    <div class="info-card upcoming-card">
+      <h3>📅 Közelgő meetingek</h3>
+      <div class="event-list-scroll">
+        <div class="mini-event-item" *ngFor="let meeting of upcomingMeetings">
+          <span class="event-day">{{ meeting.date | date:'MMM d.' }}</span>
+          <span class="event-name">{{ meeting.cim || 'Konzultáció' }}</span>
+          <span class="event-time">{{ meeting.kezdes | slice:0:5 }}</span>
+        </div>
+        <div *ngIf="upcomingMeetings.length === 0" class="no-events-text">
+          Nincs foglalt időpontod ezen a héten.
         </div>
       </div>
     </div>
+
   </div>
 
-  <aside class="add-slot-panel" *ngIf="isAddPanelOpen">
-    <div class="panel-header">
-      <h3>Időpont rögzítése</h3>
-      <button class="btn-close" (click)="toggleAddPanel()">×</button>
-    </div>
-    <div class="panel-body">
-      <div class="input-group">
-        <label>Cím (opcionális)</label>
-        <input type="text" [(ngModel)]="ujIdopont.cim" placeholder="Pl: Konzultáció...">
+  <div class="calendar-wrapper" [class.sidebar-open]="isAddPanelOpen">
+
+    <div class="calendar-main-area">
+      <div class="calendar-controls">
+        <div class="view-selector">
+          <button [class.active]="view === 'month'" (click)="changeView('month')">Hónap</button>
+          <button [class.active]="view === 'week'" (click)="changeView('week')">Hét</button>
+          <button [class.active]="view === 'day'" (click)="changeView('day')">Nap</button>
+        </div>
+
+        <div class="calendar-nav">
+          <h2>{{ currentMonthName }} {{ currentYear }}</h2>
+          <div class="nav-btns">
+            <button (click)="prev()">‹</button>
+            <button (click)="next()">›</button>
+          </div>
+        </div>
+
+        <button class="btn-add-main" (click)="toggleAddPanel()">
+          + Időpont hozzáadása
+        </button>
       </div>
-      <div class="time-range">
+
+      <div class="calendar-grid" [ngClass]="view">
+        <div class="grid-header" *ngIf="view !== 'day'">
+          <div *ngFor="let dayName of hetiNapok">{{ dayName }}</div>
+        </div>
+        <div class="grid-header single-header" *ngIf="view === 'day'">
+          <div>{{ hetiNapok[(currentDate.getDay() + 6) % 7] }}</div>
+        </div>
+
+        <div class="grid-body" [ngClass]="view">
+          <div class="grid-cell" *ngFor="let day of calendarDays" [class.other-month]="!day.isCurrentMonth"
+            [class.is-today]="day.isToday">
+
+            <span class="day-number">{{ day.date.getDate() }}</span>
+
+            <div class="cell-content">
+              <div *ngFor="let slot of day.slots" class="slot-pill" [ngClass]="slot.diak_id ? 'booked' : 'free'">
+                <div class="slot-title" *ngIf="slot.cim">{{ slot.cim }}</div>
+                <div class="slot-time">{{ slot.kezdes | slice:0:5 }} - {{ slot.befejezes | slice:0:5 }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="add-slot-panel" *ngIf="isAddPanelOpen">
+      <div class="panel-header">
+        <h3>Időpont rögzítése</h3>
+        <button class="btn-close" (click)="toggleAddPanel()">×</button>
+      </div>
+      <div class="panel-body">
         <div class="input-group">
-          <label>Tól</label>
-          <input type="time" [(ngModel)]="ujIdopont.kezdes">
+          <label>Cím (opcionális)</label>
+          <input type="text" [(ngModel)]="ujIdopont.cim" placeholder="Pl: Konzultáció...">
+        </div>
+        <div class="time-range">
+          <div class="input-group">
+            <label>Tól</label>
+            <input type="time" [(ngModel)]="ujIdopont.kezdes">
+          </div>
+          <div class="input-group">
+            <label>Ig</label>
+            <input type="time" [(ngModel)]="ujIdopont.befejezes">
+          </div>
         </div>
         <div class="input-group">
-          <label>Ig</label>
-          <input type="time" [(ngModel)]="ujIdopont.befejezes">
+          <label>Dátum</label>
+          <input type="date" [(ngModel)]="ujIdopont.datum">
         </div>
+        <button class="btn-save" (click)="addIdopont()">Mentés</button>
       </div>
-      <div class="input-group">
-        <label>Dátum</label>
-        <input type="date" [(ngModel)]="ujIdopont.datum">
-      </div>
-      <button class="btn-save" (click)="addIdopont()">Mentés</button>
-    </div>
-  </aside>
+    </aside>
+
+  </div>
 </div>

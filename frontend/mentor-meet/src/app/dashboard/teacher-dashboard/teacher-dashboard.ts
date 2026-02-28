@@ -37,20 +37,25 @@ export class TeacherDashboardComponent implements OnInit {
     tantargy_id: ''
   };
 
-  ngOnInit() {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      try {
-        this.currentUser = JSON.parse(userData);
-        if (this.currentUser && this.currentUser.id) {
-          this.loadSchedule();
-          this.loadMySubjects();
-        }
-      } catch (e) {
-        console.error("Hiba a felhasználói adatok parszolásakor", e);
+ ngOnInit() {
+  const userData = localStorage.getItem('user');
+  if (userData) {
+    const parsedUser = JSON.parse(userData);
+    this.currentUser = parsedUser;
+    
+    // Kényszerített frissítés a szerverről, hogy meglegyen az iskola_nev
+    this.http.get<any>(`${this.apiUrl}/get_user_details.php?id=${this.currentUser.id}`).subscribe({
+      next: (fullUser) => {
+        this.currentUser = fullUser;
+        // Elmentjük a friss, JOIN-olt adatokat (iskola_nev-vel együtt)
+        localStorage.setItem('user', JSON.stringify(fullUser));
       }
-    }
+    });
+
+    this.loadSchedule();
+    this.loadMySubjects();
   }
+}
 
   // --- NAPTÁR GENERÁLÁS ÉS NAVIGÁCIÓ ---
 
@@ -185,7 +190,36 @@ export class TeacherDashboardComponent implements OnInit {
     });
   }
 
+  // Ez kiszűri az összes olyan slotot a calendarDays-ből, ami foglalt (van diak_id)
+  get upcomingMeetings() {
+    const meetings: any[] = [];
+    this.calendarDays.forEach(day => {
+      day.slots.forEach((slot: any) => {
+        if (slot.diak_id) {
+          meetings.push({
+            date: day.date,
+            cim: slot.cim,
+            kezdes: slot.kezdes,
+            befejezes: slot.befejezes
+          });
+        }
+      });
+    });
+    // Sorba rendezzük dátum szerint és csak az első 5-öt mutatjuk
+    return meetings.sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, 5);
+  }
+
   // --- SEGÉDFÜGGVÉNYEK ---
+
+  // Segédfüggvény a monogramhoz (Avatar)
+  get userInitials(): string {
+    if (!this.currentUser?.nev) return '??';
+    return this.currentUser.nev
+      .split(' ')
+      .map((n: string) => n[0])
+      .join('')
+      .toUpperCase();
+  }
 
   get currentMonthName(): string {
     return this.currentDate.toLocaleDateString('hu-HU', { month: 'long' });

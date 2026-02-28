@@ -1,16 +1,129 @@
-// Színkonstansok
+// Színkonstansok (Eredetiek + kiegészítés)
 $primary-purple: #4B3B73;
 $bg-cream: #F5F5F0;
 $secondary-blue: #848CAF;
+$white: #ffffff;
 
-// Fő konténer
-.calendar-wrapper {
-  display: flex;
-  height: calc(100vh - 40px);
-  gap: 20px;
+// --- ÚJ RÉSZ: Dashboard elrendezés és felső kártyák ---
+
+.dashboard-layout {
   padding: 20px;
   background-color: $bg-cream;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
+.mentor-header-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  
+  .info-card {
+    background: $white;
+    border-radius: 30px;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(75, 59, 115, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h3 {
+      margin-top: 0;
+      color: $primary-purple;
+      font-weight: 800;
+    }
+  }
+
+  .profile-card {
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .avatar-circle {
+      width: 70px;
+      height: 70px;
+      background: $primary-purple;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .name-box {
+      h2 { margin: 0; color: $primary-purple; font-weight: 800; }
+      .school-tag { color: $secondary-blue; font-weight: 600; font-size: 0.9rem; }
+    }
+
+    .subject-list {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+
+      .subject-badge {
+        background: rgba(132, 140, 175, 0.1);
+        color: $primary-purple;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+    }
+
+    .btn-message {
+      background: $primary-purple;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      &:hover { filter: brightness(1.2); }
+    }
+  }
+
+  .upcoming-card {
+    .event-list-scroll {
+      max-height: 150px;
+      overflow-y: auto;
+      padding-right: 10px;
+
+      &::-webkit-scrollbar { width: 5px; }
+      &::-webkit-scrollbar-thumb { background: $secondary-blue; border-radius: 10px; }
+    }
+
+    .mini-event-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(132, 140, 175, 0.1);
+      
+      .event-day { color: $primary-purple; font-weight: 800; width: 80px; }
+      .event-name { flex: 1; color: $primary-purple; font-weight: 600; }
+      .event-time { color: $secondary-blue; font-size: 0.85rem; }
+    }
+  }
+}
+
+// --- EREDETI RÉSZ: Naptár stílusok (kisebb módosítással) ---
+
+.calendar-wrapper {
+  display: flex;
+  // Módosítva: height: auto, hogy ne legyen dupla görgetősáv a kártyák miatt
+  min-height: 600px; 
+  flex: 1;
+  gap: 20px;
+  // A paddingot kivettem, mert a dashboard-layout már adja
+  
   .calendar-main-area {
     flex: 1;
     display: flex;
@@ -23,11 +136,9 @@ $secondary-blue: #848CAF;
     box-shadow: 0 10px 40px rgba(75, 59, 115, 0.05);
   }
   
-  // Összehúzódás, ha nyitva az oldalsó panel
   &.sidebar-open .calendar-main-area { flex: 0.7; }
 }
 
-// JAVÍTÁS: Hiányzó vezérlőpult stílusok
 .calendar-controls {
   display: flex;
   justify-content: space-between;
@@ -106,7 +217,6 @@ $secondary-blue: #848CAF;
   }
 }
 
-// Naptár rács
 .calendar-grid {
   display: flex;
   flex-direction: column;
@@ -121,7 +231,7 @@ $secondary-blue: #848CAF;
     background: #EBEBE6;
     border-bottom: 1px solid rgba(132, 140, 175, 0.2);
     
-    div, &.single-header div {
+    div {
       padding: 15px;
       text-align: center;
       font-weight: 700;
@@ -167,7 +277,6 @@ $secondary-blue: #848CAF;
   }
 }
 
-// Időpontok
 .slot-pill {
   padding: 6px 10px;
   border-radius: 8px;
@@ -180,7 +289,6 @@ $secondary-blue: #848CAF;
   &.booked { background: #FFEBEE; color: #C62828; border-left-color: #F44336; }
 }
 
-// JAVÍTÁS: Hiányzó oldalsó panel stílusok
 .add-slot-panel {
   width: 350px;
   background: white;
