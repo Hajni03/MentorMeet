@@ -14,77 +14,76 @@ export class Friends implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // A HTML ezeket a változókat várja
-  friends: any[] = [];             // Visszaigazolt ismerősök (Ismerősök fül)
-  suggestedStudents: any[] = [];   // Iskolatársak (Keresés fül)
+  // Általánosabb név: suggestedUsers (mert lehetnek benne mentorok is)
+  friends: any[] = [];             
+  suggestedUsers: any[] = [];   
   
   currentUser: any = null;
   showSuggested = false; 
   sentRequests = new Set<number>();
+  
+  // Docker port beállítása (ha szükséges)
+  private apiUrl = 'http://localhost:8000/api'; 
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
     if (userData) {
       this.currentUser = JSON.parse(userData);
-      
-      // Mindkét listát betöltjük induláskor
       this.loadConfirmedFriends();
-      this.loadSchoolStudents();
+      this.loadSuggestedUsers(); // Meghívjuk az új szűrt listát
     } else {
       this.router.navigate(['/login']);
     }
   }
 
-  /**
-   * Visszaigazolt ismerősök lekérése (accepted státusz)
-   */
   loadConfirmedFriends() {
-    this.http.get<any[]>(`/api/get_friends.php?user_id=${this.currentUser.id}`)
+    this.http.get<any[]>(`${this.apiUrl}/get_friends.php?user_id=${this.currentUser.id}`)
       .subscribe({
-        next: (data) => {
-          this.friends = data || [];
-          console.log('Visszaigazolt ismerősök:', this.friends);
-        },
+        next: (data) => this.friends = data || [],
         error: (err) => console.error('Hiba az ismerősök betöltésekor:', err)
       });
   }
 
   /**
-   * Potenciális jelöltek (diákok) lekérése az iskolából
+   * Ez hívja meg a frissített get_users.php-t, ami szerepkör szerint szűr
    */
-  loadSchoolStudents() {
-    const url = `/api/get_school_students.php?user_id=${this.currentUser.id}&iskola_id=${this.currentUser.iskola_id}`;
+  loadSuggestedUsers() {
+    const url = `${this.apiUrl}/get_users.php?current_id=${this.currentUser.id}`;
     this.http.get<any[]>(url)
       .subscribe({
         next: (res) => {
-          this.suggestedStudents = res || [];
-          // Ha a PHP küld is_pending jelzést, töltsük fel a Set-et, hogy a gomb disabled legyen
-          this.suggestedStudents.forEach(s => {
-            if (s.is_pending) this.sentRequests.add(s.id);
+          this.suggestedUsers = res || [];
+          // Bekapcsoljuk a "Jelölés elküldve" állapotot, ha már van függő kérés
+          this.suggestedUsers.forEach(u => {
+            if (u.alreadySent) this.sentRequests.add(u.id);
           });
         },
-        error: (err) => console.error('Hiba a diákok betöltésekor:', err)
+        error: (err) => console.error('Hiba a keresésnél:', err)
       });
   }
 
-  /**
-   * Jelölés elküldése
-   */
   sendRequest(targetId: number) {
-    const payload = {
-      tanar_id: this.currentUser.id,
-      diak_id: targetId
-    };
+    // Okos azonosító kiosztás: ki a tanár és ki a diák?
+    const diakId = this.currentUser.szerep === 'diak' ? this.currentUser.id : targetId;
+    const tanarId = this.currentUser.szerep === 'tanar' ? this.currentUser.id : targetId;
 
-    this.http.post('/api/add_contact.php', payload)
+    const payload = { tanar_id: tanarId, diak_id: diakId };
+
+    this.http.post(`${this.apiUrl}/add_contact.php`, payload)
       .subscribe({
         next: (res: any) => {
-          if (res.message.includes('sikeresen') || res.message.includes('Már küldtél')) {
-            this.sentRequests.add(targetId);
-          }
+          this.sentRequests.add(targetId);
+          alert(res.message);
         },
         error: (err) => console.error('Hiba a küldésnél:', err)
       });
+  }
+
+  toggleSuggested() {
+    this.showSuggested = !this.showSuggested;
+    if (this.showSuggested) {
+      this.loadSuggestedUsers();
+    }
   }
 
   openChat(friendId: number) {

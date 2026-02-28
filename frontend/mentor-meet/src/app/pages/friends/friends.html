@@ -1,17 +1,23 @@
 <div class="header-section">
   <h2>
-    {{ showSuggested ? 'Új menteek keresése' : 'Ismerősök' }} 
-    ({{ showSuggested ? suggestedStudents.length : friends.length }})
+    {{ showSuggested ? 
+       (currentUser.szerep === 'diak' ? 'Mentorok keresése az iskolámból' : 'Új menteek keresése') : 
+       'Ismerősök' 
+    }} 
+    ({{ showSuggested ? suggestedUsers.length : friends.length }})
   </h2>
+  
   <button class="search-btn" (click)="showSuggested = !showSuggested">
-    {{ showSuggested ? 'Vissza az Ismerősökhöz' : 'Új Menteek keresése' }}
+    {{ showSuggested ? 'Vissza az Ismerősökhöz' : 
+       (currentUser.szerep === 'diak' ? 'Mentorok keresése' : 'Új menteek keresése') 
+    }}
   </button>
 </div>
 
 <div *ngIf="showSuggested" class="suggested-section">
   <h3>Menteek az iskoládból:</h3>
   <div class="friends-grid">
-    <div *ngFor="let student of suggestedStudents" class="friend-card suggested">
+    <div *ngFor="let student of suggestedUsers" class="friend-card suggested">
       <div class="card-info">
         <h3>{{ student.nev }}</h3>
         <div class="card-actions">
@@ -28,10 +34,6 @@
       </div>
     </div>
   </div>
-
-  <div *ngIf="suggestedStudents.length === 0" class="no-results">
-    <p>Nincs több elérhető mentee az iskoládban.</p>
-  </div>
 </div>
 
 <div *ngIf="!showSuggested">
@@ -45,7 +47,13 @@
         <h3>{{ friend.nev }}</h3>
         <p class="role-text">{{ friend.szerep === 'tanar' ? 'Mentor' : 'Mentee' }}</p>
       </div>
-      <div class="card-actions">
+      
+      <div class="card-actions" style="display: flex; flex-direction: column; gap: 5px;">
+        <button class="view-profile-btn" [routerLink]="['/user-profile', friend.id]" 
+                style="background: #f0f0f0; border: 1px solid #ccc; padding: 5px; border-radius: 5px; cursor: pointer;">
+          Profil
+        </button>
+
         <button class="uzenet-btn" (click)="openChat(friend.id)">
           <img src="assets/images/icons/chatsvg.svg" alt="Chat" *ngIf="!friend.is_typing">
           <span *ngIf="friend.is_typing">Ír...</span>
