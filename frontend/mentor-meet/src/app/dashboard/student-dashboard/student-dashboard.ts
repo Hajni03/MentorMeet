@@ -18,11 +18,14 @@ import huLocale from '@fullcalendar/core/locales/hu';
 })
 export class StudentDashboard implements OnInit {
   private http = inject(HttpClient);
+  
   user: any = null;
+  bookings: any[] = []; // A lista nézethez, amit a HTML-ben használtunk
+  loading = true;
 
   calendarOptions: CalendarOptions = {
-    initialView: 'timeGridWeek',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    initialView: 'timeGridWeek',
     locale: huLocale,
     headerToolbar: {
       left: 'prev,next today',
@@ -33,9 +36,8 @@ export class StudentDashboard implements OnInit {
     slotMaxTime: '21:00:00',
     allDaySlot: false,
     height: 'auto',
-    // --- EZT ÁLLÍTJUK BE A DIÁKNAK ---
-    editable: false,   // Nem mozgathatja az órákat
-    selectable: false, // Nem hozhat létre új időpontot
+    editable: false,
+    selectable: false,
     events: []
   };
 
@@ -49,17 +51,37 @@ export class StudentDashboard implements OnInit {
 
   loadMyCalendar() {
     if (!this.user?.id) return;
+    this.loading = true;
     
-    // A diák saját foglalásait kérjük le
-    this.http.get<any[]>(`http://localhost:8000/api/get_student_calendar.php?user_id=${this.user.id}`)
-      .subscribe(res => {
-        this.calendarOptions.events = res.map(event => ({
-          title: `${event.targy} - ${event.tanar_neve}`,
-          start: event.idopont_start,
-          end: event.idopont_end,
-          backgroundColor: event.statusz === 'visszaigazolt' ? '#4B3B73' : '#848CAF',
-          borderColor: 'transparent'
-        }));
-      });
+    // API hívás a diák naptáráért
+    const url = `http://localhost:8000/api/get_student_calendar.php?user_id=${this.user.id}`;
+    
+    this.http.get<any[]>(url).subscribe({
+      next: (res) => {
+        // 1. Elmentjük a nyers adatokat a lista nézethez is
+        this.bookings = res;
+
+        // 2. Frissítjük a naptár eseményeket (referencia csere!)
+        this.calendarOptions = {
+          ...this.calendarOptions,
+          events: res.map(event => ({
+            title: `${event.targy} - ${event.tanar_neve}`,
+            start: event.idopont_start,
+            end: event.idopont_end,
+            // Színkódok a HTML legend-hez igazítva
+            backgroundColor: event.statusz === 'accepted' ? '#4CAF50' : '#FFC107',
+            borderColor: 'transparent',
+            extendedProps: {
+              statusz: event.statusz
+            }
+          }))
+        };
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error("Hiba a naptár betöltésekor:", err);
+        this.loading = false;
+      }
+    });
   }
 }
