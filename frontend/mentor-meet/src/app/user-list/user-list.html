@@ -1,20 +1,31 @@
+<div class="main-content">
 
-  <div class="main-content">
-
-    <section class="search-section">
-      <div class="header-with-search">
-        <h2>{{ currentUser.szerep === 'diak' ? 'Ismerősök keresése' : 'Diákok keresése' }}</h2>
-        <div class="search-bar">
-          <input type="text" placeholder="Keresés..." (input)="onSearch($event)" class="search-input" />
-        </div>
+  <section class="search-section">
+    <div class="header-with-search">
+      <h2>{{ currentUser.szerep === 'diak' ? 'Mentorok keresése' : 'Új menteek keresése' }}</h2>
+      
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Keresés név alapján..." (input)="onSearch($event)" class="search-input" />
       </div>
+    </div>
 
-      <div class="user-grid">
-        <div *ngFor="let u of users" class="user-card">
-          <div class="user-header">
-            <img src="assets/images/profilkep_placeholder.jpg" alt="Profilkép" class="avatar-circle">
-          </div>
-          <h3>{{ u.nev }}</h3>
+    <div class="user-grid">
+      <div *ngFor="let u of users" class="user-card">
+        <div class="user-header">
+          <img [src]="u.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" alt="Profilkép" class="avatar-circle">
+        </div>
+        <h3>{{ u.nev }}</h3>
+        
+        <p class="user-role">{{ u.szerep === 'tanar' ? 'Mentor' : 'Mentee' }}</p>
+
+        <div class="user-actions">
+          <button [routerLink]="['/user-profile', u.id]" class="btn-view">
+            👁️ Profil
+          </button>
 
           <button (click)="onAddContact(u.id)" class="btn-invite" [disabled]="u.alreadySent"
             [style.opacity]="u.alreadySent ? '0.5' : '1'">
@@ -22,32 +33,45 @@
           </button>
         </div>
       </div>
-    </section>
+      
+      <div *ngIf="users.length === 0" class="empty-state">
+        <p>Nem található elérhető {{ currentUser.szerep === 'diak' ? 'mentor' : 'mentee' }} az iskoládban.</p>
+      </div>
+    </div>
+  </section>
 
-    <hr class="divider">
+  <hr class="divider">
 
-    <section class="requests-section">
-      <h3>Beérkező kérések ({{ pendingRequests.length }})</h3>
+  <section class="requests-section">
+    <h3>Beérkező kérések ({{ pendingRequests.length }})</h3>
 
-      <div class="requests-list">
-        <div *ngFor="let req of pendingRequests" class="request-item">
-          <div class="request-info">
-            <img src="assets/images/profilkep_placeholder.jpg" alt="Profilkép" class="avatar-small">
-            <div>
-              <p class="request-name">{{ req.nev }}</p>
-              <p class="request-meta">Ismerősnek jelölt</p>
-            </div>
-          </div>
-          <div class="request-actions">
-            <button (click)="handleRequest(req.request_id, 'accepted')" class="btn-accept">Elfogadás</button>
-            <button (click)="handleRequest(req.request_id, 'rejected')" class="btn-decide-later">Elutasítás</button>
+    <div class="requests-list">
+      <div *ngFor="let req of pendingRequests" class="request-item">
+        <div class="request-info">
+          <img [src]="req.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" 
+               alt="Profilkép" 
+               class="avatar-small"
+               [routerLink]="['/user-profile', req.felado_id || req.id]"
+               style="cursor: pointer;">
+          <div>
+            <p class="request-name" 
+               [routerLink]="['/user-profile', req.felado_id || req.id]"
+               style="cursor: pointer;">
+               {{ req.nev }}
+            </p>
+            <p class="request-meta">Ismerősnek jelölt</p>
           </div>
         </div>
-
-        <div *ngIf="pendingRequests.length === 0" class="empty-state">
-          Nincs függőben lévő bejövő kérésed.
+        <div class="request-actions">
+          <button (click)="handleRequest(req.request_id, 'accepted')" class="btn-accept">Elfogadás</button>
+          <button (click)="handleRequest(req.request_id, 'rejected')" class="btn-decide-later">Elutasítás</button>
         </div>
       </div>
-    </section>
 
-  </div>
+      <div *ngIf="pendingRequests.length === 0" class="empty-state">
+        <p>Nincs függőben lévő bejövő kérésed.</p>
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../shared/services/auth.service';
 import { DashboardLayoutComponent } from '../dashboard/dashboard-layout/dashboard-layout';
 import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router'; // 1. Lépés: Importáld a RouterModule-t!
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, DashboardLayoutComponent],
+  // 2. Lépés: Add hozzá az imports tömbhöz!
+  imports: [CommonModule, DashboardLayoutComponent, RouterModule], 
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss'
 })
@@ -18,6 +20,7 @@ export class UserListComponent implements OnInit {
   users: any[] = [];
   pendingRequests: any[] = [];
   currentUser: any;
+  private apiUrl = 'http://localhost:8000/backend/api'; // Érdemes fix alap URL-t használni
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -26,10 +29,10 @@ export class UserListComponent implements OnInit {
   }
 
   loadUsers(searchTerm: string = '') {
-    const url = `/api/get_users.php?current_id=${this.currentUser.id}&search=${searchTerm}`;
+    // Használjuk a teljes URL-t a biztonság kedvéért
+    const url = `${this.apiUrl}/get_users.php?current_id=${this.currentUser.id}&search=${searchTerm}`;
     this.http.get(url).subscribe({
       next: (data: any) => {
-        // Inicializáljuk az 'alreadySent' státuszt minden felhasználónál hamisra
         this.users = data.map((u: any) => ({ ...u, alreadySent: false }));
         console.log('Találatok:', this.users);
       },
@@ -43,13 +46,13 @@ export class UserListComponent implements OnInit {
   }
 
   onAddContact(targetId: number) {
+    // Logika változatlan, az authService intézi a mentést
     const diakId = this.currentUser.szerep === 'diak' ? this.currentUser.id : targetId;
     const tanarId = this.currentUser.szerep === 'tanar' ? this.currentUser.id : targetId;
 
     this.authService.addContact(diakId, tanarId).subscribe({
       next: (res) => {
         alert(res.message);
-        // Megkeressük a listában a bejelölt embert és átállítjuk a gombját
         const user = this.users.find(u => u.id === targetId);
         if (user) {
           user.alreadySent = true;
@@ -60,7 +63,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadPendingRequests() {
-    this.http.get(`/api/get_pending_requests.php?user_id=${this.currentUser.id}`).subscribe({
+    this.http.get(`${this.apiUrl}/get_pending_requests.php?user_id=${this.currentUser.id}`).subscribe({
       next: (res: any) => {
         this.pendingRequests = res;
       },
@@ -69,11 +72,10 @@ export class UserListComponent implements OnInit {
   }
 
   handleRequest(requestId: number, newStatus: string) {
-    // FONTOS: Az 'id' mezőt küldjük a PHP-nak a handle_request.php elvárása szerint
-    this.http.post('/api/handle_request.php', { id: requestId, status: newStatus }).subscribe({
+    this.http.post(`${this.apiUrl}/handle_request.php`, { id: requestId, status: newStatus }).subscribe({
       next: (res: any) => {
         alert(res.message);
-        this.loadPendingRequests(); // Lista frissítése
+        this.loadPendingRequests();
       },
       error: (err) => alert('Hiba a kérés feldolgozásakor')
     });

@@ -214,3 +214,40 @@ $gray-light: #dfe6e9;
   background: rgba(0, 0, 0, 0.02);
   border-radius: 15px;
 }
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+  width: 100%;
+
+  button {
+    flex: 1; // Egyforma szélesek lesznek
+    padding: 8px 5px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+}
+
+.btn-view {
+  background: white;
+  color: #6a5acd;
+  border: 1px solid #6a5acd;
+  
+  &:hover {
+    background: #f4f2ff;
+  }
+}
+
+.btn-invite {
+  background: #6a5acd;
+  color: white;
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: #5a4abf;
+  }
+}
