@@ -1,50 +1,41 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+require_once "../config/db.php";
 
-require_once __DIR__ . "/../config/db.php";
+$diak_id = $_GET['user_id']; // Az Angularból érkező ID
 
-// Az Angular az 'user_id' paramétert küldi a konzol alapján
-$user_id = $_GET['user_id'] ?? null;
-
-if (!$user_id) {
-    http_response_code(400);
-    echo json_encode(["message" => "Hiányzó felhasználó azonosító!"]);
+if (!$diak_id) {
+    echo json_encode([]);
     exit;
 }
 
 try {
-    // Összekapcsoljuk a foglalasok táblát az idopontok táblával
-    // Így megkapjuk a dátumot, a kezdést és a befejezést is
+    // Lekérjük a foglalásokat az időpont adatokkal és a tanár nevével együtt
     $sql = "SELECT 
-                f.id, 
+                f.id as foglalas_id,
                 f.statusz, 
-                f.megjegyzes,
                 i.datum, 
                 i.kezdes, 
                 i.befejezes,
-                u.nev AS tanar_neve
+                u.nev AS tanar_neve,
+                -- A naptárnak (FullCalendar) kellenek ezek a formátumok:
+                CONCAT(i.datum, 'T', i.kezdes) as start,
+                CONCAT(i.datum, 'T', i.befejezes) as end
             FROM foglalasok f
             JOIN idopontok i ON f.idopont_id = i.id
             JOIN felhasznalok u ON i.tanar_id = u.id
             WHERE f.diak_id = ?
-            ORDER BY i.datum DESC, i.kezdes DESC";
-            
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$user_id]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            ORDER BY i.datum ASC, i.kezdes ASC";
 
-    echo json_encode($result);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$diak_id]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode($results);
 
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["message" => "Adatbázis hiba: " . $e->getMessage()]);
+    echo json_encode(["error" => $e->getMessage()]);
 }
-?>
