@@ -1,26 +1,51 @@
 <div class="profile-container" *ngIf="user; else loader">
   <div class="profile-card">
     <div class="profile-header">
-      <div class="avatar-placeholder">
+      <div class="avatar-placeholder" *ngIf="!user.profilkep_eleres">
         {{ user.nev.charAt(0) }}
       </div>
+      <img *ngIf="user.profilkep_eleres" [src]="user.profilkep_eleres" class="profile-img">
+
       <h2>{{ user.nev }}</h2>
-      <span class="badge">{{ user.szerep }}</span>
+      <span class="badge" [ngClass]="user.szerep">{{ user.szerep === 'tanar' ? 'Mentor' : 'Mentee' }}</span>
     </div>
-    
+
     <div class="profile-body">
       <div class="info-group">
         <label>Email cím:</label>
         <p>{{ user.email }}</p>
       </div>
+
       <div class="info-group">
         <label>Iskola:</label>
         <p>{{ user.iskola_nev || 'Nincs megadva' }}</p>
       </div>
+
+      <div class="info-group" *ngIf="user.szerep === 'tanar' && subjects.length > 0">
+        <label>Oktatott tantárgyak:</label>
+        <div class="subject-tags">
+          <span class="subject-tag" *ngFor="let s of subjects">{{ s.nev }}</span>
+        </div>
+      </div>
+
+      <div class="info-group" *ngIf="user.bemutatkozas">
+        <label>Bemutatkozás:</label>
+        <p class="bio-text">{{ user.bemutatkozas }}</p>
+      </div>
+    </div>
+    <div class="calendar-booking-section card" *ngIf="user?.szerep === 'tanar'">
+      <div class="calendar-header">
+        <h3>📅 Foglalható időpontok</h3>
+        <p class="helper-text">Kattints egy lila sávra az időpont lefoglalásához!</p>
+      </div>
+
+      <div class="calendar-wrapper">
+        <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
     </div>
 
     <div class="profile-footer">
-      <button class="msg-btn">Üzenet küldése</button>
+      <button class="msg-btn" (click)="goToChat(user.id)">Üzenet küldése</button>
       <button class="back-btn" (click)="goBack()">Vissza</button>
     </div>
   </div>
