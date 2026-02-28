@@ -206,7 +206,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   updateSidebarDot() {
-    this.http.get<any>(`${this.apiUrl}/get_unread_count.php?user_id=${this.currentUser.id}`).subscribe();
+    this.http.get<any>(`${this.apiUrl}/get_unread_messages_count.php?user_id=${this.currentUser.id}`).subscribe();
   }
 
   onTyping() {
