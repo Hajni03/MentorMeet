@@ -4,10 +4,11 @@ header("Content-Type: application/json; charset=UTF-8");
 require_once "../config/db.php";
 
 try {
-    // Feltételezve, hogy van egy 'tantargyak' táblád id és nev oszlopokkal
+    // Ellenőrizd a táblanevet és az oszlopokat a képed alapján!
     $sql = "SELECT id, nev FROM tantargyak ORDER BY nev ASC";
     $stmt = $pdo->query($sql);
     $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
     echo json_encode($subjects);
 } catch (PDOException $e) {
     http_response_code(500);

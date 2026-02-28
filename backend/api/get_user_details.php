@@ -2,14 +2,18 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-// A __DIR__ biztosítja, hogy a PHP kilépjen az api mappából a config-ba
 include __DIR__ . "/../config/db.php";
 
 $id = $_GET['id'] ?? 0;
 
 try {
-    // Válogasd le azokat a mezőket, amiket meg akarsz mutatni
-    $stmt = $pdo->prepare("SELECT nev, szerep, email, iskola_id FROM felhasznalok WHERE id = ?");
+    // MÓDOSÍTOTT LEKÉRDEZÉS: JOIN-oljuk az iskolak táblát
+    $query = "SELECT f.id, f.nev, f.szerep, f.email, f.iskola_id, i.nev AS iskola_nev 
+              FROM felhasznalok f 
+              LEFT JOIN iskolak i ON f.iskola_id = i.id 
+              WHERE f.id = ?";
+              
+    $stmt = $pdo->prepare($query);
     $stmt->execute([$id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -23,3 +27,4 @@ try {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
+?>
