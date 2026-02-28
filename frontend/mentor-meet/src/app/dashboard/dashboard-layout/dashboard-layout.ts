@@ -17,9 +17,9 @@ export class DashboardLayoutComponent implements OnInit {
   private authService = inject(AuthService);
   private eRef = inject(ElementRef);
 
-  // --- DEKLARÁCIÓK (A piros hibák megszüntetése) ---
+  // --- DEKLARÁCIÓK ---
   currentUser: any = null;
-  notifications: any[] = [];      // Eltünteti a pirosat a loadNotifications-nál
+  notifications: any[] = [];
   unreadCount: number = 0;
   unreadMessagesCount: number = 0;
 
@@ -28,7 +28,7 @@ export class DashboardLayoutComponent implements OnInit {
   isDarkMode = false;
 
   pendingRequests: any[] = [];
-  apiUrl = 'http://localhost:8000/api'; // Fix API elérhetőség
+  apiUrl = 'http://localhost:8000/api'; 
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
@@ -36,7 +36,6 @@ export class DashboardLayoutComponent implements OnInit {
       try {
         this.currentUser = JSON.parse(userData);
         if (this.currentUser && this.currentUser.id) {
-          // Belépéskor azonnal betöltjük az adatokat
           this.loadNotifications();
           this.checkUnreadMessages();
         }
@@ -48,18 +47,15 @@ export class DashboardLayoutComponent implements OnInit {
       this.router.navigate(['/login']);
     }
 
-    // 10 másodpercenként nézze meg, van-e összesített olvasatlan üzenet
+    // 10 másodpercenkénti frissítés
     setInterval(() => {
       if (this.currentUser?.id) {
         this.checkUnreadMessages();
-        this.loadNotifications(); // Frissítjük az értesítéseket is
+        this.loadNotifications(); 
       }
     }, 10000);
   }
 
-  /**
-   * Értesítések betöltése
-   */
   loadNotifications() {
     if (!this.currentUser?.id) return;
 
@@ -67,16 +63,12 @@ export class DashboardLayoutComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.notifications = data || [];
-          // Az adatbázis 'is_read' mezőjét nézzük (0 = olvasatlan)
           this.unreadCount = this.notifications.filter(n => n.olvasott == 0).length;
         },
         error: (err) => console.error("Értesítés hiba:", err)
       });
   }
 
-  /**
-   * Kapcsolati kérés kezelése
-   */
   handleRequest(requestId: number, newStatus: string) {
     this.http.post(`${this.apiUrl}/handle_request.php`, { id: requestId, status: newStatus })
       .subscribe({
@@ -88,20 +80,16 @@ export class DashboardLayoutComponent implements OnInit {
       });
   }
 
-  // --- MENÜ KEZELÉS ---
-
   toggleNotifications(event: Event) {
     event.stopPropagation();
     this.isNotificationOpen = !this.isNotificationOpen;
 
     if (this.isNotificationOpen && this.unreadCount > 0) {
-      // Elküldjük a kérést a backendnek, hogy minden értesítés olvasott legyen
       this.http.get(`${this.apiUrl}/mark_notifications_read.php?user_id=${this.currentUser.id}`)
         .subscribe({
           next: () => {
             this.unreadCount = 0;
-            // Frissítjük a lokális listát is, hogy vizuálisan ne legyen "unread" stílusú
-            this.notifications.forEach(n => n.is_read = 1);
+            this.notifications.forEach(n => n.olvasott = 1);
           },
           error: (err) => console.error("Hiba az olvasottá tételkor", err)
         });
@@ -155,6 +143,46 @@ export class DashboardLayoutComponent implements OnInit {
           this.unreadMessagesCount = res.unread || 0;
         },
         error: (err) => console.error("Hiba az üzenetek ellenőrzésekor", err)
+      });
+  }
+
+  handleBooking(slotId: number, action: string) {
+  if (!this.currentUser?.id) return;
+
+  this.http.post(`${this.apiUrl}/handle_booking.php`, { 
+    slot_id: slotId, 
+    action: action,
+    user_id: this.currentUser.id
+  }).subscribe({
+    next: (res: any) => {
+      // 1. Frissítjük a listát, hogy eltűnjenek a gombok
+      this.loadNotifications();
+      
+      // 2. Visszajelzés a tanárnak az elutasítás/elfogadás sikerességéről
+      alert(res.message);
+
+      // 3. CSAK HA ELUTASÍTÁS VOLT: Külön ablakban rákérdezünk a törlésre
+      if (action === 'reject') {
+        // Kis késleltetés, hogy az előző alert után ne ugorjon azonnal az arcába
+        setTimeout(() => {
+          const confirmDelete = confirm("Szeretnéd ezt az időpontot végleg törölni a naptáradból is, hogy ne foglalja a helyet?");
+          if (confirmDelete) {
+            this.deleteSlot(slotId);
+          }
+        }, 300);
+      }
+    },
+    error: (err) => console.error("Hiba a művelet során:", err)
+  });
+}
+
+  deleteSlot(slotId: number) {
+    this.http.post(`${this.apiUrl}/delete_slot.php`, { slot_id: slotId })
+      .subscribe({
+        next: (res: any) => {
+          alert("Időpont törölve a naptárból.");
+        },
+        error: (err) => console.error("Hiba a törlés során:", err)
       });
   }
 }

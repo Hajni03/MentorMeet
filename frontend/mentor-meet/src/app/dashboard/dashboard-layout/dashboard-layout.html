@@ -84,17 +84,24 @@
                 <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.olvasott == 0">
                   <div class="notif-content">
                     <p>
-                      <strong *ngIf="n.felado_neve">{{ n.felado_neve }}</strong> 
+                      <strong *ngIf="n.felado_neve">{{ n.felado_neve }}</strong>
                       {{ n.uzenet }}
                     </p>
 
-                    <span>{{ n.datum | date:'yyyy.MM.dd. HH:mm' }}</span>
+                    <span class="notif-date">{{ n.datum | date:'yyyy.MM.dd. HH:mm' }}</span>
 
                     <div class="notif-actions" *ngIf="n.tipus === 'jeloles' && n.olvasott == 0">
                       <button class="btn-accept"
                         (click)="handleRequest(n.id, 'accepted'); $event.stopPropagation()">Elfogad</button>
                       <button class="btn-reject"
                         (click)="handleRequest(n.id, 'rejected'); $event.stopPropagation()">Elutasít</button>
+                    </div>
+
+                    <div class="notif-actions" *ngIf="n.tipus === 'booking' && n.statusz === 'pending'">
+                      <button class="btn-accept"
+                        (click)="handleBooking(n.slot_id, 'confirm'); $event.stopPropagation()">Megerősít</button>
+                      <button class="btn-reject"
+                        (click)="handleBooking(n.slot_id, 'reject'); $event.stopPropagation()">Elutasít</button>
                     </div>
                   </div>
                   <div class="unread-indicator" *ngIf="n.olvasott == 0"></div>
@@ -110,7 +117,8 @@
             </div>
           </div>
 
-          <a [routerLink]="currentUser?.szerep === 'tanar' ? '/teacher-profile-edit' : '/student-profile-edit'" routerLinkActive="active">
+          <a [routerLink]="currentUser?.szerep === 'tanar' ? '/teacher-profile-edit' : '/student-profile-edit'"
+            routerLinkActive="active">
             <div class="avatar-circle">
               <img [src]="currentUser?.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" alt="Profil">
             </div>
