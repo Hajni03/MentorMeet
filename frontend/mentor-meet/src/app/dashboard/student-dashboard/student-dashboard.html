@@ -1,4 +1,41 @@
 <div class="student-dashboard-container">
+    <div class="upcoming-lessons-section card half-width">
+        <div class="section-header">
+            <h3>Közelgő alkalmak</h3>
+            <span class="count-badge" *ngIf="bookings.length > 0">{{ bookings.length }} db</span>
+        </div>
+        
+        <div class="lessons-list">
+            <div *ngFor="let booking of bookings" 
+                 class="lesson-item" 
+                 [class.pending-border]="booking.statusz === 'pending'"
+                 [class.rejected-border]="booking.statusz === 'rejected'"> <div class="lesson-date">
+                    <span class="day">{{ booking.datum | date:'MMM d.' }}</span>
+                    <span class="time">{{ booking.kezdes.substring(0, 5) }}</span>
+                </div>
+
+                <div class="lesson-details">
+                    <h4>{{ booking.tanar_neve }}</h4>
+                    <p>{{ booking.tantargy || 'Mentorálás' }}</p> 
+                </div>
+
+                <div class="lesson-status">
+                    <span class="status-badge" [ngClass]="booking.statusz">
+                        <ng-container [ngSwitch]="booking.statusz">
+                            <span *ngSwitchCase="'accepted'">Visszaigazolva</span>
+                            <span *ngSwitchCase="'rejected'">Elutasítva</span> <span *ngSwitchDefault>Várakozás</span>
+                        </ng-container>
+                    </span>
+                </div>
+            </div>
+
+            <div *ngIf="bookings.length === 0 && !loading" class="empty-lessons">
+                <p>Nincsenek aktív foglalásaid.</p>
+                <button class="btn-primary" routerLink="/friends">Mentor keresése</button>
+            </div>
+        </div>
+    </div>
+
     <div class="calendar-section card">
         <div class="calendar-header">
             <div class="title-group">
@@ -13,42 +50,15 @@
             <div class="legend">
                 <span class="legend-item"><span class="dot accepted"></span> Elfogadva</span>
                 <span class="legend-item"><span class="dot pending"></span> Függőben</span>
-            </div>
+                <span class="legend-item"><span class="dot rejected"></span> Elutasítva</span> </div>
         </div>
 
         <div class="calendar-container">
-            <div id="calendar" class="main-calendar">
-                <div *ngIf="loading" class="placeholder-calendar">
-                    <div class="spinner"></div>
-                    <p>Naptár betöltése...</p>
-                </div>
+            <div *ngIf="loading" class="placeholder-calendar">
+                <div class="spinner"></div>
+                <p>Naptár betöltése...</p>
             </div>
-        </div>
-    </div>
-
-    <div class="upcoming-lessons-section card">
-        <h3>Közelgő alkalmak</h3>
-        <div class="lessons-list">
-            <div *ngFor="let booking of bookings" class="lesson-item" [class.pending-border]="booking.statusz === 'pending'">
-                <div class="lesson-date">
-                    <span class="day">{{ booking.idopont | date:'MMM d.' }}</span>
-                    <span class="time">{{ booking.idopont | date:'HH:mm' }}</span>
-                </div>
-                <div class="lesson-details">
-                    <h4>{{ booking.mentor_neve }}</h4>
-                    <p>{{ booking.tantargy }}</p>
-                </div>
-                <div class="lesson-status">
-                    <span class="status-badge" [ngClass]="booking.statusz">
-                        {{ booking.statusz === 'accepted' ? 'Visszaigazolva' : 'Várakozás' }}
-                    </span>
-                </div>
-            </div>
-
-            <div *ngIf="bookings.length === 0 && !loading" class="empty-lessons">
-                <p>Nincsenek aktív foglalásaid.</p>
-                <button class="btn-primary" routerLink="/friends">Mentor keresése</button>
-            </div>
+            <full-calendar *ngIf="!loading" [options]="calendarOptions" class="main-calendar"></full-calendar>
         </div>
     </div>
 </div>

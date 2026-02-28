@@ -4,11 +4,89 @@ $bg-cream: #F5F5F0;
 $secondary-blue: #848CAF;
 $success-green: #10b981;
 $pending-orange: #f59e0b;
+$error-red: #ef4444; // ÚJ: Elutasítás színe
 
 .student-dashboard-container {
     padding: 30px;
     background-color: $bg-cream;
-    min-height: 100vh; // Javítva 100%-ról, hogy kitöltse a képernyőt
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .upcoming-lessons-section {
+        background: white;
+        border-radius: 30px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        width: 100%;
+        max-width: 50%;
+        align-self: flex-start;
+
+        h3 { 
+            color: $primary-purple; 
+            font-weight: 800; 
+            margin-top: 0;
+            margin-bottom: 20px; 
+        }
+
+        .lessons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 10px;
+
+            &::-webkit-scrollbar { width: 6px; }
+            &::-webkit-scrollbar-thumb { background: rgba(132, 140, 175, 0.2); border-radius: 10px; }
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            border-left: 5px solid $success-green; // Alapértelmezett zöld
+
+            &:hover { transform: translateX(5px); }
+            
+            // Státuszfüggő szegélyszínek
+            &.pending-border { border-left-color: $pending-orange; }
+            &.rejected-border { border-left-color: $error-red; } // ÚJ
+
+            .lesson-date {
+                min-width: 80px;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid rgba(132, 140, 175, 0.1);
+                .day { font-weight: 800; color: $primary-purple; }
+                .time { font-size: 0.9rem; color: $secondary-blue; }
+            }
+
+            .lesson-details {
+                flex: 1;
+                padding-left: 20px;
+                h4 { margin: 0; color: $primary-purple; font-weight: 700; font-size: 1.1rem; }
+                p { margin: 0; color: $secondary-blue; font-size: 0.9rem; }
+            }
+
+            .status-badge {
+                padding: 6px 12px;
+                border-radius: 10px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                white-space: nowrap;
+                
+                &.accepted { background: rgba(16, 185, 129, 0.1); color: $success-green; }
+                &.pending { background: rgba(245, 158, 11, 0.1); color: $pending-orange; }
+                &.rejected { background: rgba(239, 68, 68, 0.1); color: $error-red; } // ÚJ
+            }
+        }
+    }
 
     .calendar-section {
         background: white;
@@ -16,7 +94,6 @@ $pending-orange: #f59e0b;
         padding: 30px;
         border: 1px solid rgba(132, 140, 175, 0.1);
         box-shadow: 0 10px 30px rgba(75, 59, 115, 0.05);
-        margin-bottom: 30px;
 
         .calendar-header {
             display: flex;
@@ -37,7 +114,12 @@ $pending-orange: #f59e0b;
     }
 }
 
-// FULLCALENDAR STÍLUSOK FELÜLBÍRÁLÁSA
+@media (max-width: 992px) {
+    .student-dashboard-container .upcoming-lessons-section {
+        max-width: 100%;
+    }
+}
+
 ::ng-deep {
     .fc {
         font-family: 'Inter', sans-serif;
@@ -54,7 +136,6 @@ $pending-orange: #f59e0b;
             font-size: 1.2rem !important;
         }
 
-        // Napok és idősávok fejléce
         .fc-col-header-cell {
             padding: 12px 0;
             background: #fafafa;
@@ -65,7 +146,6 @@ $pending-orange: #f59e0b;
             }
         }
 
-        // Események (időpontok) stílusa
         .fc-event {
             border-radius: 8px !important;
             padding: 4px 8px !important;
@@ -79,59 +159,10 @@ $pending-orange: #f59e0b;
             }
         }
 
-        // Idősávok szövege
         .fc-timegrid-slot-label-cushion {
             color: $secondary-blue;
             font-size: 0.8rem;
             font-weight: 600;
-        }
-    }
-}
-
-// KÖZELGŐ ALKALMAK LISTÁJA (A naptár alatt)
-.upcoming-lessons-section {
-    background: white;
-    border-radius: 30px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-
-    h3 { color: $primary-purple; font-weight: 800; margin-bottom: 20px; }
-
-    .lesson-item {
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        background: #fafafa;
-        border-radius: 20px;
-        margin-bottom: 15px;
-        transition: all 0.2s ease;
-        border-left: 5px solid $success-green;
-
-        &.pending-border { border-left-color: $pending-orange; }
-
-        .lesson-date {
-            min-width: 80px;
-            display: flex;
-            flex-direction: column;
-            .day { font-weight: 800; color: $primary-purple; }
-            .time { font-size: 0.9rem; color: $secondary-blue; }
-        }
-
-        .lesson-details {
-            flex: 1;
-            padding-left: 20px;
-            h4 { margin: 0; color: $primary-purple; font-weight: 700; }
-            p { margin: 0; color: $secondary-blue; font-size: 0.9rem; }
-        }
-
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            &.accepted { background: rgba(16, 185, 129, 0.1); color: $success-green; }
-            &.pending { background: rgba(245, 158, 11, 0.1); color: $pending-orange; }
         }
     }
 }
@@ -150,11 +181,11 @@ $pending-orange: #f59e0b;
             width: 10px; height: 10px; border-radius: 50%;
             &.accepted { background: $success-green; }
             &.pending { background: $pending-orange; }
+            &.rejected { background: $error-red; } // ÚJ
         }
     }
 }
 
-// Üres állapot (Empty State) stílusai
 .empty-lessons {
     display: flex;
     flex-direction: column;
@@ -165,7 +196,6 @@ $pending-orange: #f59e0b;
     background: rgba(132, 140, 175, 0.03);
     border: 2px dashed rgba(132, 140, 175, 0.2);
     border-radius: 20px;
-    margin-top: 10px;
 
     p {
         color: $secondary-blue;
@@ -174,7 +204,6 @@ $pending-orange: #f59e0b;
         margin-bottom: 20px;
     }
 
-    // A kereső gomb egyedi stílusa
     .btn-primary {
         background: linear-gradient(135deg, $primary-purple, #6a5acd);
         color: white;
@@ -189,22 +218,12 @@ $pending-orange: #f59e0b;
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        text-decoration: none; // Ha routerLink miatt <a> tag lenne
+        text-decoration: none;
 
         &:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(75, 59, 115, 0.3);
             filter: brightness(1.1);
-        }
-
-        &:active {
-            transform: translateY(-1px);
-        }
-
-        // Opcionális: kis ikon a gombba (ha tennél bele később)
-        &::before {
-            content: '🔍';
-            font-size: 1.1rem;
         }
     }
 }

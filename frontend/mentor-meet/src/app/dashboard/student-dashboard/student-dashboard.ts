@@ -20,8 +20,9 @@ export class StudentDashboard implements OnInit {
   private http = inject(HttpClient);
   
   user: any = null;
-  bookings: any[] = []; // A lista nézethez, amit a HTML-ben használtunk
+  bookings: any[] = []; 
   loading = true;
+  private apiUrl = 'http://localhost:8000/api';
 
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -38,7 +39,10 @@ export class StudentDashboard implements OnInit {
     height: 'auto',
     editable: false,
     selectable: false,
-    events: []
+    events: [],
+    eventClick: (info) => {
+      alert(`Tanár: ${info.event.title}\nÁllapot: ${info.event.extendedProps['statusz'] === 'accepted' ? 'Visszaigazolva' : 'Visszaigazolásra vár'}`);
+    }
   };
 
   ngOnInit() {
@@ -53,26 +57,31 @@ export class StudentDashboard implements OnInit {
     if (!this.user?.id) return;
     this.loading = true;
     
-    // API hívás a diák naptáráért
-    const url = `http://localhost:8000/api/get_student_calendar.php?user_id=${this.user.id}`;
+    // JAVÍTÁS 1: A PHP 'user_id' néven várja a paramétert a legutóbbi kódod alapján!
+    const url = `${this.apiUrl}/get_student_calendar.php?user_id=${this.user.id}`;
     
     this.http.get<any[]>(url).subscribe({
       next: (res) => {
-        // 1. Elmentjük a nyers adatokat a lista nézethez is
+        console.log("Szerver válasza:", res); // Ellenőrizd a konzolon, hogy jön-e adat!
         this.bookings = res;
 
-        // 2. Frissítjük a naptár eseményeket (referencia csere!)
         this.calendarOptions = {
           ...this.calendarOptions,
           events: res.map(event => ({
-            title: `${event.targy} - ${event.tanar_neve}`,
-            start: event.idopont_start,
-            end: event.idopont_end,
-            // Színkódok a HTML legend-hez igazítva
-            backgroundColor: event.statusz === 'accepted' ? '#4CAF50' : '#FFC107',
+            id: event.id || event.foglalas_id,
+            title: event.tanar_neve,
+            // JAVÍTÁS 2: A legutóbbi PHP 'start' és 'end' néven küldi a formázott dátumot
+            start: event.start || event.idopont_start,
+            end: event.end || event.idopont_end,
+            
+            // SZÍNEZÉS:
+            backgroundColor: event.statusz === 'accepted' ? '#10b981' : 
+                 event.statusz === 'rejected' ? '#ef4444' : '#f59e0b',
             borderColor: 'transparent',
+            
             extendedProps: {
-              statusz: event.statusz
+              statusz: event.statusz,
+              megjegyzes: event.megjegyzes
             }
           }))
         };
