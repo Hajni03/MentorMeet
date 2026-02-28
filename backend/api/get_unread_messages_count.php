@@ -1,6 +1,16 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+// Engedélyezzük a kérést az Angular portjáról (4200)
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
+
+// Az Angular néha küld egy üres "preflight" kérést ellenőrzésképp
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 require_once "../config/db.php";
 $user_id = $_GET['user_id'] ?? null;
 
