@@ -47,8 +47,8 @@
 
       <div class="subject-tags">
         <div *ngFor="let sub of mySubjects" class="tag">
-          {{sub.tantargy_nev}}
-          <span class="remove" (click)="deleteSubject(sub.id)">✕</span>
+          {{sub.nev}}
+          <span class="remove" (click)="deleteSubject(sub.tantargy_id || sub.id)">✕</span>
         </div>
       </div>
 
