@@ -39,10 +39,10 @@ export class UserProfile implements OnInit {
     slotMinTime: '08:00:00',
     slotMaxTime: '20:00:00',
     allDaySlot: false,
-    headerToolbar: { 
-      left: 'prev,next today', 
-      center: 'title', 
-      right: 'timeGridWeek,timeGridDay' 
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'timeGridWeek,timeGridDay'
     },
     events: [],
     eventClick: this.handleDateClick.bind(this), // Fontos a .bind(this)
@@ -83,28 +83,33 @@ export class UserProfile implements OnInit {
   }
 
   loadTeacherCalendar(teacherId: string) {
-  this.http.get<any[]>(`${this.apiUrl}/get_teacher_free_slots.php?teacher_id=${teacherId}`)
-    .subscribe({
-      next: (res) => {
-        console.log('Szerver válasza:', res); // Ellenőrzéshez!
+    this.http.get<any[]>(`${this.apiUrl}/get_teacher_free_slots.php?teacher_id=${teacherId}`)
+      .subscribe({
+        next: (res) => {
+          console.log('Szerverről érkező időpontok:', res); // Itt ellenőrizheted az F12 konzolon!
 
-        // Teljes objektum csere, hogy a naptár újrarajzoljon
-        this.calendarOptions = {
-          ...this.calendarOptions,
-          events: res.map(slot => ({
-            id: slot.id,
-            title: 'Szabad időpont',
-            // Fontos: ellenőrizd, hogy a PHP-ban is ezek-e a nevek!
-            start: slot.idopont_start, 
-            end: slot.idopont_end,
-            backgroundColor: '#6a5acd',
-            borderColor: 'transparent',
-          }))
-        };
-      },
-      error: (err) => console.error('Hiba a naptár betöltésekor', err)
-    });
-}
+          this.calendarOptions = {
+            ...this.calendarOptions,
+            events: res.map(slot => ({
+              id: slot.id,
+              title: 'Szabad időpont',
+              // A PHP-ból jövő '2026-03-01 10:00:00' formátumot a FullCalendar alapból érti
+              start: slot.idopont_start,
+              end: slot.idopont_end,
+              backgroundColor: '#6a5acd', // A te lila színed
+              borderColor: 'transparent',
+              extendedProps: {
+                datum: slot.datum,
+                kezdes: slot.kezdes
+              }
+            }))
+          };
+        },
+        error: (err) => {
+          console.error('Hiba a naptár betöltésekor:', err);
+        }
+      });
+  }
 
   loadTeacherSubjects(tanarId: string) {
     this.http.get<any[]>(`${this.apiUrl}/get_tanar_tantargyak.php?tanar_id=${tanarId}`)
@@ -127,8 +132,8 @@ export class UserProfile implements OnInit {
     }
 
     const slotId = info.event.id;
-    const startStr = info.event.start.toLocaleString('hu-HU', { 
-        month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+    const startStr = info.event.start.toLocaleString('hu-HU', {
+      month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
     });
 
     if (confirm(`Szeretnéd lefoglalni ezt az időpontot: ${startStr}?`)) {
