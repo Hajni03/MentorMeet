@@ -27,7 +27,7 @@
         Üzenetek
         <span class="msg-badge" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
       </a>
-      <a routerLink="/friends">
+      <a routerLink="/friends" routerLinkActive="active">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
@@ -83,7 +83,10 @@
               <div class="dropdown-body">
                 <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.olvasott == 0">
                   <div class="notif-content">
-                    <p>{{ n.uzenet }}</p>
+                    <p>
+                      <strong *ngIf="n.felado_neve">{{ n.felado_neve }}</strong> 
+                      {{ n.uzenet }}
+                    </p>
 
                     <span>{{ n.datum | date:'yyyy.MM.dd. HH:mm' }}</span>
 
@@ -107,9 +110,9 @@
             </div>
           </div>
 
-          <a routerLink="/teacher-profile-edit" routerLinkActive="active">
+          <a [routerLink]="currentUser?.szerep === 'tanar' ? '/teacher-profile-edit' : '/student-profile-edit'" routerLinkActive="active">
             <div class="avatar-circle">
-              <img [src]="currentUser?.profilkep || 'assets/images/profilkep_placeholder.jpg'" alt="Profil">
+              <img [src]="currentUser?.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" alt="Profil">
             </div>
           </a>
         </div>
