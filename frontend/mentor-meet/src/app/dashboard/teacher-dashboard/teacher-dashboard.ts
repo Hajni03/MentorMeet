@@ -15,7 +15,8 @@ export class TeacherDashboardComponent implements OnInit {
 
   // Felhasználói adatok
   currentUser: any = null;
-  private apiUrl = 'http://localhost:8000/api';
+  // ✅ JAVÍTVA: Éles HTTPS útvonal
+  private readonly apiUrl = 'https://mentormeet.hu/backend/api';
 
   // Naptár vezérlés
   view: 'month' | 'week' | 'day' = 'month';
@@ -37,35 +38,42 @@ export class TeacherDashboardComponent implements OnInit {
     tantargy_id: ''
   };
 
- ngOnInit() {
-  const userData = localStorage.getItem('user');
-  if (userData) {
-    const parsedUser = JSON.parse(userData);
-    this.currentUser = parsedUser;
-    
-    // Kényszerített frissítés a szerverről, hogy meglegyen az iskola_nev
-    this.http.get<any>(`${this.apiUrl}/get_user_details.php?id=${this.currentUser.id}`).subscribe({
-      next: (fullUser) => {
-        this.currentUser = fullUser;
-        // Elmentjük a friss, JOIN-olt adatokat (iskola_nev-vel együtt)
-        localStorage.setItem('user', JSON.stringify(fullUser));
-      }
-    });
-
-    this.loadSchedule();
-    this.loadMySubjects();
+  ngOnInit() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      this.currentUser = parsedUser;
+      
+      // ✅ JAVÍTVA: get_user_details.php hívás az éles URL-el
+      this.http.get<any>(`${this.apiUrl}/get_user_details.php?id=${this.currentUser.id}`).subscribe({
+        next: (fullUser) => {
+          this.currentUser = fullUser;
+          localStorage.setItem('user', JSON.stringify(fullUser));
+          
+          // Csak miután megjöttek a user adatok, töltsük be a többit
+          this.loadSchedule();
+          this.loadMySubjects();
+        },
+        error: (err) => {
+          console.error("Hiba a felhasználói adatok frissítésekor", err);
+          // Hiba esetén is próbáljuk meg betölteni a naptárat a meglévő ID-val
+          this.loadSchedule();
+          this.loadMySubjects();
+        }
+      });
+    }
   }
-}
 
   // --- NAPTÁR GENERÁLÁS ÉS NAVIGÁCIÓ ---
 
   loadSchedule() {
     if (!this.currentUser?.id) return;
 
+    // ✅ JAVÍTVA: API URL használata
     this.http.get<any[]>(`${this.apiUrl}/get_schedule.php?tanar_id=${this.currentUser.id}`).subscribe({
       next: (data) => {
         this.idopontok = data || [];
-        this.generateCalendar(); // A rácsos naptár frissítése
+        this.generateCalendar();
       },
       error: (err) => console.error("Hiba az órarend betöltésekor", err)
     });
@@ -76,27 +84,25 @@ export class TeacherDashboardComponent implements OnInit {
     const month = this.currentDate.getMonth();
     this.calendarDays = [];
 
-    let startDay = new Date(this.currentDate);
-    let daysToGenerate = 42; // Alapértelmezett hónap nézet
+    // Létrehozunk egy másolatot a currentDate-ről, hogy ne módosítsuk az eredetit
+    let startDay = new Date(year, month, 1);
+    let daysToGenerate = 42; 
 
     if (this.view === 'month') {
-      // Hónap első napja, majd vissza az első hétfőig
-      const firstDayOfMonth = new Date(year, month, 1);
-      startDay = new Date(firstDayOfMonth);
       const dayOfWeek = startDay.getDay();
       const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
       startDay.setDate(startDay.getDate() + diff);
       daysToGenerate = 42;
     }
     else if (this.view === 'week') {
-      // Aktuális hét hétfője
+      startDay = new Date(this.currentDate);
       const dayOfWeek = startDay.getDay();
       const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
       startDay.setDate(startDay.getDate() + diff);
       daysToGenerate = 7;
     }
     else if (this.view === 'day') {
-      // Csak a kiválasztott nap
+      startDay = new Date(this.currentDate);
       daysToGenerate = 1;
     }
 
@@ -107,9 +113,9 @@ export class TeacherDashboardComponent implements OnInit {
 
       const dailySlots = this.idopontok.filter(s => s.datum === dateString).map(s => ({
         ...s,
-        isFree: s.diak_id === null,
-        startShort: s.kezdes.substring(0, 5),
-        endShort: s.befejezes.substring(0, 5)
+        isFree: !s.diak_id,
+        startShort: s.kezdes ? s.kezdes.substring(0, 5) : '',
+        endShort: s.befejezes ? s.befejezes.substring(0, 5) : ''
       }));
 
       this.calendarDays.push({
@@ -148,16 +154,13 @@ export class TeacherDashboardComponent implements OnInit {
     this.generateCalendar();
   }
 
-  // --- PANEL ÉS MODAL KEZELÉS ---
-
   toggleAddPanel() {
     this.isAddPanelOpen = !this.isAddPanelOpen;
   }
 
-  // --- ADATKEZELÉS ---
-
   loadMySubjects() {
     if (!this.currentUser?.id) return;
+    // ✅ JAVÍTVA: API URL használata
     this.http.get<any[]>(`${this.apiUrl}/get_tanar_tantargyak.php?tanar_id=${this.currentUser.id}`).subscribe({
       next: (data) => this.mySubjects = data || [],
       error: (err) => console.error("Hiba a tantárgyak betöltésekor", err)
@@ -179,39 +182,34 @@ export class TeacherDashboardComponent implements OnInit {
       tantargy_id: this.ujIdopont.tantargy_id || null
     };
 
+    // ✅ JAVÍTVA: API URL használata
     this.http.post(`${this.apiUrl}/add_idopont.php`, payload).subscribe({
       next: () => {
         alert("Időpont sikeresen rögzítve!");
         this.loadSchedule();
         this.ujIdopont = { cim: '', datum: '', kezdes: '', befejezes: '', tantargy_id: '' };
-        this.isAddPanelOpen = false; // Panel bezárása mentés után
+        this.isAddPanelOpen = false;
       },
       error: (err) => alert("Hiba a mentés során!")
     });
   }
 
-  // Ez kiszűri az összes olyan slotot a calendarDays-ből, ami foglalt (van diak_id)
   get upcomingMeetings() {
     const meetings: any[] = [];
-    this.calendarDays.forEach(day => {
-      day.slots.forEach((slot: any) => {
+    // Mivel a calendarDays csak a nézetet tartalmazza, jobb az idopontokból számolni
+    this.idopontok.forEach(slot => {
         if (slot.diak_id) {
           meetings.push({
-            date: day.date,
+            date: new Date(slot.datum),
             cim: slot.cim,
             kezdes: slot.kezdes,
             befejezes: slot.befejezes
           });
         }
-      });
     });
-    // Sorba rendezzük dátum szerint és csak az első 5-öt mutatjuk
     return meetings.sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, 5);
   }
 
-  // --- SEGÉDFÜGGVÉNYEK ---
-
-  // Segédfüggvény a monogramhoz (Avatar)
   get userInitials(): string {
     if (!this.currentUser?.nev) return '??';
     return this.currentUser.nev
