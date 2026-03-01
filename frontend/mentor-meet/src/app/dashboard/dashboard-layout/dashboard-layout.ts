@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, HostListener, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../shared/services/auth.service';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -11,13 +12,12 @@ import { AuthService } from '../../shared/services/auth.service';
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.scss'
 })
-export class DashboardLayoutComponent implements OnInit {
+export class DashboardLayoutComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private eRef = inject(ElementRef);
 
-  // --- DEKLARÁCIÓK ---
   currentUser: any = null;
   notifications: any[] = [];
   unreadCount: number = 0;
@@ -27,8 +27,8 @@ export class DashboardLayoutComponent implements OnInit {
   isNotificationOpen = false;
   isDarkMode = false;
 
-  pendingRequests: any[] = [];
-  apiUrl = 'http://localhost:8000/api'; 
+  apiUrl = environment.apiUrl.replace('http://', 'https://');
+  private refreshInterval: any;
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
@@ -47,25 +47,35 @@ export class DashboardLayoutComponent implements OnInit {
       this.router.navigate(['/login']);
     }
 
-    // 10 másodpercenkénti frissítés
-    setInterval(() => {
+    // Polling beállítása (10 másodpercenként frissít)
+    this.refreshInterval = setInterval(() => {
       if (this.currentUser?.id) {
         this.checkUnreadMessages();
-        this.loadNotifications(); 
+        this.loadNotifications();
       }
     }, 10000);
   }
 
+  ngOnDestroy() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  // ✅ VÉGLEGESÍTETT: Már a tiszta tömb válaszra vár a PHP-tól
   loadNotifications() {
     if (!this.currentUser?.id) return;
 
-    this.http.get<any[]>(`${this.apiUrl}/get_notifications.php?tanar_id=${this.currentUser.id}`)
+    this.http.get<any[]>(`${this.apiUrl}/get_notifications.php?user_id=${this.currentUser.id}`)
       .subscribe({
         next: (data) => {
-          this.notifications = data || [];
+          // Most már a PHP sima tömböt küld: [{}, {}]
+          this.notifications = Array.isArray(data) ? data : [];
           this.unreadCount = this.notifications.filter(n => n.olvasott == 0).length;
         },
-        error: (err) => console.error("Értesítés hiba:", err)
+        error: (err) => {
+          if (err.status !== 0) console.error("Értesítés hiba:", err);
+        }
       });
   }
 
@@ -128,7 +138,9 @@ export class DashboardLayoutComponent implements OnInit {
 
   logout() {
     if (this.currentUser) {
-      this.http.get(`${this.apiUrl}/logout.php?id=${this.currentUser.id}`).subscribe();
+      this.http.get(`${this.apiUrl}/logout.php?id=${this.currentUser.id}`).subscribe({
+        error: () => { }
+      });
     }
     localStorage.removeItem('user');
     this.currentUser = null;
@@ -142,45 +154,53 @@ export class DashboardLayoutComponent implements OnInit {
         next: (res) => {
           this.unreadMessagesCount = res.unread || 0;
         },
-        error: (err) => console.error("Hiba az üzenetek ellenőrzésekor", err)
+        error: (err) => {
+          if (err.status !== 0) console.error("Hiba az üzenetek ellenőrzésekor", err);
+        }
       });
   }
 
   handleBooking(slotId: number, action: string) {
-  if (!this.currentUser?.id) return;
+    if (!this.currentUser?.id) return;
 
-  this.http.post(`${this.apiUrl}/handle_booking.php`, { 
-    slot_id: slotId, 
-    action: action,
-    user_id: this.currentUser.id
-  }).subscribe({
-    next: (res: any) => {
-      // 1. Frissítjük a listát, hogy eltűnjenek a gombok
-      this.loadNotifications();
-      
-      // 2. Visszajelzés a tanárnak az elutasítás/elfogadás sikerességéről
-      alert(res.message);
+    // Ha elutasítás, megkérdezzük a törlést
+    let deleteSlot = false;
+    if (action === 'reject') {
+      deleteSlot = confirm("Szeretnéd végleg törölni ezt az időpontot a naptáradból is?");
+    }
 
-      // 3. CSAK HA ELUTASÍTÁS VOLT: Külön ablakban rákérdezünk a törlésre
-      if (action === 'reject') {
-        // Kis késleltetés, hogy az előző alert után ne ugorjon azonnal az arcába
-        setTimeout(() => {
-          const confirmDelete = confirm("Szeretnéd ezt az időpontot végleg törölni a naptáradból is, hogy ne foglalja a helyet?");
-          if (confirmDelete) {
-            this.deleteSlot(slotId);
-          }
-        }, 300);
-      }
-    },
-    error: (err) => console.error("Hiba a művelet során:", err)
-  });
-}
+    // ✅ JAVÍTÁS: A kulcsok nevei egyezzenek a PHP-val (slot_id, action)
+    const payload = {
+      slot_id: slotId,
+      action: action,
+      delete_slot: deleteSlot
+    };
+
+    this.http.post(`${this.apiUrl}/handle_booking.php`, payload)
+    .subscribe({
+      next: (res: any) => {
+        alert(res.message);
+        
+        // ✅ MEGOLDÁS: Keressük meg az értesítést és írjuk át a státuszát
+        const notif = this.notifications.find(n => Number(n.kapcsolodo_id) === Number(slotId) && n.tipus === 'booking');
+        if (notif) {
+          notif.kapcsolat_statusz = (action === 'confirm') ? 'accepted' : 'rejected';
+          notif.olvasott = 1;
+        }
+
+        // Biztonság kedvéért a szerverről is frissítünk
+        this.loadNotifications();
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
   deleteSlot(slotId: number) {
     this.http.post(`${this.apiUrl}/delete_slot.php`, { slot_id: slotId })
       .subscribe({
         next: (res: any) => {
-          alert("Időpont törölve a naptárból.");
+          alert(res.message);
+          this.loadNotifications(); // Frissítjük a listát
         },
         error: (err) => console.error("Hiba a törlés során:", err)
       });
