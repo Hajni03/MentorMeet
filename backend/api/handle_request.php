@@ -10,40 +10,37 @@ require_once __DIR__ . "/../config/db.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!isset($data['id']) || !isset($data['status'])) {
-    echo json_encode(["message" => "Hiányzó adatok!"]);
+// ✅ Adatok beolvasása (Angular rugalmasság)
+$kapcsolat_id = $data['id'] ?? $data['kapcsolodo_id'] ?? null;
+$uj_statusz = $data['status'] ?? $data['action'] ?? null;
+
+if (!$kapcsolat_id || !$uj_statusz) {
+    echo json_encode([
+        "message" => "Hiányzó adatok!",
+        "debug_received" => $data 
+    ]);
     exit;
 }
 
 try {
     $pdo->beginTransaction();
 
-    $kapcsolat_id = (int)$data['id'];
-    $statusz = $data['status'];
-
-    // 1. ELŐBB az értesítést tesszük olvasottá
-    // Az ertesitesek táblában a kapcsolodo_id tárolja a kapcsolatok tábla ID-ját
-    $stmtMarkRead = $pdo->prepare("
-        UPDATE ertesitesek 
-        SET olvasott = 1 
-        WHERE tipus = 'jeloles' AND kapcsolodo_id = ?
-    ");
-    $stmtMarkRead->execute([$kapcsolat_id]);
-
-    // 2. Frissítjük a kapcsolat státuszát
+    // 1. Frissítjük a kapcsolat státuszát
+    // JAVÍTÁS: -> használata . helyett
     $stmtUpdate = $pdo->prepare("UPDATE kapcsolatok SET statusz = ? WHERE id = ?");
-    $stmtUpdate->execute([$statusz, $kapcsolat_id]);
+    $stmtUpdate->execute([$uj_statusz, $kapcsolat_id]);
 
-    // 3. CSAK A VÉGÉN törlünk, ha elutasítás volt
-    if ($statusz === 'rejected') {
-        $stmtDelete = $pdo->prepare("DELETE FROM kapcsolatok WHERE id = ?");
-        $stmtDelete->execute([$kapcsolat_id]);
-    }
+    // 2. Az értesítést olvasottá tesszük (slot_id alapján)
+    $stmtMarkRead = $pdo->prepare("UPDATE ertesitesek SET olvasott = 1 WHERE tipus = 'jeloles' AND slot_id = ?");
+    $stmtMarkRead->execute([$kapcsolat_id]);
 
     $pdo->commit();
     
-    $msg = ($statusz === 'accepted') ? "Kapcsolat elfogadva!" : "Kapcsolat elutasítva.";
-    echo json_encode(["message" => $msg, "status" => $statusz]);
+    echo json_encode([
+        "success" => true,
+        "message" => "Sikeres mentés!", 
+        "status" => $uj_statusz
+    ]);
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
