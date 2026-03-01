@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-friends',
@@ -14,7 +15,6 @@ export class Friends implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // Általánosabb név: suggestedUsers (mert lehetnek benne mentorok is)
   friends: any[] = [];             
   suggestedUsers: any[] = [];   
   
@@ -22,60 +22,76 @@ export class Friends implements OnInit {
   showSuggested = false; 
   sentRequests = new Set<number>();
   
-  // Docker port beállítása (ha szükséges)
-  private apiUrl = 'http://localhost:8000/api'; 
+  private apiUrl = environment.apiUrl.replace('http://', 'https://'); 
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
     if (userData) {
-      this.currentUser = JSON.parse(userData);
-      this.loadConfirmedFriends();
-      this.loadSuggestedUsers(); // Meghívjuk az új szűrt listát
+      try {
+        this.currentUser = JSON.parse(userData);
+        this.loadConfirmedFriends();
+        this.loadSuggestedUsers(); 
+      } catch (e) {
+        console.error("Hibás felhasználói adatok", e);
+        this.router.navigate(['/login']);
+      }
     } else {
       this.router.navigate(['/login']);
     }
   }
 
   loadConfirmedFriends() {
+    if (!this.currentUser?.id) return;
+    
     this.http.get<any[]>(`${this.apiUrl}/get_friends.php?user_id=${this.currentUser.id}`)
       .subscribe({
         next: (data) => this.friends = data || [],
-        error: (err) => console.error('Hiba az ismerősök betöltésekor:', err)
+        error: (err) => {
+           if (err.status !== 0) console.error('Hiba az ismerősök betöltésekor:', err);
+        }
       });
   }
 
-  /**
-   * Ez hívja meg a frissített get_users.php-t, ami szerepkör szerint szűr
-   */
   loadSuggestedUsers() {
+    if (!this.currentUser?.id) return;
+
     const url = `${this.apiUrl}/get_users.php?current_id=${this.currentUser.id}`;
     this.http.get<any[]>(url)
       .subscribe({
         next: (res) => {
           this.suggestedUsers = res || [];
-          // Bekapcsoljuk a "Jelölés elküldve" állapotot, ha már van függő kérés
+          this.sentRequests.clear();
           this.suggestedUsers.forEach(u => {
             if (u.alreadySent) this.sentRequests.add(u.id);
           });
         },
-        error: (err) => console.error('Hiba a keresésnél:', err)
+        error: (err) => {
+           if (err.status !== 0) console.error('Hiba a keresésnél:', err);
+        }
       });
   }
 
   sendRequest(targetId: number) {
-    // Okos azonosító kiosztás: ki a tanár és ki a diák?
-    const diakId = this.currentUser.szerep === 'diak' ? this.currentUser.id : targetId;
-    const tanarId = this.currentUser.szerep === 'tanar' ? this.currentUser.id : targetId;
+    if (!this.currentUser?.id) return;
 
-    const payload = { tanar_id: tanarId, diak_id: diakId };
+    // ✅ JAVÍTÁS: Összehangolva az add_contact.php elvárásaival
+    const payload = { 
+      sender_id: this.currentUser.id,
+      receiver_id: targetId,
+      diak_id: this.currentUser.szerep === 'diak' ? this.currentUser.id : targetId,
+      tanar_id: this.currentUser.szerep === 'tanar' ? this.currentUser.id : targetId 
+    };
 
     this.http.post(`${this.apiUrl}/add_contact.php`, payload)
       .subscribe({
         next: (res: any) => {
           this.sentRequests.add(targetId);
-          alert(res.message);
+          alert(res.message || 'Kapcsolatfelvételi kérelem elküldve!');
         },
-        error: (err) => console.error('Hiba a küldésnél:', err)
+        error: (err) => {
+          console.error('Hiba a küldésnél:', err);
+          alert(err.error?.message || 'Hiba történt a küldés során.');
+        }
       });
   }
 
