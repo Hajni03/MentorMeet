@@ -13,12 +13,12 @@ export interface Iskola {
 })
 export class SchoolService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api/iskolak.php'; 
+  private readonly apiUrl = 'https://mentormeet.hu/backend/api'; 
   /**
    * Összes iskola lekérdezése
    */
   getIskolak(): Observable<Iskola[]> {
-    return this.http.get<Iskola[]>(`${this.apiUrl}`);
+    return this.http.get<Iskola[]>(`${this.apiUrl}/iskolak.php`);
   }
 
   /**

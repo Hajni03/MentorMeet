@@ -15,7 +15,7 @@ export interface Osztaly {
   providedIn: 'root'
 })
 export class OsztalyService {
-  private apiUrl = '/api/osztalyok.php';
+  private apiUrl = 'https://mentormeet.hu/backend/api/osztalyok.php';
 
   constructor(private http: HttpClient) {}
 

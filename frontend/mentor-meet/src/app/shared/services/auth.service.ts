@@ -7,12 +7,13 @@ import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // ✅ A localhost:8000-et töröljük, a proxy /api/ előtagot használjuk
-  private baseUrl = '/api';
+  private baseUrl = 'https://mentormeet.hu/backend/api';
   private router = inject(Router);
 
   isLoggedIn = signal<boolean>(false);
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   // Diák regisztráció
   registerStudent(data: any): Observable<any> {
@@ -36,7 +37,7 @@ export class AuthService {
         this.isLoggedIn.set(true); // <--- Itt váltunk "bejelentkezett" módba
       }
     })
-  );;
+  );
   }
 
   //Kijelentkezésnél törli a memóriát
