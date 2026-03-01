@@ -79,16 +79,32 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
       });
   }
 
-  handleRequest(requestId: number, newStatus: string) {
-    this.http.post(`${this.apiUrl}/handle_request.php`, { id: requestId, status: newStatus })
-      .subscribe({
-        next: (res: any) => {
-          alert(res.message);
-          this.loadNotifications();
-        },
-        error: (err) => console.error("Hiba a kérés kezelésekor", err)
-      });
+ handleRequest(kapcsolodoId: number, statusz: string) {
+  if (!kapcsolodoId) {
+    console.error("Hiba: Az ID üres!");
+    return;
   }
+
+  // Pontosan 'id' és 'status' kulcsokat küldünk
+  const payload = { 
+    id: kapcsolodoId, 
+    status: statusz 
+  };
+
+  this.http.post(`${this.apiUrl}/handle_request.php`, payload).subscribe({
+    next: (res: any) => {
+      if (res.message === "Sikeres mentés!") {
+        // Frissítjük a felületet
+        const notif = this.notifications.find(n => n.kapcsolodo_id === kapcsolodoId && n.tipus === 'jeloles');
+        if (notif) notif.kapcsolat_statusz = statusz;
+      } else {
+        console.error("Szerver hibaüzenet:", res);
+        alert("Szerver hiba: " + res.message);
+      }
+    },
+    error: (err) => console.error("Hálózati hiba:", err)
+  });
+}
 
   toggleNotifications(event: Event) {
     event.stopPropagation();
