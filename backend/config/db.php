@@ -1,9 +1,9 @@
 <?php
 // Mivel Dockerben vagyunk, a host neve 'db', mert ez a service neve a compose-ban
-$host = 'db'; 
-$db   = 'mentormeet'; // A compose-ban megadott MYSQL_DATABASE
-$user = 'root'; // A compose-ban megadott MYSQL_USER
-$pass = 'root'; // A compose-ban megadott MYSQL_PASSWORD
+$host = 'mysql.rackhost.hu'; 
+$db   = 'c94046mentormeet'; // A compose-ban megadott MYSQL_DATABASE
+$user = 'c94046mentormeet'; // A compose-ban megadott MYSQL_USER
+$pass = 'mentormeet'; // A compose-ban megadott MYSQL_PASSWORD
 
 $charset = 'utf8mb4';
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
