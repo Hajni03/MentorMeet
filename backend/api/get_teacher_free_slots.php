@@ -1,6 +1,13 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+// ✅ JAVÍTÁS: Éles domain engedélyezése
+header("Access-Control-Allow-Origin: https://mentormeet.hu");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit;
+}
 
 require_once "../config/db.php";
 
@@ -8,21 +15,11 @@ $teacher_id = $_GET['teacher_id'] ?? null;
 
 if ($teacher_id) {
     try {
-        // A te táblád oszlopai: id, tanar_id, diak_id, datum, kezdes, befejezes, aktiv
-        // Akkor szabad egy időpont, ha nincs még diák_id (NULL) és az aktiv = 1
-        $sql = "SELECT 
-                    id, 
-                    datum, 
-                    kezdes, 
-                    befejezes,
-                    CONCAT(datum, ' ', kezdes) as idopont_start,
-                    CONCAT(datum, ' ', befejezes) as idopont_end
-                FROM idopontok 
-                WHERE tanar_id = :tid 
-                AND diak_id IS NULL 
-                AND aktiv = 1 
-                AND datum >= CURDATE()
-                ORDER BY datum ASC, kezdes ASC";
+        $sql = "SELECT id, datum, kezdes, befejezes, diak_id,
+        CONCAT(datum, 'T', kezdes) as idopont_start,
+        CONCAT(datum, 'T', befejezes) as idopont_end
+        FROM idopontok 
+        WHERE tanar_id = :tid AND aktiv = 1";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['tid' => $teacher_id]);

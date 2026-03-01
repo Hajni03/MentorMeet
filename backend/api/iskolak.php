@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Adatbázis kapcsolat (példa, módosítsd a saját szerint)
-$pdo = new PDO('mysql:host=db;dbname=mentormeet', 'root', 'root'); 
+$pdo = new PDO('mysql:host=mysql.rackhost.hu;dbname=c94046mentormeet', 'c94046mentormeet', 'mentormeet'); 
 $pdo->exec("SET NAMES utf8");
 
 // Lekérdezés

@@ -1,30 +1,41 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+// ✅ JAVÍTÁS: Éles domain és fejléc beállítások
+header("Access-Control-Allow-Origin: https://mentormeet.hu");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit;
 
 require_once "../config/db.php";
+
 $data = json_decode(file_get_contents("php://input"));
 
 if (!empty($data->slot_id)) {
     try {
-        // Töröljük az időpontot az idopontok táblából
-        // (A foglalás már 'rejected' státusszal megmarad a foglalasok táblában naplózásnak, 
-        // de az időpont eltűnik a kínálatból)
-        $sql = "DELETE FROM idopontok WHERE id = ?";
+        $pdo->beginTransaction();
+
+        // 1. Megnézzük, van-e hozzá kapcsolódó foglalás
+        // Ha van, érdemesebb az időpontot csak inaktiválni, hogy a foglalási napló megmaradjon
+        $sql = "UPDATE idopontok SET aktiv = 0, diak_id = NULL WHERE id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$data->slot_id]);
 
-        echo json_encode(["message" => "Időpont sikeresen törölve."]);
+        if ($stmt->rowCount() > 0) {
+            $pdo->commit();
+            echo json_encode(["message" => "Időpont sikeresen eltávolítva a naptárból."]);
+        } else {
+            $pdo->rollBack();
+            echo json_encode(["message" => "Nem található aktív időpont ezzel az ID-val."]);
+        }
+
     } catch (PDOException $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
         http_response_code(500);
-        echo json_encode(["error" => $e->getMessage()]);
+        echo json_encode(["error" => "Adatbázis hiba: " . $e->getMessage()]);
     }
 } else {
     http_response_code(400);
-    echo json_encode(["message" => "Hiányzó ID."]);
+    echo json_encode(["message" => "Hiányzó slot_id."]);
 }
 ?>

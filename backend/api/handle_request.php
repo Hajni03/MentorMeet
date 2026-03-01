@@ -1,7 +1,7 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Origin: https://mentormeet.hu");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
@@ -18,35 +18,35 @@ if (!isset($data['id']) || !isset($data['status'])) {
 try {
     $pdo->beginTransaction();
 
-    // 1. Megkeressük az értesítést (itt csak felhasznalo_id van az image_9671cb alapján)
-    $stmtNoti = $pdo->prepare("SELECT felhasznalo_id FROM ertesitesek WHERE id = ?");
-    $stmtNoti->execute([$data['id']]);
-    $noti = $stmtNoti->fetch();
+    $kapcsolat_id = (int)$data['id'];
+    $statusz = $data['status'];
 
-    if ($noti) {
-        // 2. Mivel nincs felado_id-nk az értesítésben, megkeressük a hozzá tartozó 'pending' kapcsolatot
-        // Feltételezzük, hogy a diák (felhasznalo_id) kapta a kérést
-        $stmtUpdate = $pdo->prepare("
-            UPDATE kapcsolatok 
-            SET statusz = ? 
-            WHERE diak_id = ? AND statusz = 'pending'
-            LIMIT 1
-        ");
-        $stmtUpdate->execute([$data['status'], $noti['felhasznalo_id']]);
+    // 1. ELŐBB az értesítést tesszük olvasottá
+    // Az ertesitesek táblában a kapcsolodo_id tárolja a kapcsolatok tábla ID-ját
+    $stmtMarkRead = $pdo->prepare("
+        UPDATE ertesitesek 
+        SET olvasott = 1 
+        WHERE tipus = 'jeloles' AND kapcsolodo_id = ?
+    ");
+    $stmtMarkRead->execute([$kapcsolat_id]);
 
-        // 3. Értesítés olvasottá tétele (image_9671cb oszlopneveivel)
-        $stmtMarkRead = $pdo->prepare("UPDATE ertesitesek SET olvasott = 1 WHERE id = ?");
-        $stmtMarkRead->execute([$data['id']]);
+    // 2. Frissítjük a kapcsolat státuszát
+    $stmtUpdate = $pdo->prepare("UPDATE kapcsolatok SET statusz = ? WHERE id = ?");
+    $stmtUpdate->execute([$statusz, $kapcsolat_id]);
 
-        $pdo->commit();
-        echo json_encode(["message" => "Sikeresen frissítve: " . $data['status']]);
-    } else {
-        $pdo->rollBack();
-        echo json_encode(["message" => "Hiba: Az értesítés (ID: ".$data['id'].") nem található!"]);
+    // 3. CSAK A VÉGÉN törlünk, ha elutasítás volt
+    if ($statusz === 'rejected') {
+        $stmtDelete = $pdo->prepare("DELETE FROM kapcsolatok WHERE id = ?");
+        $stmtDelete->execute([$kapcsolat_id]);
     }
+
+    $pdo->commit();
+    
+    $msg = ($statusz === 'accepted') ? "Kapcsolat elfogadva!" : "Kapcsolat elutasítva.";
+    echo json_encode(["message" => $msg, "status" => $statusz]);
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
     http_response_code(500);
-    echo json_encode(["message" => "SQL hiba: " . $e->getMessage()]);
+    echo json_encode(["message" => "Szerver hiba: " . $e->getMessage()]);
 }

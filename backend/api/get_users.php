@@ -1,38 +1,56 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+// JAVÍTÁS: Éles HTTPS domain engedélyezése
+header("Access-Control-Allow-Origin: https://mentormeet.hu");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 require_once "../config/db.php"; 
 
 $current_id = $_GET['current_id'] ?? 0;
 $search = $_GET['search'] ?? '';
 
+if ($current_id == 0) {
+    echo json_encode([]);
+    exit;
+}
+
 try {
-    // 1. Felhasználó adatainak lekérése
+    // 1. Aktuális felhasználó adatainak lekérése
     $userStmt = $pdo->prepare("SELECT iskola_id, szerep FROM felhasznalok WHERE id = ?");
     $userStmt->execute([$current_id]);
     $currentUserData = $userStmt->fetch(PDO::FETCH_ASSOC);
     
-    $my_school_id = $currentUserData['iskola_id'] ?? null;
-    $my_role = $currentUserData['szerep'] ?? null;
+    if (!$currentUserData) {
+        echo json_encode([]);
+        exit;
+    }
+
+    $my_school_id = $currentUserData['iskola_id'];
+    $my_role = $currentUserData['szerep'];
+    // Ha diák vagyok, tanárt keresek, és fordítva
     $target_role = ($my_role === 'diak') ? 'tanar' : 'diak';
 
-    // 2. SZŰRÉS: Iskola + Ellentétes szerepkör + NINCS MÉG KAPCSOLAT
-    $sql = "SELECT id, nev, szerep, iskola_id, profilkep_eleres,
-            (SELECT COUNT(*) FROM uzenetek 
-             WHERE kuldo_id = felhasznalok.id 
-             AND fogado_id = :my_id 
-             AND olvasott = 0) as unread_count
+    // 2. SZŰRÉS: Iskola + Ellentétes szerepkör + NINCS MÉG ELFOGADOTT KAPCSOLAT
+    // JAVÍTÁS: A tábla neve nálad 'kapcsolatok', nem 'ismerosok'!
+    $sql = "SELECT id, nev, szerep, iskola_id, profilkep_eleres
             FROM felhasznalok 
             WHERE id != :my_id 
             AND iskola_id = :my_school
             AND szerep = :target_role
             
-            -- EZ A RÉSZ SZŰRI KI A MÁR ISMERŐSÖKET --
+            -- Kiszűrjük azokat, akikkel már van ELFOGADOTT kapcsolatunk --
             AND NOT EXISTS (
-                SELECT 1 FROM ismerosok 
-                WHERE (tanar_id = :my_id AND diak_id = felhasznalok.id AND statusz = 'accepted')
-                OR (diak_id = :my_id AND tanar_id = felhasznalok.id AND statusz = 'accepted')
+                SELECT 1 FROM kapcsolatok 
+                WHERE statusz = 'accepted' AND (
+                    (tanar_id = :my_id AND diak_id = felhasznalok.id) OR 
+                    (diak_id = :my_id AND tanar_id = felhasznalok.id)
+                )
             )";
     
     if ($search !== '') {
@@ -53,10 +71,13 @@ try {
     }
 
     $stmt->execute($params);
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode($results);
 
 } catch(Exception $e) {
     http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
+    // Élesben ne írjuk ki a pontos hibaüzenetet
+    echo json_encode(["error" => "Hiba történt a keresés során."]);
 }
 ?>
