@@ -5,6 +5,7 @@ import { startWith, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-chat',
@@ -23,7 +24,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   newMessage: string = '';
   selectedFriendId: number | null = null;
 
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
   private messageSub?: Subscription;
   private friendsPollingSub?: Subscription;
 
