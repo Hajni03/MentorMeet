@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subscription, interval } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { Subscription, interval, of } from 'rxjs';
+import { startWith, switchMap, catchError } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -24,13 +24,12 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   newMessage: string = '';
   selectedFriendId: number | null = null;
 
-  private apiUrl = environment.apiUrl;
+  // Fontos: Használj HTTPS-t az environmentben!
+  private apiUrl = environment.apiUrl; 
   private messageSub?: Subscription;
   private friendsPollingSub?: Subscription;
 
-  // Változó a görgetés vezérléséhez
   private autoScroll = true;
-
   lastSeenId: number = 0;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
@@ -38,7 +37,6 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     this.currentUser = userJson ? JSON.parse(userJson) : null;
   }
 
-  // JAVÍTÁS: Csak akkor görgetünk, ha az autoScroll engedélyezve van
   ngAfterViewChecked() {
     if (this.autoScroll) {
       this.scrollToBottom();
@@ -62,25 +60,17 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  // Barát választása
+  // --- PARTNER VÁLASZTÁSA ---
   selectFriend(friend: any) {
+    if (!friend) return;
     this.selectedFriend = friend;
     this.autoScroll = true;
+    this.messages = []; 
 
-    // 1. Először lekérjük az utolsó üzenetet, amit MÁR OLVASTUNK
-    // Ezt azért tesszük, hogy tudjuk, honnan kezdődik az "ÚJ" rész a megnyitás pillanatában
-    this.http.get<any[]>(`${this.apiUrl}/get_messages.php?kuldo_id=${this.currentUser.id}&fogado_id=${friend.id}`)
-      .subscribe({
-        next: (msgs) => {
-          // Megkeressük az utolsó olyan üzenet ID-ját, ami már olvasott volt
-          const lastRead = [...msgs].reverse().find(m => m.fogado_id === this.currentUser.id && m.olvasott == 1);
-          this.lastSeenId = lastRead ? lastRead.id : 0;
-
-          this.messages = msgs;
-          this.updateSidebarDot();
-          this.startPolling();
-        }
-      });
+    // Azonnali betöltés váltáskor
+    this.loadMessages();
+    // Polling (frissítés) indítása
+    this.startPolling();
   }
 
   loadFriends() {
@@ -90,27 +80,28 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
         next: (res) => {
           this.friends = res;
           if (this.selectedFriendId && this.friends.length > 0) {
-            const foundFriend = this.friends.find(f => f.id == this.selectedFriendId);
+            const foundFriend = this.friends.find(f => Number(f.id) === Number(this.selectedFriendId));
             if (foundFriend) this.selectFriend(foundFriend);
           }
-        }
+        },
+        error: (err) => console.error("Barátok betöltése hiba:", err)
       });
   }
 
-  // Polling a barát listához (piros pöttyökhöz)
   startFriendsPolling() {
     this.friendsPollingSub = interval(5000)
       .pipe(
         startWith(0),
-        switchMap(() => this.http.get<any[]>(`${this.apiUrl}/get_friends.php?user_id=${this.currentUser.id}`))
+        switchMap(() => this.http.get<any[]>(`${this.apiUrl}/get_friends.php?user_id=${this.currentUser.id}`).pipe(
+          catchError(() => of(this.friends)) // Hiba esetén megtartja a régit
+        ))
       )
       .subscribe(res => {
         this.friends = res;
-        this.updateSidebarDot();
       });
   }
 
-  // Üzenetek folyamatos frissítése
+  // --- ÜZENETEK KEZELÉSE ---
   startPolling() {
     this.stopPolling();
     if (!this.selectedFriend) return;
@@ -120,17 +111,21 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
         startWith(0),
         switchMap(() => this.http.get<any[]>(
           `${this.apiUrl}/get_messages.php?kuldo_id=${this.currentUser.id}&fogado_id=${this.selectedFriend.id}`
+        ).pipe(
+          catchError(() => of(this.messages))
         ))
       )
       .subscribe(res => {
-        // JAVÍTÁS: Megnézzük, hogy a felhasználó az alján van-e, mielőtt frissítünk
         this.autoScroll = this.isUserAtBottom();
         this.messages = res;
       });
   }
 
   stopPolling() {
-    if (this.messageSub) this.messageSub.unsubscribe();
+    if (this.messageSub) {
+      this.messageSub.unsubscribe();
+      this.messageSub = undefined;
+    }
   }
 
   sendMessage() {
@@ -139,29 +134,37 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     const body = {
       kuldo_id: this.currentUser.id,
       fogado_id: this.selectedFriend.id,
-      szoveg: this.newMessage
+      szoveg: this.newMessage 
     };
 
-    this.autoScroll = true; // Saját üzenetnél mindig görgessen le
+    this.autoScroll = true; 
     this.http.post(`${this.apiUrl}/send_messages.php`, body)
-      .subscribe(() => {
-        this.newMessage = '';
-        this.loadMessages();
+      .subscribe({
+        next: () => {
+          this.newMessage = '';
+          this.loadMessages(); 
+        },
+        error: (err) => console.error("Küldési hiba:", err)
       });
   }
 
   loadMessages() {
-    if (!this.selectedFriend) return;
+    if (!this.selectedFriend || !this.currentUser) return;
     this.http.get<any[]>(
       `${this.apiUrl}/get_messages.php?kuldo_id=${this.currentUser.id}&fogado_id=${this.selectedFriend.id}`
-    ).subscribe(res => {
-      this.messages = res;
+    ).subscribe(msgs => {
+      // Olvasottság jelzés kiszámítása az elválasztóhoz
+      const lastRead = [...msgs].reverse().find(m => 
+        Number(m.fogado_id) === Number(this.currentUser.id) && m.olvasott == 1
+      );
+      this.lastSeenId = lastRead ? lastRead.id : 0;
+      
+      this.messages = msgs;
       this.autoScroll = true;
     });
   }
 
   // --- GÖRGETÉSI LOGIKA ---
-
   private scrollToBottom(): void {
     if (!this.scrollContainer) return;
     try {
@@ -170,35 +173,27 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     } catch (err) { }
   }
 
-  // Megnézi, hogy a felhasználó épp az alján tartózkodik-e (threshold = 100px)
   private isUserAtBottom(): boolean {
     if (!this.scrollContainer) return true;
     const element = this.scrollContainer.nativeElement;
-    const threshold = 100;
+    const threshold = 150; 
     const position = element.scrollTop + element.clientHeight;
     const max = element.scrollHeight;
     return max - position < threshold;
   }
 
-  // --- MESSENGER STÍLUS SEGÉDFÜGGVÉNYEK ---
+  // --- SEGÉDFÜGGVÉNYEK ---
 
-  isLastSentMessage(msg: any, index: number): boolean {
-    return msg.kuldo_id === this.currentUser.id && index === this.messages.length - 1;
-  }
-
-  isNewDay(prevDate: string, currDate: string): boolean {
-    if (!prevDate) return true;
-    const prev = new Date(prevDate);
-    const curr = new Date(currDate);
-    // Új nap VAGY több mint 30 perc telt el
-    return prev.toDateString() !== curr.toDateString() ||
-      (curr.getTime() - prev.getTime()) > 10 * 60 * 1000;
+  isNewDay(index: number): boolean {
+    if (index === 0) return true;
+    const prev = new Date(this.messages[index - 1].datum);
+    const curr = new Date(this.messages[index].datum);
+    return prev.toDateString() !== curr.toDateString() || 
+           (curr.getTime() - prev.getTime()) > 30 * 60 * 1000;
   }
 
   shouldShowUnreadDivider(msg: any, index: number): boolean {
-   // Ha az üzenet a partnertől jött ÉS az ID-ja nagyobb, mint amit utoljára olvasottként láttunk
     if (msg.kuldo_id !== this.currentUser.id && msg.id > this.lastSeenId) {
-        // Csak az első ilyen üzenet fölé tegyük (vagyis az előző még a lastSeenId alatt volt)
         if (index === 0 || this.messages[index - 1].id <= this.lastSeenId) {
             return true;
         }
@@ -206,15 +201,21 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     return false;
   }
 
-  updateSidebarDot() {
-    this.http.get<any>(`${this.apiUrl}/get_unread_messages_count.php?user_id=${this.currentUser.id}`).subscribe();
-  }
+  // Időformázó függvény a build hibák elkerülésére
+  formatLastActive(minutes: any): string {
+    if (minutes === null || minutes === undefined || minutes === '') {
+      return 'régen';
+    }
+    const mins = Number(minutes);
+    if (isNaN(mins)) return 'régen';
 
-  onTyping() {
-    if (!this.selectedFriend) return;
-    this.http.post(`${this.apiUrl}/typing_status.php`, {
-      user_id: this.currentUser.id,
-      target_id: this.selectedFriend.id
-    }).subscribe();
+    if (mins < 1) return 'épp most';
+    if (mins < 60) return `${mins}p perce`;
+    
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}ó órája`;
+    
+    const days = Math.floor(hours / 24);
+    return `${days}n napja`;
   }
 }

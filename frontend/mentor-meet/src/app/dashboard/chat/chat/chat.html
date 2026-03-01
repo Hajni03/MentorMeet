@@ -15,7 +15,8 @@
                 <div class="convo-info">
                     <div class="convo-header">
                         <span class="name">{{ friend.nev }}</span>
-                        <span class="time">{{ friend.utolso_ido | date:'HH:mm' }}</span>
+                        <span class="time">{{ friend.is_online == 1 ? 'Online' : formatLastActive(friend.perce_aktiv)
+                            }}</span>
                     </div>
                     <p class="preview" [class.typing]="friend.is_typing == 1"
                         [class.unread-text]="friend.unread_count > 0">
@@ -32,7 +33,9 @@
             <div class="user-info">
                 <h3>{{ selectedFriend.nev }}</h3>
                 <p *ngIf="selectedFriend.is_online == 1" class="online-text">Online</p>
-                <p *ngIf="selectedFriend.is_online != 1" class="offline-text">Offline</p>
+                <p *ngIf="selectedFriend.is_online != 1" class="offline-text">
+                    Aktív: {{ formatLastActive(selectedFriend.perce_aktiv) }}
+                </p>
             </div>
             <div class="header-actions">
                 <button class="action-icon"><img src="assets/images/icons/phonesvg.svg" alt="Hívás"></button>
@@ -43,8 +46,8 @@
         <div class="messages-viewport" #scrollContainer>
             <ng-container *ngFor="let msg of messages; let i = index">
 
-                <div class="time-divider" *ngIf="i === 0 || isNewDay(messages[i-1].idopont, msg.idopont)">
-                    {{ msg.idopont | date:'MMM d, h:mm a' }}
+                <div class="time-divider" *ngIf="i === 0 || isNewDay(i)">
+                    {{ msg.datum | date:'MMM d, HH:mm' }}
                 </div>
 
                 <div class="unread-divider" *ngIf="shouldShowUnreadDivider(msg, i)">
@@ -54,12 +57,17 @@
                 <div class="message-row" [class.sent]="msg.kuldo_id === currentUser.id">
                     <div class="message-bubble">
                         {{ msg.szoveg }}
+                        <span class="bubble-time">{{ msg.datum | date:'HH:mm' }}</span>
                     </div>
                 </div>
 
-                <div class="message-status" *ngIf="i === messages.length - 1 && msg.kuldo_id === currentUser.id">
-                    <span *ngIf="msg.olvasott == 1">Látta {{ msg.olvasva_ekkor | date:'HH:mm' }}</span>
-                    <span *ngIf="msg.olvasott == 0">Elküldve</span>
+                <div class="message-status" *ngIf="msg.kuldo_id === currentUser.id">
+                    <ng-container *ngIf="msg.olvasott == 1; else sentOnly">
+                        <span>Látta: {{ msg.olvasva_ekkor | date:'HH:mm' }}</span>
+                    </ng-container>
+                    <ng-template #sentOnly>
+                        <span class="sent-text">✔ Elküldve</span>
+                    </ng-template>
                 </div>
             </ng-container>
         </div>
