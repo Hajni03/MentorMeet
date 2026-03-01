@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-
 @Component({
   selector: 'app-teacher-profile-edit',
   standalone: true,
@@ -14,6 +13,8 @@ import { RouterModule } from '@angular/router';
 })
 export class TeacherProfileEditComponent implements OnInit {
   private http = inject(HttpClient);
+  // ✅ Központi API útvonal HTTPS-el
+  private readonly apiUrl = 'https://mentormeet.hu/backend/api';
 
   currentUser: any = null;
   allSubjects: any[] = [];     // Minden választható tárgy a DB-ből
@@ -29,15 +30,19 @@ export class TeacherProfileEditComponent implements OnInit {
     }
   }
 
+  // ✅ JAVÍTVA: Itt a get_all_subjects.php-t kell hívni a teljes listához!
   loadAllSubjects() {
-    this.http.get<any[]>('/api/get_all_subjects.php').subscribe({
-      next: (res) => this.allSubjects = res,
+    this.http.get<any[]>(`${this.apiUrl}/get_all_subjects.php`).subscribe({
+      next: (res) => {
+        this.allSubjects = res || [];
+        console.log('Összes választható tantárgy:', this.allSubjects);
+      },
       error: (err) => console.error("Hiba a tantárgyak betöltésekor", err)
     });
   }
 
   loadMySubjects() {
-    this.http.get<any[]>(`/api/get_tanar_tantargyak.php?tanar_id=${this.currentUser.id}`)
+    this.http.get<any[]>(`${this.apiUrl}/get_tanar_tantargyak.php?tanar_id=${this.currentUser.id}`)
       .subscribe({
         next: (res) => {
           this.mySubjects = res || [];
@@ -55,7 +60,7 @@ export class TeacherProfileEditComponent implements OnInit {
       tantargy_id: this.selectedSubjectId
     };
 
-    this.http.post('/api/save_tantargy.php', payload).subscribe({
+    this.http.post(`${this.apiUrl}/save_tantargy.php`, payload).subscribe({
       next: (res: any) => {
         this.loadMySubjects(); // Frissítjük a listát a képernyőn
         this.selectedSubjectId = ''; // Alaphelyzetbe állítjuk a választót
@@ -65,7 +70,6 @@ export class TeacherProfileEditComponent implements OnInit {
   }
 
   deleteSubject(tantargyId: any) {
-    // Nagyon fontos: a tantargyId nem lehet üres!
     if (!tantargyId) {
       console.error("Hiba: Nincs tantárgy azonosító a törléshez!");
       return;
@@ -77,13 +81,10 @@ export class TeacherProfileEditComponent implements OnInit {
         tantargy_id: tantargyId
       };
 
-      console.log('Törlés küldése:', payload);
-
-      this.http.post('/api/delete_tanar_tantargy.php', payload).subscribe({
+      this.http.post(`${this.apiUrl}/delete_tanar_tantargy.php`, payload).subscribe({
         next: (res: any) => {
           if (res.success) {
-            console.log('Sikeres törlés a szerveren');
-            this.loadMySubjects(); // Csak akkor frissítünk, ha a PHP is visszaigazolta
+            this.loadMySubjects();
           } else {
             alert("Szerver hiba: " + res.message);
           }
@@ -96,8 +97,6 @@ export class TeacherProfileEditComponent implements OnInit {
     }
   }
 
-  // Összevontuk a savePersonalData és saveDetails metódusokat egybe, 
-  // hogy ne legyen duplikáció
   saveDetails() {
     const payload = {
       id: this.currentUser.id,
@@ -106,10 +105,9 @@ export class TeacherProfileEditComponent implements OnInit {
       bemutatkozas: this.currentUser.bemutatkozas
     };
 
-    this.http.post('/api/update_user_details.php', payload).subscribe({
+    this.http.post(`${this.apiUrl}/update_user_details.php`, payload).subscribe({
       next: (res: any) => {
         alert(res.message || "Adataid sikeresen frissítve!");
-        // Frissítjük a localStorage-t, hogy az új adatok megmaradjanak
         localStorage.setItem('user', JSON.stringify(this.currentUser));
       },
       error: (err) => {
@@ -123,20 +121,15 @@ export class TeacherProfileEditComponent implements OnInit {
     const file: File = event.target.files[0];
     if (file) {
       console.log("Kiválasztott fájl feltöltésre vár:", file.name);
-      // Itt majd a FormData alapú feltöltés következik
     }
   }
 
-  // Ezt add hozzá az osztályhoz
+  // ✅ JAVÍTVA: A baseUrl a backend gyökerére mutasson a képek miatt
   getAvatarUrl(path: string | null): string {
     if (!path) return 'assets/images/profilkep_placeholder.jpg';
-
-    // Ha a path már tartalmaz http-t (mert pl. külső kép), ne nyúljunk hozzá
     if (path.startsWith('http')) return path;
 
-    // Localhoston a mappa neve kell, élesben a domain után jön az uploads
-    // Ezt később az environment fájlból fogjuk dinamikusan kezelni
-    const baseUrl = 'http://localhost/mentormeet/';
+    const baseUrl = 'https://mentormeet.hu/backend/'; 
     return baseUrl + path;
   }
 }
