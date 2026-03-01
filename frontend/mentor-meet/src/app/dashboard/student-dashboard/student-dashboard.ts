@@ -22,7 +22,9 @@ export class StudentDashboard implements OnInit {
   user: any = null;
   bookings: any[] = []; 
   loading = true;
-  private apiUrl = 'http://localhost:8000/api';
+
+  // ✅ JAVÍTVA: Éles HTTPS útvonal a mentormeet.hu-hoz
+  private readonly apiUrl = 'https://mentormeet.hu/backend/api';
 
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -41,7 +43,11 @@ export class StudentDashboard implements OnInit {
     selectable: false,
     events: [],
     eventClick: (info) => {
-      alert(`Tanár: ${info.event.title}\nÁllapot: ${info.event.extendedProps['statusz'] === 'accepted' ? 'Visszaigazolva' : 'Visszaigazolásra vár'}`);
+      const statusz = info.event.extendedProps['statusz'];
+      const statuszSzoveg = statusz === 'accepted' ? 'Visszaigazolva ✅' : 
+                           statusz === 'rejected' ? 'Elutasítva ❌' : 'Visszaigazolásra vár ⏳';
+      
+      alert(`Tanár: ${info.event.title}\nÁllapot: ${statuszSzoveg}`);
     }
   };
 
@@ -57,26 +63,27 @@ export class StudentDashboard implements OnInit {
     if (!this.user?.id) return;
     this.loading = true;
     
-    // JAVÍTÁS 1: A PHP 'user_id' néven várja a paramétert a legutóbbi kódod alapján!
+    // ✅ JAVÍTVA: apiUrl használata és HTTPS kérés
     const url = `${this.apiUrl}/get_student_calendar.php?user_id=${this.user.id}`;
     
     this.http.get<any[]>(url).subscribe({
       next: (res) => {
-        console.log("Szerver válasza:", res); // Ellenőrizd a konzolon, hogy jön-e adat!
-        this.bookings = res;
+        console.log("Szerver válasza:", res);
+        this.bookings = res || [];
 
+        // ✅ JAVÍTVA: FullCalendar események mapping-je
         this.calendarOptions = {
           ...this.calendarOptions,
-          events: res.map(event => ({
+          events: this.bookings.map(event => ({
+            // Kezeljük mindkét lehetséges mezőnevet, amit a PHP küldhet
             id: event.id || event.foglalas_id,
-            title: event.tanar_neve,
-            // JAVÍTÁS 2: A legutóbbi PHP 'start' és 'end' néven küldi a formázott dátumot
+            title: event.tanar_neve || 'Mentorálás',
             start: event.start || event.idopont_start,
             end: event.end || event.idopont_end,
             
             // SZÍNEZÉS:
             backgroundColor: event.statusz === 'accepted' ? '#10b981' : 
-                 event.statusz === 'rejected' ? '#ef4444' : '#f59e0b',
+                             event.statusz === 'rejected' ? '#ef4444' : '#f59e0b',
             borderColor: 'transparent',
             
             extendedProps: {
