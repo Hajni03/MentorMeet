@@ -1,0 +1,97 @@
+<div class="student-dashboard-container">
+    
+    <div class="dashboard-top-grid">
+        
+        <div class="profile-preview-section card">
+            <div class="section-header">
+                <h3>Profilom</h3>
+                <button class="btn-edit" routerLink="/student-profile-edit">Szerkesztés</button>
+            </div>
+            
+            <div class="profile-preview-content" *ngIf="user">
+                <div class="avatar-wrapper">
+                    <img [src]="user.profilkep_eleres || 'assets/images/profilkep_placeholder.jpg'" alt="Profilkép">
+                </div>
+                <div class="profile-details">
+                    <h4>{{ user.nev }}</h4>
+                    <p class="major">🎓 {{ user.szak_nev || 'Nincs szak megadva' }}</p>
+                    <p class="school">🏫 {{ user.iskola_nev || 'Nincs intézmény megadva' }}</p>
+                    
+                    <div class="bio-preview">
+                        <label>Bemutatkozás:</label>
+                        <p>{{ user.bemutatkozas || 'Még nem írtál bemutatkozást.' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="upcoming-lessons-section card">
+            <div class="section-header">
+                <h3>Közelgő alkalmak</h3>
+                <span class="count-badge" *ngIf="bookings.length > 0">{{ bookings.length }} db</span>
+            </div>
+            
+            <div class="lessons-scroll-area">
+                <div class="lessons-list">
+                    <div *ngFor="let booking of bookings" 
+                         class="lesson-item" 
+                         [class.pending-border]="booking.statusz === 'pending'"
+                         [class.rejected-border]="booking.statusz === 'rejected'">
+                        
+                        <div class="lesson-date">
+                            <span class="day">{{ booking.datum | date:'MMM d.' }}</span>
+                            <span class="time">{{ booking.kezdes.substring(0, 5) }}</span>
+                        </div>
+
+                        <div class="lesson-details">
+                            <h4>{{ booking.tanar_neve }}</h4>
+                            <p>{{ booking.tantargy || 'Mentorálás' }}</p> 
+                        </div>
+
+                        <div class="lesson-status">
+                            <span class="status-badge" [ngClass]="booking.statusz">
+                                <ng-container [ngSwitch]="booking.statusz">
+                                    <span *ngSwitchCase="'accepted'">Visszaigazolva</span>
+                                    <span *ngSwitchCase="'rejected'">Elutasítva</span> 
+                                    <span *ngSwitchDefault>Várakozás</span>
+                                </ng-container>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="bookings.length === 0 && !loading" class="empty-lessons">
+                        <p>Nincsenek aktív foglalásaid.</p>
+                        <button class="btn-primary" routerLink="/friends">Mentor keresése</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="calendar-section card">
+        <div class="calendar-header">
+            <div class="title-group">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="calendar-icon">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <h2>Órarendem & Foglalásaim</h2>
+            </div>
+            <div class="legend">
+                <span class="legend-item"><span class="dot accepted"></span> Elfogadva</span>
+                <span class="legend-item"><span class="dot pending"></span> Függőben</span>
+                <span class="legend-item"><span class="dot rejected"></span> Elutasítva</span>
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div *ngIf="loading" class="placeholder-calendar">
+                <div class="spinner"></div>
+                <p>Naptár betöltése...</p>
+            </div>
+            <full-calendar *ngIf="!loading" [options]="calendarOptions" class="main-calendar"></full-calendar>
+        </div>
+    </div>
+</div>

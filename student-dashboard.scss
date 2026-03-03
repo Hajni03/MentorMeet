@@ -1,0 +1,239 @@
+// Színkonstansok
+$primary-purple: #4B3B73;
+$bg-cream: #F5F5F0;
+$secondary-blue: #848CAF;
+$success-green: #10b981;
+$pending-orange: #f59e0b;
+$error-red: #ef4444;
+
+.student-dashboard-container {
+    padding: 30px;
+    background-color: $bg-cream;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    // --- ÚJ: Felső rács elrendezés (Profil + Alkalmak) ---
+    .dashboard-top-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        align-items: start;
+    }
+
+    // --- ÚJ: Profil előnézet kártya ---
+    .profile-preview-section {
+        background: white;
+        border-radius: 30px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            
+            h3 { color: $primary-purple; font-weight: 800; margin: 0; }
+            .btn-edit {
+                background: rgba(75, 59, 115, 0.05);
+                color: $primary-purple;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 10px;
+                font-weight: 700;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                &:hover { background: rgba(75, 59, 115, 0.1); }
+            }
+        }
+
+        .profile-preview-content {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+
+            .avatar-wrapper img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid rgba(75, 59, 115, 0.1);
+            }
+
+            .profile-details {
+                flex: 1;
+                h4 { margin: 0 0 10px 0; color: $primary-purple; font-weight: 800; font-size: 1.4rem; }
+                p { margin: 0 0 5px 0; color: $secondary-blue; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+                
+                .bio-preview {
+                    margin-top: 15px;
+                    background: #fafafa;
+                    padding: 15px;
+                    border-radius: 15px;
+                    label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: $secondary-blue; font-weight: 800; display: block; margin-bottom: 5px; }
+                    p { margin: 0; font-size: 0.9rem; color: #555; font-style: italic; line-height: 1.5; }
+                }
+            }
+        }
+    }
+
+    // --- Módosított: Közelgő alkalmak (Görgetéssel) ---
+    .upcoming-lessons-section {
+        background: white;
+        border-radius: 30px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        width: 100%;
+
+        h3 { 
+            color: $primary-purple; 
+            font-weight: 800; 
+            margin-top: 0;
+            margin-bottom: 20px; 
+        }
+
+        .lessons-scroll-area {
+            max-height: 310px; // Kb. 3 elem magassága + rések
+            overflow-y: auto;
+            padding-right: 10px;
+
+            &::-webkit-scrollbar { width: 6px; }
+            &::-webkit-scrollbar-track { background: transparent; }
+            &::-webkit-scrollbar-thumb { background: rgba(132, 140, 175, 0.2); border-radius: 10px; }
+        }
+
+        .lessons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            border-left: 5px solid $success-green;
+
+            &:hover { transform: translateX(5px); }
+            
+            &.pending-border { border-left-color: $pending-orange; }
+            &.rejected-border { border-left-color: $error-red; }
+
+            .lesson-date {
+                min-width: 80px;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid rgba(132, 140, 175, 0.1);
+                .day { font-weight: 800; color: $primary-purple; }
+                .time { font-size: 0.9rem; color: $secondary-blue; }
+            }
+
+            .lesson-details {
+                flex: 1;
+                padding-left: 20px;
+                h4 { margin: 0; color: $primary-purple; font-weight: 700; font-size: 1.1rem; }
+                p { margin: 0; color: $secondary-blue; font-size: 0.9rem; }
+            }
+
+            .status-badge {
+                padding: 6px 12px;
+                border-radius: 10px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                font-weight: 700;
+                text-transform: uppercase;
+                
+                &.accepted { background: rgba(16, 185, 129, 0.1); color: $success-green; }
+                &.pending { background: rgba(245, 158, 11, 0.1); color: $pending-orange; }
+                &.rejected { background: rgba(239, 68, 68, 0.1); color: $error-red; }
+            }
+        }
+    }
+
+    .calendar-section {
+        background: white;
+        border-radius: 30px;
+        padding: 30px;
+        border: 1px solid rgba(132, 140, 175, 0.1);
+        box-shadow: 0 10px 30px rgba(75, 59, 115, 0.05);
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(132, 140, 175, 0.1);
+
+            .title-group {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                h2 { margin: 0; color: $primary-purple; font-weight: 800; font-size: 1.5rem; }
+                .calendar-icon { width: 28px; height: 28px; stroke: $primary-purple; }
+            }
+        }
+    }
+}
+
+// --- Reszponzivitás ---
+@media (max-width: 992px) {
+    .student-dashboard-container {
+        .dashboard-top-grid {
+            grid-template-columns: 1fr; // Mobilon egymás alá kerülnek
+        }
+    }
+}
+
+// FullCalendar testreszabás (Változatlan)
+::ng-deep {
+    .fc {
+        font-family: 'Inter', sans-serif;
+        --fc-border-color: #f0f0f0;
+        --fc-button-bg-color: #4B3B73;
+        --fc-button-border-color: #4B3B73;
+        --fc-today-bg-color: rgba(75, 59, 115, 0.03);
+
+        .fc-toolbar-title { color: $primary-purple !important; font-weight: 800 !important; }
+        .fc-col-header-cell { background: #fafafa; padding: 12px 0; }
+        .fc-event { border-radius: 8px !important; border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    }
+}
+
+.legend {
+    display: flex;
+    gap: 15px;
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $secondary-blue;
+        .dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            &.accepted { background: $success-green; }
+            &.pending { background: $pending-orange; }
+            &.rejected { background: $error-red; }
+        }
+    }
+}
+
+.empty-lessons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(132, 140, 175, 0.03);
+    border: 2px dashed rgba(132, 140, 175, 0.2);
+    border-radius: 20px;
+    p { color: $secondary-blue; font-weight: 600; margin-bottom: 20px; }
+}
