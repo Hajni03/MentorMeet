@@ -1,0 +1,57 @@
+<div class="edit-container">
+    <div class="edit-card">
+        <div class="card-header">
+            <h2>Profil szerkesztése</h2>
+            <p>Módosítsd az adataidat, hogy a mentorok jobban megismerjenek!</p>
+        </div>
+
+        <div class="card-body">
+            <div class="avatar-section">
+                <div class="avatar-wrapper" (click)="fileInput.click()">
+                    <img [src]="user.profil_kep || 'assets/images/default-avatar.png'" alt="Profilkép">
+                    <div class="avatar-overlay">
+                        <span class="icon">📷</span>
+                    </div>
+                </div>
+                <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
+                <div class="avatar-text">
+                    <p class="main">Profilkép módosítása</p>
+                    <p class="sub">Kattints a körre a feltöltéshez</p>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Teljes név</label>
+                <input type="text" [(ngModel)]="user.nev" placeholder="Név">
+            </div>
+
+            <div class="input-group">
+                <label>Iskola / Intézmény</label>
+                <input type="text" [(ngModel)]="user.iskola_nev" placeholder="Iskolád neve">
+            </div>
+
+            <div class="input-group">
+                <label class="label-subject">Tanulmányok / Szak</label>
+                <select [(ngModel)]="user.szak_id" class="szak-select">
+                    <option [ngValue]="null">Válassz szakot...</option>
+                    <option *ngFor="let szak of szakokListaja" [value]="szak.id">
+                        {{ szak.nev }}
+                    </option>
+                </select>
+                <small class="helper-text">Válaszd ki a jelenlegi képzésed típusát.</small>
+            </div>
+
+            <div class="input-group">
+                <label>Bemutatkozás</label>
+                <textarea [(ngModel)]="user.bio" rows="4" placeholder="Mesélj magadról pár szót..."></textarea>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button class="btn-cancel" (click)="cancel()">Mégse</button>
+            <button class="btn-save" (click)="saveProfile()" [disabled]="isSaving">
+                {{ isSaving ? 'Mentés...' : 'Változtatások mentése' }}
+            </button>
+        </div>
+    </div>
+</div>
