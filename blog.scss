@@ -1,0 +1,727 @@
+// 1. VÁLTOZÓK (Legyenek legfelül)
+$primary-lila: #8383ba;
+$text-dark: #1a1a1a;
+$text-muted: #777;
+$bg-cream: #F5F5F0;
+
+// 2. ALAPBEÁLLÍTÁSOK
+body {
+  background-color: $bg-cream; // Ez az egész oldal alapja
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif; // Opcionális, de ajánlott
+}
+
+// 3. NAVBAR
+.navbar {
+  background-color: $bg-cream;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  &__logo img {
+    height: 40px;
+  }
+
+  &__menu {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+
+    li button {
+      // Itt a buttonokat stílusozzuk a menüben
+      background: none;
+      border: none;
+      text-decoration: none;
+      color: $text-dark;
+      font-weight: 500;
+      transition: color 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: $primary-lila;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+
+      &--primary {
+        background-color: $primary-lila;
+        color: white;
+
+        &:hover {
+          background-color: darken($primary-lila, 10%);
+        }
+      }
+
+      &--secondary {
+        background-color: #e5e6f3;
+        color: $primary-lila;
+
+        &:hover {
+          background-color: #d3d4eb;
+        }
+      }
+    }
+  }
+}
+
+// 4. HERO SZEKCIÓ
+.blog-hero {
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+
+  .hero-container {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .hero-content {
+    flex: 1;
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: $text-dark;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: $text-muted;
+      line-height: 1.6;
+      margin-bottom: 40px;
+      max-width: 450px;
+    }
+
+    .mentor-cta p {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .cta-btn {
+      background-color: $primary-lila;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .image-grid {
+    display: flex;
+    gap: 20px;
+    height: 320px;
+
+    .main-image {
+      width: 220px;
+    }
+
+    .side-images {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 150px;
+
+      img {
+        flex: 1;
+        min-height: 0;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+  }
+}
+
+// 5. ELVÁLASZTÓ
+.section-divider {
+  height: 2px;
+  background: $primary-lila;
+  max-width: 1100px;
+  margin: 0 auto; // Kivettem az alsó margót, paddinggel oldjuk meg a távolságot
+  opacity: 0.3;
+}
+
+// 6. TÉMÁK SZEKCIÓ
+.topics-section {
+  width: 100%;
+  background-color: #F5F5F0;
+  padding: 60px 0; // Függőleges távolság a szekciók között
+}
+
+.topics-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px; // Mobilbarát margó a széleken
+  h2 {
+    font-size: 2.2rem;    // Itt állíthatod a méretet (eredetileg kb. 1.5rem volt)
+    font-weight: 700;     // Vastagabb betűtípus
+    color: $text-dark;    // A változót használjuk
+    margin-bottom: 30px;  // Távolság a szűrőktől
+    letter-spacing: -0.5px; // Egy kis modern finomhangolás
+  }
+}
+
+.topic-filter {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 40px;
+
+  .filter-item {
+    color: #888;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &.active {
+      color: #000;
+      font-weight: bold;
+      border-bottom: 2px solid #000; // Opcionális: kiemeli az aktívat
+    }
+
+    &:hover {
+      color: #333;
+    }
+  }
+
+  .more-btn {
+    margin-left: auto;
+    border: 1px solid #ccc;
+    background: #fff; // A gomb belseje lehet fehér, hogy elüssön
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.topic-card {
+  .card-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 15px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px; // A képen látható kerekítés
+    }
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+  }
+}
+.latest-posts {
+  background-color: #8383ba; // A képen látható lila háttér
+  padding: 40px 0;
+  color: white;
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+
+    h2 {
+      font-size: 2.2rem;
+      margin: 0;
+    }
+
+    .mutass-tobbet {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: white;
+        color: #8383ba;
+      }
+    }
+  }
+
+  .posts-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr; // Bal oldal kicsit szélesebb
+    gap: 50px;
+    align-items: start;
+  }
+
+  // Nagy kártya stílusa
+  .main-post {
+    .post-image {
+      width: 100%;
+      height: 350px;
+      margin-bottom: 25px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 25px;
+      }
+    }
+    h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    p {
+      line-height: 1.6;
+      opacity: 0.9;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
+
+  // Oldalsó kis kártyák
+  .side-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .mini-card {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+
+      img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 20px;
+        flex-shrink: 0;
+      }
+
+      h4 {
+        margin: 0 0 10px 0;
+        font-size: 1.1rem;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// Mobilos elrendezés
+@media (max-width: 992px) {
+  .latest-posts .posts-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .latest-posts .side-posts .mini-card {
+    flex-direction: column;
+    text-align: center;
+    img { width: 100%; height: 200px; }
+  }
+}
+.featured-story {
+  background-color: #F5F5F0; // Vissza a krémszínhez
+  padding: 40px 0;
+  color: #1a1a1a;
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: -30px;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; // Három egyenlő oszlop
+    gap: 40px;
+    align-items: center;
+  }
+
+  // Bal oldal stílusa
+  .testimonial-side {
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .name {
+        display: block;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+
+      .status {
+        font-size: 0.9rem;
+        color: #666;
+      }
+    }
+
+    .stars {
+      color: #ffcc00; // Arany szín a csillagoknak
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    .quote {
+      margin-top: 20px;
+      line-height: 1.6;
+      font-size: 1.05rem;
+      color: #333;
+    }
+  }
+
+  // Középső kép
+  .main-image {
+    img {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      border-radius: 25px;
+    }
+  }
+
+  // Jobb oldal (Videó)
+  .video-side {
+    text-align: center;
+
+    .video-card {
+      position: relative;
+      margin-bottom: 25px;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 20px;
+      }
+
+      .play-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0,0,0,0.1); // Enyhe sötétítés
+        border-radius: 20px;
+      }
+
+      .play-button {
+        width: 60px;
+        height: 60px;
+        background: white;
+        border-radius: 50%;
+        position: relative;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 20px; left: 24px;
+          border-left: 18px solid #333;
+          border-top: 10px solid transparent;
+          border-bottom: 10px solid transparent;
+        }
+      }
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      line-height: 1.3;
+    }
+
+    .more-btn {
+      background: #fff;
+      border: 1px solid #333;
+      padding: 12px 35px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #333;
+        color: white;
+      }
+    }
+  }
+}
+
+// Mobil nézet
+@media (max-width: 992px) {
+  .featured-story .story-grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .featured-story .main-image img {
+    height: 350px;
+  }
+}
+
+.cta-banner {
+  background-color: #8c96b8; 
+  /* KESKENYEBB SECTION: a paddinget 100px-ről 60px-re vettem */
+  padding: 40px 0; 
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  /* FEHÉR SZÖVEG: minden szöveg fehér lesz alapból */
+  color: #ffffff; 
+}
+
+/* KISEBB FOLTOK */
+.cta-blob {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  /* 400px-ről 280px-re csökkentve */
+  width: 200px; 
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cta-blob--left {
+  /* Kisebb folthoz közelebb húzzuk a széléhez */
+  left: 0px; 
+}
+
+.cta-blob--right {
+  right: 0px;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* NAGYOBB SZÖVEGMÉRET */
+.cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  /* 2.8rem-ről 3.2rem-re növelve */
+  font-size: 3.2rem; 
+  font-weight: 300;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  color: #ffffff; /* Biztonság kedvéért itt is fehér */
+}
+
+.cta-subtitle {
+  /* 1.3rem-ről 1.5rem-re növelve */
+  font-size: 1.5rem; 
+  margin-bottom: 35px;
+  color: #ffffff;
+  opacity: 1; /* Hogy ne legyen szürke a fehér felett */
+}
+
+/* REGISZTRÁLJ GOMB - változatlan sötét szín, fehér szöveggel */
+.btn--cta {
+  background-color: #434c76;
+  color: #ffffff;
+  padding: 18px 28px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.main-footer {
+  background-color: #f9f9f7; /* A képen látható bézses-szürke */
+  padding: 30px 0 10px;
+  color: #6a6a6a;
+  font-family: 'Poppins', sans-serif;
+  margin: 20px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 50px;
+  margin-bottom: 50px;
+}
+
+.footer-logo {
+  height: 100px; /* A kép alapján picit nagyobb */
+  margin-bottom: -10px;
+}
+
+.footer-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.footer-title {
+  color: #1a1a1a;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #6a6a6a;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #8c96b8;
+}
+
+/* Kapcsolat oszlop ikonokkal */
+.contact-list {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+.contact-list i {
+  color: #8c96b8; /* Ikonok színe a képről */
+  font-size: 1.1rem;
+  width: 20px;
+}
+
+/* Social média ikonok */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  color: #8c96b8;
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+}
+
+.social-links a:hover {
+  transform: translateY(-3px);
+}
+
+/* Footer alsó sáv */
+.footer-bottom {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 25px;
+}
+
+.footer-bottom-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.footer-legal a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #888;
+}
+
+.footer-legal a:hover {
+  text-decoration: underline;
+}
