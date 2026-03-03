@@ -1,0 +1,443 @@
+// Színkonstansok
+$primary-purple: #4B3B73;
+$bg-cream: #F5F5F0;
+$secondary-blue: #848CAF;
+
+.dashboard-structure {
+  display: flex;
+  height: 100vh;
+  background-color: $bg-cream;
+
+  // --- SIDEBAR STÍLUS ---
+  .sidebar {
+    width: 260px;
+    background: $primary-purple;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 50px;
+      padding-left: 10px;
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        fill: white;
+      }
+
+      .logo-text {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: white;
+      }
+    }
+
+    .side-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px 18px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        border-radius: 14px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+
+        // SVG ikonok a menüben
+        .nav-icon {
+          width: 20px;
+          height: 20px;
+          stroke: rgba(255, 255, 255, 0.6);
+          transition: 0.3s;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          .nav-icon { stroke: white; }
+        }
+
+        &.active {
+          background: rgba(255, 255, 255, 0.15);
+          color: white;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          .nav-icon { stroke: white; }
+        }
+      }
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+
+      .btn-logout {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.2s;
+
+        .nav-icon {
+          width: 18px;
+          height: 18px;
+          stroke: white;
+        }
+
+        &:hover {
+          background: #ef4444;
+          border-color: #ef4444;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+      }
+    }
+  }
+
+  // --- TARTALMI TERÜLET ÉS NAVBAR ---
+  .content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 40px;
+      background: $bg-cream;
+
+      .welcome-msg {
+        h1 {
+          margin: 0;
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: $primary-purple;
+        }
+        p {
+          margin: 5px 0 0;
+          color: $secondary-blue;
+          font-weight: 600;
+        }
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+
+        .search-wrapper {
+          position: relative;
+          
+          .search-icon-svg {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: $secondary-blue;
+          }
+
+          input {
+            background: white;
+            border: 1px solid rgba(132, 140, 175, 0.15);
+            padding: 12px 20px 12px 45px;
+            border-radius: 16px;
+            width: 280px;
+            box-shadow: 0 4px 15px rgba(75, 59, 115, 0.02);
+            font-weight: 600;
+            color: $primary-purple;
+            transition: 0.3s;
+
+            &::placeholder { color: rgba(132, 140, 175, 0.6); }
+            &:focus {
+              outline: none;
+              border-color: $primary-purple;
+              box-shadow: 0 4px 20px rgba(75, 59, 115, 0.08);
+              width: 320px; // Kicsit megnő fókusznál, mint a profi oldalakon
+            }
+          }
+        }
+
+        .profile-section {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+
+          .notif-bell {
+            width: 24px;
+            height: 24px;
+            stroke: $secondary-blue;
+            cursor: pointer;
+            transition: 0.2s;
+            &:hover { 
+              stroke: $primary-purple;
+              transform: rotate(15deg);
+            }
+          }
+
+          .avatar-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px; // Modern, lekerekített négyzet forma
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 8px 20px rgba(75, 59, 115, 0.12);
+            cursor: pointer;
+            transition: 0.3s;
+
+            img { width: 100%; height: 100%; object-fit: cover; }
+            &:hover { transform: scale(1.05); }
+          }
+        }
+      }
+    }
+
+    .page-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 25px 25px 25px;
+      background-color: $bg-cream;
+      
+      // Egyedi görgetősáv a tartalomnak
+      &::-webkit-scrollbar { width: 6px; }
+      &::-webkit-scrollbar-track { background: transparent; }
+      &::-webkit-scrollbar-thumb { 
+        background: rgba(132, 140, 175, 0.2); 
+        border-radius: 10px; 
+      }
+    }
+  }
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  .notification-wrapper {
+    position: relative; // Ez a dropdown origója
+
+    .notif-bell-container {
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      .notif-bell {
+        width: 26px;
+        height: 26px;
+        stroke: $secondary-blue;
+        transition: 0.3s ease;
+        &:hover { stroke: $primary-purple; transform: rotate(15deg); }
+      }
+
+      .unread-dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: #ef4444; // Élénk piros a figyelemért
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 800;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid $bg-cream; // Elválasztja a harangtól
+      }
+    }
+  }
+}
+
+// A LENYÍLÓ ABLAK STÍLUSA
+.notif-dropdown {
+  position: absolute;
+  top: 50px;
+  right: -10px;
+  width: 340px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 15px 45px rgba(75, 59, 115, 0.15); // Lila tónusú árnyék
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid rgba(132, 140, 175, 0.1);
+  animation: dropdownFade 0.3s ease-out;
+
+  .dropdown-header {
+    padding: 18px 20px;
+    background: #EBEBE6; // Kicsit sötétebb törtfehér
+    border-bottom: 1px solid rgba(132, 140, 175, 0.1);
+    
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 800;
+      color: $primary-purple;
+    }
+  }
+
+  .dropdown-body {
+    max-height: 380px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: rgba(132, 140, 175, 0.2); border-radius: 10px; }
+
+    .notif-item {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(132, 140, 175, 0.05);
+      transition: 0.2s;
+      cursor: pointer;
+
+      &:hover { background: rgba(75, 59, 115, 0.02); }
+
+      &.unread {
+        background: rgba(75, 59, 115, 0.04);
+        .notif-content p { font-weight: 700; }
+      }
+
+      .notif-content {
+        flex: 1;
+        p {
+          margin: 0;
+          font-size: 0.85rem;
+          color: #1e293b;
+          line-height: 1.4;
+        }
+        span {
+          font-size: 0.75rem;
+          color: $secondary-blue;
+          margin-top: 4px;
+          display: block;
+        }
+      }
+
+      .unread-indicator {
+        width: 8px;
+        height: 8px;
+        background: $primary-purple;
+        border-radius: 50%;
+        margin-left: 15px;
+      }
+    }
+
+    .empty-notif {
+      padding: 40px 20px;
+      text-align: center;
+      color: $secondary-blue;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+  }
+
+  .dropdown-footer {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid rgba(132, 140, 175, 0.1);
+    
+    a {
+      color: $primary-purple;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.8rem;
+      &:hover { text-decoration: underline; }
+    }
+  }
+}
+
+// Animáció a megjelenéshez
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Üzenet badge a sidebar-hoz
+.msg-badge {
+  background: white;
+  color: $primary-purple;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto; // Kitolja a szélére
+}
+// --- ÚJ: ÉRTESÍTÉSI AKCIÓ GOMBOK STÍLUSA ---
+.notif-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  padding-bottom: 5px;
+
+  button {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+
+    &.btn-accept {
+      background-color: $primary-purple;
+      color: white;
+      box-shadow: 0 4px 10px rgba(75, 59, 115, 0.2);
+
+      &:hover {
+        background-color: lighten($primary-purple, 10%);
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    &.btn-reject {
+      background-color: transparent;
+      color: $secondary-blue;
+      border: 1px solid rgba(132, 140, 175, 0.3);
+
+      &:hover {
+        background-color: #ef4444; // Piros háttér elutasításnál
+        color: white;
+        border-color: #ef4444;
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
