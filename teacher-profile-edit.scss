@@ -1,0 +1,205 @@
+.profile-edit-wrapper {
+  padding: 3rem 2rem;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  background: #f8f9fd;
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; // Bal oldal (személyes) most a szélesebb
+    gap: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .glass-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 1rem;
+    }
+  }
+
+  // Avatar stílusok
+  .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2.5rem;
+
+    .avatar-preview {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      }
+
+      .upload-label {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #8187b1;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-size: 1.2rem;
+        transition: 0.2s;
+        &:hover { background: #6366f1; transform: scale(1.1); }
+      }
+    }
+    .upload-text { margin-top: 10px; color: #718096; font-size: 0.85rem; }
+  }
+
+  .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; // Két egyenlő oszlop
+  gap: 20px; // Ez biztosítja a távolságot, hogy ne csússzanak össze!
+  margin-top: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr; // Mobilon egymás alá rakja őket a biztonság kedvéért
+  }
+
+  .full-width {
+    grid-column: span 2;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%; // Garantálja, hogy kitölti a saját oszlopát
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      font-size: 1rem;
+      box-sizing: border-box; // Nagyon fontos: a padding ne növelje a szélességet!
+      transition: all 0.2s ease-in-out;
+
+      &:focus {
+        outline: none;
+        border-color: #8187b1;
+        box-shadow: 0 0 0 3px rgba(129, 135, 177, 0.1);
+      }
+
+      &::placeholder {
+        color: #a0aec0;
+      }
+    }
+  }
+}
+
+  // Tantárgy stílusok (Jobb oldal)
+  .add-subject-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+    .modern-select { flex: 1; padding: 0.8rem; border-radius: 12px; border: 1px solid #e2e8f0; }
+  }
+
+  .subject-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 15px;
+
+  .tag {
+    display: flex;
+    align-items: center;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #e2e8f0;
+    }
+
+    .remove {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px; // Távolság a szöveg és az X között
+      cursor: pointer;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      line-height: 1;
+      
+      &:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+}
+
+  .btn-save {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 1rem;
+    background: #8187b1;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover { background: #6366f1; transform: translateY(-2px); }
+  }
+
+  .btn-dash {
+    margin-top: 3rem;
+    width: 100%;
+    padding: 1rem;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    &:disabled { background: #d1d5db; cursor: not-allowed; }
+  }
+}
