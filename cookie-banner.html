@@ -1,0 +1,15 @@
+<div class="cookie-overlay" *ngIf="isVisible()" [@fadeInOut]>
+  <div class="cookie-card">
+    <div class="cookie-content">
+      <div class="cookie-icon">🍪</div>
+      <div class="cookie-text">
+        <h3>Sütiket használunk</h3>
+        <p>A MentorMeet a legjobb élmény biztosítása érdekében sütiket használ. Az oldal használatával elfogadod a szabályzatunkat.</p>
+      </div>
+    </div>
+    <div class="cookie-actions">
+      <a href="#" class="link-more">Részletek</a>
+      <button class="btn-accept" (click)="acceptCookies()">Elfogadom</button>
+    </div>
+  </div>
+</div>
