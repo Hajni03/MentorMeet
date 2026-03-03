@@ -1,0 +1,185 @@
+<div class="dashboard-layout">
+
+  <div class="mentor-header-cards">
+
+    <div class="info-card profile-card">
+      <div class="profile-header">
+        <div class="avatar-circle">{{ userInitials }}</div>
+        <div class="name-box">
+          <h2>{{ currentUser?.nev }}</h2>
+          <span class="school-tag">🏫 {{ currentUser?.iskola_nev || 'Nincs megadva iskola' }}</span>
+        </div>
+      </div>
+      <div class="subject-list">
+        <span class="subject-badge" *ngFor="let s of mySubjects">{{ s.nev }}</span>
+        <span *ngIf="mySubjects.length === 0" class="school-tag">Nincsenek tantárgyak</span>
+      </div>
+      <button class="btn-message">✉️ Üzenetek megnyitása</button>
+    </div>
+
+    <div class="info-card upcoming-card">
+      <h3>📅 Közelgő meetingek</h3>
+      <div class="event-list-scroll">
+        <div class="mini-event-item" *ngFor="let meeting of upcomingMeetings">
+          <span class="event-day">{{ meeting.date | date:'MMM d.' }}</span>
+          <div class="event-details">
+            <span class="event-name">{{ meeting.cim || 'Konzultáció' }}</span>
+            <div class="student-name-tag" *ngIf="meeting.diak_neve">👤 {{ meeting.diak_neve }}</div>
+          </div>
+          <span class="event-time">{{ meeting.kezdes | slice:0:5 }}</span>
+        </div>
+        <div *ngIf="upcomingMeetings.length === 0" class="no-events-text">
+          Nincs foglalt időpontod ezen a héten.
+        </div>
+      </div>
+    </div>
+
+    <div class="past-meetings-container">
+      <button class="btn-toggle-past" (click)="togglePastMeetings()">
+        <span>📜 Korábbi meetingek ({{ pastMeetings.length }})</span>
+        <span class="arrow" [class.open]="isPastMeetingsOpen">▼</span>
+      </button>
+
+      <div class="past-meetings-content" [class.show]="isPastMeetingsOpen">
+        <div class="event-list-scroll past-scroll">
+          <div class="mini-event-item past-item" *ngFor="let meeting of pastMeetings">
+            <span class="event-day">{{ meeting.date | date:'MMM d.' }}</span>
+            <div class="event-details">
+              <span class="event-name">{{ meeting.cim || 'Konzultáció' }}</span>
+              <div class="student-name-tag">👤 {{ meeting.diak_neve }}</div>
+            </div>
+            <span class="event-time">{{ meeting.kezdes | slice:0:5 }}</span>
+          </div>
+
+          <div *ngIf="pastMeetings.length === 0" class="no-events-text">
+            Nincs korábbi esemény.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="calendar-wrapper" [class.sidebar-open]="isAddPanelOpen">
+
+    <div class="calendar-main-area">
+      <div class="calendar-controls">
+        <div class="view-selector">
+          <button [class.active]="view === 'month'" (click)="changeView('month')">Hónap</button>
+          <button [class.active]="view === 'week'" (click)="changeView('week')">Hét</button>
+          <button [class.active]="view === 'day'" (click)="changeView('day')">Nap</button>
+        </div>
+
+        <div class="calendar-nav">
+          <h2>{{ currentMonthName }} {{ currentYear }}</h2>
+          <div class="nav-btns">
+            <button (click)="prev()">‹</button>
+            <button (click)="next()">›</button>
+          </div>
+        </div>
+
+        <button class="btn-add-main" (click)="toggleAddPanel()">
+          + Időpont hozzáadása
+        </button>
+      </div>
+
+      <div class="calendar-grid" [ngClass]="view">
+        <div class="grid-header" *ngIf="view !== 'day'">
+          <div *ngFor="let dayName of hetiNapok">{{ dayName }}</div>
+        </div>
+        <div class="grid-header single-header" *ngIf="view === 'day'">
+          <div>{{ hetiNapok[(currentDate.getDay() + 6) % 7] }}</div>
+        </div>
+
+        <div class="grid-body" [ngClass]="view">
+          <div class="grid-cell" *ngFor="let day of calendarDays" [class.other-month]="!day.isCurrentMonth"
+            [class.is-today]="day.isToday">
+
+            <span class="day-number">{{ day.date.getDate() }}</span>
+
+            <div class="cell-content">
+              <div *ngFor="let slot of day.slots" class="slot-pill" [ngClass]="slot.diak_id ? 'booked' : 'free'"
+                (click)="openEditModal(slot, $event)">
+
+                <div class="slot-title">
+                  {{ slot.cim || 'Konzultáció' }}
+                  <strong *ngIf="slot.diak_neve" class="slot-student-name"> - {{ slot.diak_neve }}</strong>
+                </div>
+
+                <div class="slot-time">{{ slot.kezdes | slice:0:5 }} - {{ slot.befejezes | slice:0:5 }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="add-slot-panel" *ngIf="isAddPanelOpen">
+      <div class="panel-header">
+        <h3>Időpont rögzítése</h3>
+        <button class="btn-close" (click)="toggleAddPanel()">×</button>
+      </div>
+      <div class="panel-body">
+        <div class="input-group">
+          <label>Cím (opcionális)</label>
+          <input type="text" [(ngModel)]="ujIdopont.cim" placeholder="Pl: Konzultáció...">
+        </div>
+        <div class="time-range">
+          <div class="input-group">
+            <label>Tól</label>
+            <input type="time" [(ngModel)]="ujIdopont.kezdes">
+          </div>
+          <div class="input-group">
+            <label>Ig</label>
+            <input type="time" [(ngModel)]="ujIdopont.befejezes">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Dátum</label>
+          <input type="date" [(ngModel)]="ujIdopont.datum">
+        </div>
+        <button class="btn-save" (click)="addIdopont()">Mentés</button>
+      </div>
+    </aside>
+
+    <div class="edit-overlay" *ngIf="isEditModalOpen" (click)="closeEditModal()">
+      <div class="edit-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Időpont módosítása</h3>
+          <button class="btn-close" (click)="closeEditModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="booked-info-box" *ngIf="selectedSlot?.diak_neve">
+            <p><strong>Partner:</strong> {{ selectedSlot.diak_neve }}</p>
+          </div>
+
+          <div class="input-group">
+            <label>Cím</label>
+            <input type="text" [(ngModel)]="selectedSlot.cim">
+          </div>
+          <div class="time-range">
+            <div class="input-group">
+              <label>Kezdés</label>
+              <input type="time" [(ngModel)]="selectedSlot.kezdes">
+            </div>
+            <div class="input-group">
+              <label>Befejezés</label>
+              <input type="time" [(ngModel)]="selectedSlot.befejezes">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-delete" (click)="deleteSlot()">Törlés</button>
+            <button class="btn-save" (click)="updateSlot()">Módosítás</button>
+          </div>
+
+          <p *ngIf="selectedSlot?.diak_id" class="warning-text">
+            ⚠️ Figyelem: Ezt az időpontot már lefoglalták!
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
