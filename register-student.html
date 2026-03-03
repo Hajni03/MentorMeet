@@ -1,0 +1,85 @@
+<div class="registration-wrapper">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="form-card">
+    <div class="card-header">
+      <h2>Diák regisztráció</h2>
+      <p>Csatlakozz a MentorMeet közösségéhez!</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      
+      <div class="input-row">
+        <div class="input-group">
+          <label>Teljes név</label>
+          <input type="text" formControlName="nev" placeholder="Kovács János" />
+        </div>
+
+        <div class="input-group">
+          <label>E-mail cím</label>
+          <input type="email" formControlName="email" placeholder="pelda@email.hu" />
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Jelszó</label>
+          <input type="password" formControlName="jelszo" placeholder="••••••••" />
+        </div>
+
+        <div class="input-group">
+          <label>Jelszó megerősítése</label>
+          <input type="password" formControlName="jelszoUjra" placeholder="••••••••" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="iskola">Intézmény típusa / Iskola</label>
+        <select formControlName="iskola_id" id="iskola">
+          <option value="">-- Válassz intézményt --</option>
+          <option value="egyetem">🎓 Egyetemista vagyok / Felsőoktatás</option>
+          <option *ngFor="let iskola of iskolak()" [value]="iskola.id">
+            🏫 {{ iskola.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="input-group animated-field" *ngIf="form.get('iskola_id')?.value === 'egyetem'">
+        <label for="szak">Válassz szakot</label>
+        <select formControlName="szak_id" id="szak">
+          <option value="">-- Válassz szakot --</option>
+          <option *ngFor="let szak of szakok()" [value]="szak.id">
+            {{ szak.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="input-group animated-field" *ngIf="form.get('iskola_id')?.value && form.get('iskola_id')?.value !== 'egyetem'">
+        <label for="osztaly">Osztály / Évfolyam</label>
+        <select formControlName="osztaly_id" id="osztaly">
+          <option value="">-- Válassz osztályt --</option>
+          <option *ngFor="let osztaly of osztalyok()" [value]="osztaly.id">
+            {{ osztaly.nev }}
+          </option>
+        </select>
+      </div>
+
+      <div class="checkbox-group">
+        <label class="custom-checkbox">
+          <input type="checkbox" formControlName="elfogadas" />
+          <span class="checkmark"></span>
+          Elfogadom az <a href="#" class="link">Adatvédelmi tájékoztatót</a>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="form.invalid || !passwordsMatch">
+        Regisztráció befejezése
+      </button>
+    </form>
+
+    <p class="footer-text">
+      Már van fiókod? <a routerLink="/login">Jelentkezz be</a>
+    </p>
+  </div>
+</div>
